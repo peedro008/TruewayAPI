@@ -7,7 +7,7 @@ const path = require('path');
 const { Sequelize } = require('sequelize');
 
 
-const sequelize = new Sequelize( "postgres", "postgres", "pesanmene8*",  {
+const sequelize = new Sequelize( "trueway", "postgres", "pesanmene8*",  {
   host: "trueway.cviwhti8ghss.us-east-1.rds.amazonaws.com",
   dialect:'postgres',
   logging: false, // set to console.log to see the raw SQL queries
