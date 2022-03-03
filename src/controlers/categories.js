@@ -11,7 +11,7 @@ const getCategories = async (req,res)=>{
         res.status(404).send("no Categories");
     }
     catch(e){
-    console.log("Error in Categories controller"+ e)
+    console.log("Error in Categorasdies controller"+ e)
 }
 }
 const addCategories = async (req,res)=>{

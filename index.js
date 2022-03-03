@@ -9,7 +9,7 @@ const{createQuotes, QuoteStatuss}=require("./src/data/quotes")
 const{createClient}=require("./src/data/clients")
 
 // Syncing all the models at once.
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync({ force: true }).then(() => {
   server.listen(8080, async()=>{
    
     // try{
