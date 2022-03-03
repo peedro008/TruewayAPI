@@ -7,8 +7,9 @@ const{Health, Auto, Comercial, Home}=require("./src/data/categories")
 const{createCompanies}=require("./src/data/companies")
 const{createQuotes, QuoteStatuss}=require("./src/data/quotes")
 const{createClient}=require("./src/data/clients")
-const port = 8080||5000
+
 // Syncing all the models at once.
+let port =  process.env.port || 8080
 sequelize.sync({ force: false }).then(() => {
   server.listen(8080, async()=>{
    
