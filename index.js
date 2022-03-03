@@ -12,17 +12,17 @@ const{createClient}=require("./src/data/clients")
 sequelize.sync({ force: false }).then(() => {
   server.listen(8080, async()=>{
    
-    // try{
+    try{
      
     //   Promise.all([admin(), Manager(), Producer(), createLocations(), Health(), Auto(), Comercial(), Home(), createCompanies(),createClient()])
     //   .then(res =>console.log("datos cargados!"))      
       
-    //   console.log('%s listening at 4000'); // 
+       console.log('%s listening at 4000'); // 
       
-    // }
-    // catch(e){
-    //   console.log("Error in sequelize.sinc, index.js: " + e)
-    // }
+    }
+    catch(e){
+       console.log("Error in sequelize.sinc, index.js: " + e)
+    }
   });
 });
 
