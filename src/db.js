@@ -7,8 +7,8 @@ const path = require('path');
 const { Sequelize } = require('sequelize');
 
 
-const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
-  ///host: "trueway.cviwhti8ghss.us-east-1.rds.amazonaws.com",
+const sequelize = new Sequelize( "postgres", "postgres", "pesanmene8*",  {
+  host: "trueway.cviwhti8ghss.us-east-1.rds.amazonaws.com",
   dialect:'postgres',
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
