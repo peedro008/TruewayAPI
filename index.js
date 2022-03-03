@@ -10,7 +10,7 @@ const{createClient}=require("./src/data/clients")
 
 // Syncing all the models at once.
 sequelize.sync({ force: false }).then(() => {
-  server.listen(4000, async()=>{
+  server.listen(8080, async()=>{
    
     // try{
      
