@@ -140,9 +140,44 @@ const getDealer = async(req,res)=>{
     
 }}
 
+
+
+const modifyProducer =async (req, res, next) => {
+    let name= req.body.name
+    let email= req.body.email
+    let phone= req.body.phone
+    
+    let LocationId= req.body.LocationId
+    let address= req.body.address
+    let UserId= req.body.UserId
+  
+   
+  
+                   
+            
+                    const user =Users.update({
+                        name: name,
+                        UserName: email,
+                        Password:"2131"
+                       
+                    }, {
+                        where:{id:UserId}
+                    })
+                    user.length?
+                    res.status(200).send("ASDSAdasd")
+                   :
+                   res.status(404).send("no dealers")
+          
+              
+            
+          
+   
+};
+
 module.exports={
     addCompany,
     addProducer,
     addDealer,
-    getDealer
+    getDealer,
+    modifyProducer
 }

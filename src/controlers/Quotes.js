@@ -150,7 +150,7 @@ const locationQuotes=async(req,res)=>{
         include:[
             {model:Client},
             {model:Company},
-            {model:User},
+            {model:Users},
          
         ],
         

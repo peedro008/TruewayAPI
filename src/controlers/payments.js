@@ -24,6 +24,26 @@ const addPayment = async (req,res)=>{
         res.status(400).send("Error in addPayment controller")
     }
 }
+
+const getUserPayment = async (req,res)=>{
+    try{
+        const payments = await Payments.findAll({
+            attributes: {exclude:[ "modifiedAt"]},  
+            include:[
+                {model:Client},
+                {model:Users},
+                {model:Location}
+            ],
+            
+      
+       })
+       payments.length?res.status(200).json(payments):
+        res.status(404).send("no Payments");
+    }
+    catch(e){
+    console.log("Error in payments controller"+ e)
+}
+}
 const getPayment = async (req,res)=>{
     try{
         const payments = await Payments.findAll({
@@ -44,13 +64,15 @@ const getPayment = async (req,res)=>{
 }
 
 const getCashPayment = async (req,res)=>{
+    const papa = req.body.id
     try{
         const payments = await Payments.findAll({
             attributes: {exclude:[ "modifiedAt"]},  
             where:{deposited: false},
             include:[
                 {model:Client},
-                {model:Users},
+                {model:Users,
+                    where:{id: papa}},
                 {model:Location}
             ]
       
@@ -177,4 +199,4 @@ const Deposit=async(req, res)=>{
 
     
 
-module.exports={addPayment, getPayment, ClientPayment, getDepositCashPayment,Deposit, dailyReport}
+module.exports={addPayment, getPayment, ClientPayment, getDepositCashPayment,Deposit, dailyReport,getCashPayment}
