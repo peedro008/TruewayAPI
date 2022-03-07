@@ -27,7 +27,11 @@ const getProducer=async(req,res)=>{
           
         let QuotesDB=await Producer.findAll({
             attributes: {exclude:["createdAt", "modifiedAt"]},  
-         
+            include:[
+                
+                {model:Users},
+               
+            ],
       
    
        })
