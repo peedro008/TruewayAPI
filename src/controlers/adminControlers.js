@@ -60,8 +60,8 @@ const addProducer =async (req, res, next) => {
                     return res.status(500).json({message: "couldnt hash the password"}); 
                 } else if (passwordHash) {
                     let userBd= Users.create(({
-                        name: req.body.name,
-                        UserName: req.body.email,
+                        name: name,
+                        UserName: email,
                         Password: passwordHash,
                         UserRole:"Producer"
                         
@@ -146,30 +146,81 @@ const modifyProducer =async (req, res, next) => {
     let name= req.body.name
     let email= req.body.email
     let phone= req.body.phone
-    
+    let ProducerId= req.body.ProducerID
     let LocationId= req.body.LocationId
     let address= req.body.address
     let UserId= req.body.UserId
+    let Password= req.body.Password
   
    
-  
-                   
-            
-                    const user =Users.update({
+    if(!Password){const user =Users.update({
+                       
                         name: name,
                         UserName: email,
-                        Password:"2131"
+                        
                        
                     }, {
                         where:{id:UserId}
                     })
+
+                    .then(()=>{
+                        Producer.update({
+                            UserId: UserId,
+                            LocationId:LocationId,
+                            name: name,
+                            email: email,
+                            address: address,
+                            phone: phone
+                        },{
+                        where:{id:ProducerId}
+                    })
+
+                    })
                     user.length?
                     res.status(200).send("ASDSAdasd")
                    :
-                   res.status(404).send("no dealers")
+                   res.status(404).send("no dealers")}
+    else{
+        bcrypt.hash(req.body.Password, 12, (err, passwordHash) => {
+            if (err) {
+                return res.status(500).json({message: "couldnt hash the password"}); 
+            } else if (passwordHash) {
+                const user =Users.update({
+                       
+                    name: name,
+                    UserName: email,
+                    
+                   
+                }, {
+                    where:{id:UserId}
+                })
+
+                .then(()=>{
+                    Producer.update({
+                        UserId: UserId,
+                        LocationId:LocationId,
+                        name: name,
+                        email: email,
+                        address: address,
+                        phone: phone
+                    },{
+                    where:{id:ProducerId}
+                })
+
+                })
+                user.length?
+                res.status(200).json(user)
+               :
+               res.status(404).send("no dealers")}
+            
+        })
+        
+                 
+            
+                    
           
               
-            
+    }   
           
    
 };
