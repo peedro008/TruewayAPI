@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const {get} = require('../controlers/gett');
 const{idQuotes,modifyQuotes, getQuotes, addQuote, getStatus, producerQuotes, locationQuotes, clientQuotes,companyQuotes,dateQuotes, addQuoteStatus, getQuoteStatus} = require("../controlers/Quotes")
-const{addCompany, addProducer,addDealer,getDealer,modifyProducer} = require("../controlers/adminControlers")
+const{addCompany, addProducer,addDealer,getDealer,modifyProducer, addManager} = require("../controlers/adminControlers")
 const {login, users} = require("../controlers/login")
 const {getProducer, getProducerFilter} = require("../controlers/producer")
 const {getCompany} = require("../controlers/company")
@@ -40,6 +40,7 @@ router.get('/getCompany', getCompany);
 router.get('/getCashPayment', getCashPayment);
 router.get('/dailyReport', dailyReport);
 
+router.post('/addManager', addManager);
 router.post('/login', login);
 router.post("/addquote", addQuote);
 router.post("/addcompany", addCompany);

@@ -95,39 +95,55 @@ const addProducer =async (req, res, next) => {
         console.log('error', err);
     });
 };
-// const addProducer=async(req, res)=>{
-//     let name= req.body.name
-//     let email= req.body.email
-//     let phone= req.body.phone
-//     let Password= req.body.Password
-//     let LocationId= req.body.LocationId
-//     let address= req.body.address
-        
-//     try{
-//         Producer.create({
-//             name: name,
-//             email: email,
-//             phone: phone,
-//             LocationId: LocationId,
-//             address: address
-//         })
-//         .then(
-//             Users.create({
-//                 name: name,
-//                 UserName:email,
-//                 Password:Password,
-//                 UserRole:"Producer"
-//             })
-
-//         )
-//         res.status(200).send("Producer Added")
-//     }
-    
-//     catch(e){
-//         console.log("Error in addProducer controller "+ e)   
-//         res.status(400).send("Error in addProducer controller ")     
-//     }
-// }
+const addManager =async (req, res, next) => {
+    let name= req.body.name
+    let email= req.body.email
+    let phone= req.body.phone
+    let Password= req.body.Password
+    let LocationId= req.body.LocationId
+    let address= req.body.address
+    // checks if email already exists
+    Users.findOne({ where : {
+        UserName: req.body.email, 
+    }})
+    .then(dbUser => {
+        if (dbUser) {
+            return res.status(409).json({message: "email already exists"});
+        } else if (req.body.email && req.body.Password) {
+            // password hash
+            bcrypt.hash(req.body.Password, 12, (err, passwordHash) => {
+                if (err) {
+                    return res.status(500).json({message: "couldnt hash the password"}); 
+                } else if (passwordHash) {
+                    let userBd= Users.create(({
+                        name: name,
+                        UserName: email,
+                        Password: passwordHash,
+                        UserRole:"Manager"
+                        
+                    }))
+                    
+                    
+                    
+                    .then(() => {
+                        res.status(200).json({message: "user created"});
+                    })
+                    .catch(err => {
+                        console.log("Error in signup controllers: " + err);
+                        res.status(502).json({message: "error while creating the user"});
+                    });
+                };
+            });
+        } else if (!req.body.password) {
+            return res.status(400).json({message: "password not provided"});
+        } else if (!req.body.email) {
+            return res.status(400).json({message: "email not provided"});
+        };
+    })
+    .catch(err => {
+        console.log('error', err);
+    });
+};
 const getDealer = async(req,res)=>{
     try{
         let dealer =await Dealer.findAll({})
@@ -230,5 +246,6 @@ module.exports={
     addProducer,
     addDealer,
     getDealer,
+    addManager,
     modifyProducer
 }
