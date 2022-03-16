@@ -11,17 +11,17 @@ const login = (req, res, next) => {
     }})
     .then(dbUser => {
         if (!dbUser) {
-            return res.status(404).json({message: "user not found"});
+            return res.status(404).json({message: "User not found"});
         } else {
             // password hash
             bcrypt.compare(req.body.Password, dbUser.Password, (err, compareRes) => {
                 if (err) { // error while comparing
-                    res.status(502).json({message: "error while checking user password"});
+                    res.status(502).json({message: "Error"});
                 } else if (compareRes) { // password match
                     const token = jwt.sign({ email: req.body.email }, 'secret', { expiresIn: '1h' });
-                    res.status(200).json({message: "user logged in", "token": token, UserRole: dbUser.UserRole, userId:dbUser.id, Name:dbUser.name,});
+                    res.status(200).json({message: "User logged in", "token": token, UserRole: dbUser.UserRole, userId:dbUser.id, Name:dbUser.name,});
                 } else { // password doesnt match
-                    res.status(401).json({message: "invalid credentials"});
+                    res.status(401).json({message: "Invalid credentials"});
                 };
             });
         };

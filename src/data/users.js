@@ -4,7 +4,7 @@ const admin =function(){
     Users.create({
         name:"Admin",
         UserName: "admin",
-        Password: "$2a$12$289tRMBxX4ca/jP1om1pReZFCGd/PYAvVcA6H1HkNqMHn4uq7tCnW",
+        Password: "$2a$12$4cR7yRyBvaCPrUT15prXb.HBWjpTCSqV/6PYni5ru5fOwGJuoV6CG",
         UserRole: "Admin",
     })
 } 

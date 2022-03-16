@@ -52,7 +52,7 @@ router.post("/addPayment", addPayment)
 router.post("/addClientPayment", ClientPayment)
 router.get("/getpayments", getPayment), 
 
-router.get("/getCashPayment", getDepositCashPayment), 
+
 
 router.get("/getlocations", getLocations), 
 router.post("/addlocation", addLocations), 

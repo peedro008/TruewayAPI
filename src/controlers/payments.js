@@ -64,7 +64,7 @@ const getPayment = async (req,res)=>{
 }
 
 const getCashPayment = async (req,res)=>{
-    const papa = req.body.id
+    const papa = req.query.UserId
     try{
         const payments = await Payments.findAll({
             attributes: {exclude:[ "modifiedAt"]},  
