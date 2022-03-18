@@ -5,7 +5,7 @@ const{addCompany, addProducer,addDealer,getDealer,modifyProducer, addManager} = 
 const {login, users} = require("../controlers/login")
 const {getProducer, getProducerFilter} = require("../controlers/producer")
 const {getCompany} = require("../controlers/company")
-const {addPayment, getPayment, ClientPayment,  getDepositCashPayment, Deposit, dailyReport,getCashPayment} = require("../controlers/payments")
+const {addPayment, getPayment, ClientPayment,  getDepositCashPayment, Deposit, dailyReport,getCashPayment, getUserPayment} = require("../controlers/payments")
 const {getClients, addClient,modifyClient} = require("../controlers/clients");
 const { getLocations, addLocations } = require('../controlers/location');
 const {getCategories,  addCategories} = require("../controlers/categories")
@@ -19,6 +19,7 @@ const router = Router();
 router.get('/', get);
 router.get('/Quotes', getQuotes);
 router.get('/getStatus', getStatus);
+router.get('/getUserPayment', getUserPayment);
 router.get('/clients', getClients);
 router.post('/modifyClient', modifyClient);
 router.post('/modifyProducer', modifyProducer);

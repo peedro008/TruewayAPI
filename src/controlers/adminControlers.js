@@ -48,7 +48,7 @@ const addProducer =async (req, res, next) => {
     let address= req.body.address
     // checks if email already exists
     Users.findOne({ where : {
-        UserName: req.body.email, 
+        UserName: email, 
     }})
     .then(dbUser => {
         if (dbUser) {
@@ -157,18 +157,18 @@ const getDealer = async(req,res)=>{
 }}
 
 
-
+console.log(Producer)
 const modifyProducer =async (req, res, next) => {
     let name= req.body.name
     let email= req.body.email
     let phone= req.body.phone
-    let ProducerId= req.body.ProducerID
+    let ProducerId= req.body.ProducerId
     let LocationId= req.body.LocationId
     let address= req.body.address
     let UserId= req.body.UserId
     let Password= req.body.Password
   
-   
+   console.log(UserId)
     if(!Password){const user =Users.update({
                        
                         name: name,
@@ -176,7 +176,9 @@ const modifyProducer =async (req, res, next) => {
                         
                        
                     }, {
-                        where:{id:UserId}
+                        where:{id:req.body.UserId
+                            ,
+                        }
                     })
 
                     .then(()=>{
@@ -192,20 +194,21 @@ const modifyProducer =async (req, res, next) => {
                     })
 
                     })
-                    user.length?
+                    console.log(user)
+                   
                     res.status(200).send("ASDSAdasd")
-                   :
-                   res.status(404).send("no dealers")}
+                   }
     else{
         bcrypt.hash(req.body.Password, 12, (err, passwordHash) => {
             if (err) {
                 return res.status(500).json({message: "couldnt hash the password"}); 
             } else if (passwordHash) {
+                console.log(passwordHash)
                 const user =Users.update({
                        
                     name: name,
                     UserName: email,
-                    
+                    Password:passwordHash
                    
                 }, {
                     where:{id:UserId}
@@ -220,7 +223,7 @@ const modifyProducer =async (req, res, next) => {
                         address: address,
                         phone: phone
                     },{
-                    where:{id:ProducerId}
+                        where:{id:ProducerId}
                 })
 
                 })

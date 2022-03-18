@@ -26,12 +26,13 @@ const addPayment = async (req,res)=>{
 }
 
 const getUserPayment = async (req,res)=>{
+    let papa=req.query.UserId
     try{
         const payments = await Payments.findAll({
             attributes: {exclude:[ "modifiedAt"]},  
             include:[
                 {model:Client},
-                {model:Users},
+                {model:Users, where:{id: papa}},
                 {model:Location}
             ],
             
@@ -199,4 +200,4 @@ const Deposit=async(req, res)=>{
 
     
 
-module.exports={addPayment, getPayment, ClientPayment, getDepositCashPayment,Deposit, dailyReport,getCashPayment}
+module.exports={addPayment,getUserPayment , getPayment, ClientPayment, getDepositCashPayment,Deposit, dailyReport,getCashPayment}
