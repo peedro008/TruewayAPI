@@ -1,9 +1,9 @@
 const { Router } = require('express');
 const {get} = require('../controlers/gett');
 const{idQuotes,modifyQuotes, getQuotes, addQuote, getStatus, producerQuotes, locationQuotes, clientQuotes,companyQuotes,dateQuotes, addQuoteStatus, getQuoteStatus} = require("../controlers/Quotes")
-const{addCompany, addProducer,addDealer,getDealer,modifyProducer, addManager} = require("../controlers/adminControlers")
+const{addCompany, addProducer,addDealer,getDealer,modifyProducer, addManager, modifyManager} = require("../controlers/adminControlers")
 const {login, users} = require("../controlers/login")
-const {getProducer, getProducerFilter} = require("../controlers/producer")
+const {getProducer, getProducerFilter, getManager} = require("../controlers/producer")
 const {getCompany} = require("../controlers/company")
 const {addPayment, getPayment, ClientPayment,  getDepositCashPayment, Deposit, dailyReport,getCashPayment, getUserPayment} = require("../controlers/payments")
 const {getClients, addClient,modifyClient} = require("../controlers/clients");
@@ -40,6 +40,8 @@ router.get('/getProducerFilter', getProducerFilter);
 router.get('/getCompany', getCompany);
 router.get('/getCashPayment', getCashPayment);
 router.get('/dailyReport', dailyReport);
+router.get('/getManager', getManager);
+router.post('/modifyManager', modifyManager);
 
 router.post('/addManager', addManager);
 router.post('/login', login);

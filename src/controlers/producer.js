@@ -1,4 +1,5 @@
-const {Producer,  Location, Users} = require("../db")
+const {Producer,  Manager, Users} = require("../db")
+
 
 
 const getProducerFilter=async(req,res)=>{
@@ -41,7 +42,31 @@ const getProducer=async(req,res)=>{
     catch(e){
     console.log("Error in Quote controller"+ e)
 }
+
+}
+const getManager=async(req,res)=>{
+    
+
+    try{
+        
+      let QuotesDB=await Manager.findAll({
+          attributes: {exclude:["createdAt", "modifiedAt"]},  
+          include:[
+              
+              {model:Users},
+             
+          ],
+    
+ 
+     })
+      QuotesDB.length?res.status(200).json(QuotesDB):
+      res.status(404).send("no Quotes");
+  }
+  catch(e){
+  console.log("Error in Quote controller"+ e)
+}
 }
 module.exports={
     getProducer,
-    getProducerFilter}
+    getProducerFilter,
+    getManager}

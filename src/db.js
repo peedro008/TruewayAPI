@@ -6,7 +6,7 @@ const path = require('path');
 
 const { Sequelize } = require('sequelize');
 
-//const sequelize = new Sequelize('postgres://postgres:pesanmene@localhost:5432/test', {logging: false,});
+// const sequelize = new Sequelize('postgres://postgres:pesanmene@localhost:5432/test', {logging: false,});
 
 const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
   host: "aacao4lyn1y73d.cviwhti8ghss.us-east-1.rds.amazonaws.com",
@@ -34,7 +34,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Client,Company,Producer,Quote,  Users, Payments, Location, Category, QuoteStatus, Dealer } = sequelize.models;
+const { Client,Company,Producer,Quote,  Users, Payments, Location, Category, QuoteStatus, Dealer, Manager  } = sequelize.models;
 
 
 
@@ -115,9 +115,15 @@ Users.hasOne(Producer, {
 });
 Producer.belongsTo(Users)
 
+Users.hasOne(Manager, {
+  foreignKey: 'UserId'
+});
+Manager.belongsTo(Users)
 
-
-
+Location.hasMany(Manager, {
+  foreignKey: 'LocationId'
+});
+Manager.belongsTo(Location)
 
 
 module.exports = {
