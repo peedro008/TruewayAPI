@@ -40,7 +40,7 @@ const Quote= (sequelize)=>{
         
     },
     down:{
-         type: DataTypes.INTEGER,
+         type: DataTypes.STRING,
          allowNull: false
      },
     
@@ -48,20 +48,20 @@ const Quote= (sequelize)=>{
     
     
     monthlyPayment:{
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
     },
  
     NSDvalue:{
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
     },
   
     PIPvalue:{
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
         
     },
  
     MVRvalue:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
     },
 
     

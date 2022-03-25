@@ -14,7 +14,7 @@ const addPayment = async (req,res)=>{
             type: type,
             UserId: UserId,
             creditCardFee:creditCardFee,
-            total:creditCardFee?amount+creditCardFee: amount,
+            total:creditCardFee? `${parseFloat(amount)+parseFloat(creditCardFee)}`: `${parseFloat(amount)}`,
             
         })
         res.status(200).json(pay)
@@ -156,7 +156,7 @@ const ClientPayment =  (req, res) => {
                 type: type,
                 UserId: UserId,
                 creditCardFee:creditCardFee&&creditCardFee,
-                total:creditCardFee?amount+creditCardFee: amount,
+                total:creditCardFee? `${parseFloat(amount)+parseFloat(creditCardFee)}`: `${parseFloat(amount)}`,
                 
             })
         })

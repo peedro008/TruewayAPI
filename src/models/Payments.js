@@ -30,7 +30,7 @@ const Payments= (sequelize)=>{
     
 
     amount:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.STRING,
         allowNull: false
     },
     method:{
@@ -44,11 +44,11 @@ const Payments= (sequelize)=>{
         defaultValue: false
     },
     creditCardFee:{
-        type:DataTypes.INTEGER,
+        type:DataTypes.STRING,
         defaultValue: null
     },
     total:{
-        type:DataTypes.INTEGER
+        type:DataTypes.STRING
     }
   
 
