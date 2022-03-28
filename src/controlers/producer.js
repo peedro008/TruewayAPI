@@ -34,9 +34,29 @@ const getProducer=async(req,res)=>{
                
             ],
       
-   
+        
        })
-        QuotesDB.length?res.status(200).json(QuotesDB):
+       let manager=await Manager.findAll({
+        attributes: {exclude:["createdAt", "modifiedAt"]},  
+        include:[
+            
+            {model:Users},
+           
+        ],
+  
+    
+   })
+       let pes = []
+        manager.map(e=>{
+            pes.push(e)
+        })
+        QuotesDB.map(e=>{
+            pes.push(e)
+        })
+
+
+
+        QuotesDB.length?res.status(200).json(pes):
         res.status(404).send("no Quotes");
     }
     catch(e){
