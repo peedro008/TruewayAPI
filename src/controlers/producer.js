@@ -56,7 +56,7 @@ const getProducer=async(req,res)=>{
 
 
 
-        QuotesDB.length?res.status(200).json(pes):
+        pes.length?res.status(200).json(pes):
         res.status(404).send("no Quotes");
     }
     catch(e){
