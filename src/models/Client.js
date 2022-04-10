@@ -13,6 +13,24 @@ const Client= (sequelize)=>{
     email:{
          type: DataTypes.STRING,
     },
+    new:{
+        type:DataTypes.BOOLEAN
+    },
+    notes:{
+        type: DataTypes.STRING,
+    },
+    deleted:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    address:{
+        type: DataTypes.STRING,
+    },
+    dateOfBirth:{
+        type: DataTypes.STRING,
+    },
+    
+
    
 });
 };

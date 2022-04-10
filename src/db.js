@@ -6,7 +6,7 @@ const path = require('path');
 
 const { Sequelize } = require('sequelize');
 
-// const sequelize = new Sequelize('postgres://postgres:pesanmene@localhost:5432/test', {logging: false,});
+//  const sequelize = new Sequelize('postgres://postgres:pesanmene@localhost:5432/test', {logging: false,});
 
 const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
   host: "aacao4lyn1y73d.cviwhti8ghss.us-east-1.rds.amazonaws.com",
@@ -14,6 +14,7 @@ const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });
+
 
 const basename = path.basename(__filename);
 
@@ -34,7 +35,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Client,Company,Producer,Quote,  Users, Payments, Location, Category, QuoteStatus, Dealer, Manager  } = sequelize.models;
+const { Client,Company,Producer,Quote,  Users, Payments, Location, Category, QuoteStatus, Dealer, Manager, DailyReport  } = sequelize.models;
 
 
 
@@ -57,6 +58,20 @@ Location.hasMany(Producer, {
   foreignKey: 'LocationId'
 });
 Producer.belongsTo(Location)
+
+DailyReport.hasMany(Payments,{
+  foreignKey: {
+    name: 'DailyReportId',
+  allowNull: true}
+});
+Payments.belongsTo(DailyReport)
+
+Location.hasMany(DailyReport,{
+  foreignKey: {
+    name: 'LocationId',
+  }
+});
+DailyReport.belongsTo(Location)
 
 Location.hasMany(Payments, {
   foreignKey: 'LocationId'
@@ -115,6 +130,8 @@ Users.hasOne(Producer, {
 });
 Producer.belongsTo(Users)
 
+
+
 Users.hasOne(Manager, {
   foreignKey: 'UserId'
 });
@@ -130,3 +147,19 @@ module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
    sequelize,    // para importart la conexión { conn } = require('./db.js');
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

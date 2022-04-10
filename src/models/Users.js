@@ -21,6 +21,10 @@ const Users= (sequelize)=>{
     UserRole:{
     type:DataTypes.ENUM("Admin", "Manager", "Producer"),
     allowNull:false
+    },
+    deleted:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }   
 });
 };

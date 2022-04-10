@@ -1,15 +1,15 @@
 const { Router } = require('express');
 const {get} = require('../controlers/gett');
-const{idQuotes,modifyQuotes, getQuotes, addQuote, getStatus, producerQuotes, locationQuotes, clientQuotes,companyQuotes,dateQuotes, addQuoteStatus, getQuoteStatus} = require("../controlers/Quotes")
+const{idQuotes,modifyQuotes, getQuotes,undeleteQuote, addQuote, getStatus, producerQuotes, locationQuotes, clientQuotes,companyQuotes,dateQuotes, addQuoteStatus, getQuoteStatus, deleteQuote, getDeletedQuotes} = require("../controlers/Quotes")
 const{addCompany, addProducer,addDealer,getDealer,modifyProducer, addManager, modifyManager} = require("../controlers/adminControlers")
 const {login, users} = require("../controlers/login")
-const {getProducer, getProducerFilter, getManager} = require("../controlers/producer")
+const {getProducer, getProducerFilter, getManager, getProuducerUser} = require("../controlers/producer")
 const {getCompany} = require("../controlers/company")
-const {addPayment, getPayment, ClientPayment,  getDepositCashPayment, Deposit, dailyReport,getCashPayment, getUserPayment} = require("../controlers/payments")
-const {getClients, addClient,modifyClient} = require("../controlers/clients");
+const {addPayment, getPayment, ClientPayment,deletePayment,undeletePayment,  getDepositCashPayment, Deposit, dailyReport,getCashPayment, getUserPayment, getDeletedPayment} = require("../controlers/payments")
+const {getClients, addClient,modifyClient, deleteClient, undeleteClient, getDeletedClients} = require("../controlers/clients");
 const { getLocations, addLocations } = require('../controlers/location');
 const {getCategories,  addCategories} = require("../controlers/categories")
-
+const {addDailyReport, getDailyReports} = require("../controlers/dailyReport")
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
 const router = Router();
@@ -42,7 +42,7 @@ router.get('/getCashPayment', getCashPayment);
 router.get('/dailyReport', dailyReport);
 router.get('/getManager', getManager);
 router.post('/modifyManager', modifyManager);
-
+router.post('/addDailyReport', addDailyReport);
 router.post('/addManager', addManager);
 router.post('/login', login);
 router.post("/addquote", addQuote);
@@ -53,13 +53,22 @@ router.post("/addDealer", addDealer);
 router.post("/addClient", addClient);
 router.post("/addPayment", addPayment)
 router.post("/addClientPayment", ClientPayment)
+router.post("/deleteClient", deleteClient)
 router.get("/getpayments", getPayment), 
+router.get("/getDailyReports", getDailyReports), 
+router.post("/deleteQuote", deleteQuote),
+router.post("/undeleteQuote", undeleteQuote),
+router.post("/undeletePayment", undeletePayment),
+router.post("/undeleteClient", undeleteClient),
+router.get("/getDeletedClients", getDeletedClients), 
+router.get("/getDeletedPayment", getDeletedPayment),
+router.get("/getDeletedQuotes", getDeletedQuotes),
 
 
-
+router.get("/getProuducerUser", getProuducerUser), 
 router.get("/getlocations", getLocations), 
 router.post("/addlocation", addLocations), 
-
+router.post("/deletePayment", deletePayment),
 router.get("/getCategories", getCategories), 
 
 

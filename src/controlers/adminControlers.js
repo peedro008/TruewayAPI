@@ -182,7 +182,7 @@ const deletet = async(req,res)=>{
     
 }}
 
-console.log(Producer)
+
 const modifyProducer =async (req, res, next) => {
     let name= req.body.name
     let email= req.body.email

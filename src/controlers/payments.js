@@ -4,7 +4,7 @@ const { Op } = require('sequelize');
 ;
 
 const addPayment = async (req,res)=>{
-    let { ClientId, LocationId, amount, method,type, creditCardFee, UserId} = req.body
+    let { ClientId, LocationId, amount, method,type, creditCardFee, UserId, PIPvalue, NSDvalue, MVRvalue} = req.body
     try{
         const pay = await Payments.create({
             ClientId: ClientId,
@@ -14,7 +14,10 @@ const addPayment = async (req,res)=>{
             type: type,
             UserId: UserId,
             creditCardFee:creditCardFee,
-            total:creditCardFee? `${parseFloat(amount)+parseFloat(creditCardFee)}`: `${parseFloat(amount)}`,
+            PIPvalue:PIPvalue,
+            NSDvalue: NSDvalue,
+            MVRvalue:MVRvalue
+           
             
         })
         res.status(200).json(pay)
@@ -35,7 +38,7 @@ const getUserPayment = async (req,res)=>{
                 {model:Users, where:{id: papa}},
                 {model:Location}
             ],
-            
+            where:{deleted: false}
       
        })
        payments.length?res.status(200).json(payments):
@@ -53,8 +56,26 @@ const getPayment = async (req,res)=>{
                 {model:Client},
                 {model:Users},
                 {model:Location}
-            ]
-      
+            ],
+            where:{deleted: false}
+       })
+       payments.length?res.status(200).json(payments):
+        res.status(404).send("no Payments");
+    }
+    catch(e){
+    console.log("Error in payments controller"+ e)
+}
+}
+const getDeletedPayment = async (req,res)=>{
+    try{
+        const payments = await Payments.findAll({
+            attributes: {exclude:[ "modifiedAt"]},  
+            include:[
+                {model:Client},
+                {model:Users},
+                {model:Location}
+            ],
+            where:{deleted: true}
        })
        payments.length?res.status(200).json(payments):
         res.status(404).send("no Payments");
@@ -65,17 +86,18 @@ const getPayment = async (req,res)=>{
 }
 
 const getCashPayment = async (req,res)=>{
-    const papa = req.query.UserId
+    const LocationId = req.query.LocationId
     try{
         const payments = await Payments.findAll({
             attributes: {exclude:[ "modifiedAt"]},  
             where:{deposited: false},
             include:[
                 {model:Client},
-                {model:Users,
-                    where:{id: papa}},
+                {model:Users},
                 {model:Location}
-            ]
+            ],
+            where:{deleted: false,
+                LocationId:LocationId }
       
        })
        payments.length?res.status(200).json(payments):
@@ -91,6 +113,7 @@ const getDepositCashPayment = async (req,res)=>{
         const payments = await Payments.findAll({
             attributes: {exclude:[ "modifiedAt"]},  
             where:{
+                deleted: false,
                 deposited: false,
                 UserId:UserId,
                 method: "Cash"},
@@ -112,6 +135,7 @@ const dailyReport=async(req,res)=>{
     
     let date = new Date().toJSON();
     let ated = date.substring(0,10)
+    let LocationId = req.query.LocationId
     try{
         let PaymentsDB=await Payments.findAll({
             attributes: {exclude:["createdAt", "modifiedAt"]},  
@@ -122,6 +146,8 @@ const dailyReport=async(req,res)=>{
         ],
         where:{
             date:ated,
+            LocationId:LocationId,
+            DailyReportId:null
             
         }
         
@@ -134,17 +160,21 @@ const dailyReport=async(req,res)=>{
         res.status(404).send("no Payments");
     }
     catch(e){
-    console.log("Error in Payments controller"+ e)
+    console.log("Error in GenerateDailyReport controller"+ e)
 }
 }
 
 const ClientPayment =  (req, res) => {
-    let { LocationId, amount, method,type, creditCardFee, UserId,  name, email, phone} = req.body
+    let { LocationId, amount, method,type, creditCardFee, UserId,  name, email, phone, notes} = req.body
+    let neww = req.body.new
+    
     try{
         const client =  Client.create({
             name: name,
             email: email,
-            tel: phone
+            tel: phone,
+            new:neww,
+            notes:notes
         })
 
         .then(Client=>{
@@ -156,7 +186,7 @@ const ClientPayment =  (req, res) => {
                 type: type,
                 UserId: UserId,
                 creditCardFee:creditCardFee&&creditCardFee,
-                total:creditCardFee? `${parseFloat(amount)+parseFloat(creditCardFee)}`: `${parseFloat(amount)}`,
+                
                 
             })
         })
@@ -198,6 +228,28 @@ const Deposit=async(req, res)=>{
 
 }
 
+const deletePayment = async (req,res)=>{
+        let PaymentId= req.body.PaymentId
+    try{
+        const deleted = await Payments.update({deleted:true},
+            {where:{id:PaymentId }})
+       res.status(200).json(deleted)
+    }
+    catch(e){
+    console.log("Error in deletePayment controller"+ e)
+}
+}
+const undeletePayment = async (req,res)=>{
+    let PaymentId= req.body.PaymentId
+try{
+    const deleted = await Payments.update({deleted:false},
+        {where:{id:PaymentId }})
+   res.status(200).json(deleted)
+}
+catch(e){
+console.log("Error in deletePayment controller"+ e)
+}
+}
     
 
-module.exports={addPayment,getUserPayment , getPayment, ClientPayment, getDepositCashPayment,Deposit, dailyReport,getCashPayment}
+module.exports={getDeletedPayment,undeletePayment,addPayment,getUserPayment , getPayment, deletePayment,ClientPayment, getDepositCashPayment,Deposit, dailyReport,getCashPayment}

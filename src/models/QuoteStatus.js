@@ -24,6 +24,10 @@ const QuoteStatus= (sequelize)=>{
             
             defaultValue: NOW,
         },
+        deleted:{
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        }
  
 });
 };

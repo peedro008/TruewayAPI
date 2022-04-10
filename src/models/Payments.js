@@ -27,7 +27,10 @@ const Payments= (sequelize)=>{
         type:DataTypes.INTEGER,
         allowNull:false
     },
-    
+    deleted:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
 
     amount:{
         type:DataTypes.STRING,
@@ -47,9 +50,19 @@ const Payments= (sequelize)=>{
         type:DataTypes.STRING,
         defaultValue: null
     },
-    total:{
-        type:DataTypes.STRING
-    }
+    NSDvalue:{
+        type: DataTypes.STRING
+    },
+  
+    PIPvalue:{
+        type: DataTypes.STRING
+        
+    },
+ 
+    MVRvalue:{
+        type: DataTypes.STRING,
+    },
+
   
 
 });

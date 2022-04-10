@@ -16,13 +16,47 @@ const getQuotes=async(req,res)=>{
             {model:Company},
             {model:Users},
             {model:QuoteStatus,
-                order: [['date', 'ASC'], [QuoteStatus, 'id', 'ASC' ]]},
+                order: [['date', 'ASC'], [QuoteStatus, 'id', 'ASC' ]],
+                
+                include:[Users]},
             {model:Dealer},
             {model:Location},
             {model:Category},
            
         ],
-        order: [['date', 'ASC'], [QuoteStatus, 'id', 'ASC' ]]
+        order: [['date', 'ASC'], [QuoteStatus, 'id', 'ASC' ]],
+        where:{
+            deleted:false
+        }
+       })
+        QuotesDB.length?res.status(200).json(QuotesDB):
+        res.status(404).send("no Quotes");
+    }
+    catch(e){
+    console.log("Error in Quote controller"+ e)
+}
+}
+const getDeletedQuotes=async(req,res)=>{
+    try{
+        let QuotesDB=await Quote.findAll({
+            attributes: {exclude:["createdAt", "modifiedAt"]},  
+        include:[
+            {model:Client},
+            {model:Company},
+            {model:Users},
+            {model:QuoteStatus,
+                order: [['date', 'ASC'], [QuoteStatus, 'id', 'ASC' ]],
+                
+                include:[Users]},
+            {model:Dealer},
+            {model:Location},
+            {model:Category},
+           
+        ],
+        order: [['date', 'ASC'], [QuoteStatus, 'id', 'ASC' ]],
+        where:{
+            deleted:true
+        }
        })
         QuotesDB.length?res.status(200).json(QuotesDB):
         res.status(404).send("no Quotes");
@@ -45,11 +79,12 @@ const addQuote = async(req,res)=>{
     let UserId= req.body.UserId
     let down = req.body.down
     let dealer= req.body.dealer
-    let Status= req.body.status
+    let bound= req.body.Bound
     let monthlyPayment= req.body.monthlyPayment
-  
+    let neww= req.body.new
     let NSDvalue= req.body.NSDvalue
-  
+    let TotalPremium= req.body.TotalPremium
+    let ClientNotes = req.body.notes
     let PIPvalue= req.body.PIPvalue
     
 
@@ -64,7 +99,9 @@ const addQuote = async(req,res)=>{
         await Client.create({
             name: clientName,
             email: clientEmail,
-            tel: Tel
+            tel: Tel,
+            new:neww,
+            notes:ClientNotes
             })
         .then(Client=>
             Quote.create({
@@ -77,7 +114,7 @@ const addQuote = async(req,res)=>{
                 dealer: dealer,
                 dealerId: dealerId,
                 monthlyPayment: monthlyPayment,
-                
+                totalPremium:TotalPremium,
                 NSDvalue: NSDvalue,
                
                 PIPvalue: PIPvalue,
@@ -88,7 +125,7 @@ const addQuote = async(req,res)=>{
             .then(Quote=>{
                 QuoteStatus.create({
                     note: notes,
-                    Status: "Quoted",
+                    Status: bound? "Sold" : "Quoted",
                     QuoteId: Quote.id,
                     UserId: UserId
                 })
@@ -110,7 +147,7 @@ const addQuote = async(req,res)=>{
             dealer: dealer,
             dealerId: dealerId,
             monthlyPayment: monthlyPayment,
-           
+            totalPremium:TotalPremium,
             NSDvalue: NSDvalue,
             
             PIPvalue: PIPvalue,
@@ -121,7 +158,7 @@ const addQuote = async(req,res)=>{
         .then(Quote=>{
             QuoteStatus.create({
                 note: notes,
-                Status: "Quoted",
+                Status: bound? "Sold" : "Quoted",
                 QuoteId: Quote.id,
                 UserId: UserId
             })
@@ -154,7 +191,8 @@ const locationQuotes=async(req,res)=>{
          
         ],
         
-        where:{location: papa}
+        where:{location: papa,
+               deleted:true}
         
         
     })
@@ -208,6 +246,9 @@ const producerQuotes=async(req,res)=>{
         
         
         
+        where:{
+            deleted:false
+        }
         
     })
         
@@ -235,6 +276,9 @@ const companyQuotes=async(req,res)=>{
         
         
         
+        where:{
+            deleted:false
+        }
         
     })
         
@@ -265,6 +309,9 @@ const clientQuotes=async(req,res)=>{
         ],
         
         
+        where:{
+            deleted:false
+        }
         
         
     })
@@ -290,11 +337,12 @@ const dateQuotes=async(req,res)=>{
             
         ],
         where:{
-            date:papa
+            date:papa,
+            deleted:false
         }
         
         
-        
+    
     })
         
   
@@ -349,6 +397,9 @@ const getStatus= async(req,res)=>{
         ],
        
         
+        where:{
+            deleted:false
+        }
         
         
     })
@@ -369,13 +420,15 @@ const idQuotes=async(req,res)=>{
         let QuotesDB=await Quote.findAll({
             attributes: {exclude:["createdAt", "modifiedAt"]},  
         where:{
-            id:ID
+            id:ID,
+            deleted:false
         },
         include:[
             {model:Client},
             {model:Company},
             {model:Users},
-            {model:QuoteStatus},
+            {model:QuoteStatus,
+            include:[Users]},
             {model:Location}
             
 
@@ -441,7 +494,32 @@ const modifyQuotes=async(req, res)=>{
 
 
 }
-
+const deleteQuote = async (req,res)=>{
+    let QuoteId= req.body.QuoteId
+try{
+    const deleted = await Quote.update({deleted:true},
+        {where:{id:QuoteId }})
+    const statusDeleted = await QuoteStatus.update({deleted:true},
+        {where:{QuoteId:QuoteId }})
+   res.status(200).json(deleted, statusDeleted)
+}
+catch(e){
+console.log("Error in deleteQuote controller"+ e)
+}
+}
+const undeleteQuote = async (req,res)=>{
+    let QuoteId= req.body.QuoteId
+try{
+    const deleted = await Quote.update({deleted:false},
+        {where:{id:QuoteId }})
+    const statusDeleted = await QuoteStatus.update({deleted:false},
+        {where:{QuoteId:QuoteId }})
+   res.status(200).json(deleted, statusDeleted)
+}
+catch(e){
+console.log("Error in deleteQuote controller"+ e)
+}
+}
 
 module.exports={
     getQuotes,
@@ -455,4 +533,7 @@ module.exports={
     dateQuotes,
     idQuotes,
     modifyQuotes,
-    getStatus}
+    getStatus,
+    deleteQuote,
+    undeleteQuote,
+    getDeletedQuotes}

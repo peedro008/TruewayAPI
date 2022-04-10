@@ -21,6 +21,35 @@ const getProducerFilter=async(req,res)=>{
     console.log("Error in Quote controller"+ e)
 }
 }
+const getProuducerUser=async(req,res)=>{
+    let UserId = req.query.UserId
+
+
+      try{
+          
+        let QuotesDB=await Producer.findAll({
+            attributes: {exclude:["createdAt", "modifiedAt"]},  
+    
+        where:{ UserId: UserId}
+                
+       })
+        QuotesDB.length?res.status(200).json(QuotesDB):
+
+
+         QuotesDB=await Manager.findAll({
+            attributes: {exclude:["createdAt", "modifiedAt"]},  
+    
+        where:{ UserId: UserId}
+                
+       })
+        QuotesDB.length?res.status(200).json(QuotesDB):
+        res.status(404).send("404")
+        
+    }
+    catch(e){
+    console.log("Error in Quote controller"+ e)
+}
+}
 const getProducer=async(req,res)=>{
     
 
@@ -88,5 +117,7 @@ const getManager=async(req,res)=>{
 }
 module.exports={
     getProducer,
+    getProuducerUser,
+
     getProducerFilter,
     getManager}
