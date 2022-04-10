@@ -1,6 +1,6 @@
 const server = require('./src/app.js');
 const { sequelize } = require('./src/db')
-//  const{ admin , Manager, Producer}=require("./src/data/users")
+ const{ admin , Manager, Producer}=require("./src/data/users")
 // // const{ Pe}=require("./src/data/producer")
 //  const{ createLocations}=require("./src/data/location")
 //  const{Health, Auto, Comercial, Home}=require("./src/data/categories")
@@ -9,13 +9,13 @@ const { sequelize } = require('./src/db')
 // // const{createClient}=require("./src/data/clients")
 
 // Syncing all the models at once.
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
   server.listen(8080, async()=>{
    
     try{
      
-       Promise.all([admin()])
-        .then(res =>console.log("datos cargados!"))      
+      //  Promise.all([admin()])
+      //   .then(res =>console.log("datos cargados!"))      
       
        console.log('%s listening at 4000'); 
       
