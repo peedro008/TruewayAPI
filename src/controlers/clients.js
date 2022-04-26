@@ -1,10 +1,17 @@
-const {Client} =require("../db")
+const {Client, Company} =require("../db")
 
 const getClients = async (req,res)=>{
     try{
         const Clients = await Client.findAll({
             attributes: {exclude:["createdAt", "modifiedAt"]},  
-            where:{deleted:false}
+            where:{deleted:false},
+            include:[
+                {model:Company},
+           
+             
+                
+                
+            ],
       
        })
        Clients.length?res.status(200).json(Clients):
@@ -36,7 +43,8 @@ const addClient = async (req,res)=>{
     let notes = req.body.notes
     let address = req.body.address
     let dateOfBirth= req.body.dateOfBirth
-
+    let CompanyId= req.body.CompanyId
+    
     try{
         const Clientt = await Client.create({
             name:name,
@@ -45,7 +53,8 @@ const addClient = async (req,res)=>{
             new:neww,
             notes:notes,
             address:address,
-            dateOfBirth:dateOfBirth
+            dateOfBirth:dateOfBirth,
+            CompanyId:CompanyId
          
       
        })
@@ -62,8 +71,9 @@ const modifyClient = async (req,res)=>{
     let neww = req.body.new
     let ClientId= req.body.ClientId
     let notes = req.body.notes
+    let CompanyId= req.body.CompanyId
     try{
-        const payments = await Client.update({name:name,Tel:Tel,email:email, new:neww, notes:notes},
+        const payments = await Client.update({name:name,Tel:Tel,email:email, new:neww, notes:notes, CompanyId:CompanyId},
             {where:{id:ClientId }})
        res.status(200).json(payments)
     }

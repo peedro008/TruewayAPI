@@ -6,7 +6,7 @@ const path = require('path');
 
 const { Sequelize } = require('sequelize');
 
-//  const sequelize = new Sequelize('postgres://postgres:pesanmene@localhost:5432/test', {logging: false,});
+  //const sequelize = new Sequelize('postgres://postgres:pesanmene@localhost:5432/test', {logging: false,});
 
 const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
   host: "aacao4lyn1y73d.cviwhti8ghss.us-east-1.rds.amazonaws.com",
@@ -77,6 +77,11 @@ Location.hasMany(Payments, {
   foreignKey: 'LocationId'
 });
 Payments.belongsTo(Location)
+
+Company.hasMany(Client,{
+  foreignKey: "CompanyId"});
+Client.belongsTo(Company);
+
 
 Client.hasMany(Payments,{
   foreignKey: "ClientId"});

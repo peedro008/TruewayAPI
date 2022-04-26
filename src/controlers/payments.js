@@ -2,7 +2,41 @@ const {  Producer, Payments, Client, Users, Location } = require("../db")
 
 const { Op } = require('sequelize');
 ;
+const ClientPayment =  (req, res) => {
+    let { LocationId, amount, method,type, creditCardFee, UserId,  name, email, phone, notes , PIPvalue, NSDvalue, MVRvalue} = req.body
+    let neww = req.body.new
 
+    try{
+        const client =  Client.create({
+            name: name,
+            email: email,
+            tel: phone,
+            new:neww,
+            notes:notes
+        })
+
+        .then(Client=>{
+            const pay =  Payments.create({
+                ClientId: Client.id,
+                LocationId: LocationId,
+                amount: amount,
+                method: method,
+                type: type,
+                UserId: UserId,
+                creditCardFee:creditCardFee&&creditCardFee,
+                PIPvalue:PIPvalue==""?"0":PIPvalue,
+                NSDvalue: NSDvalue==""?"0":NSDvalue,
+                MVRvalue:MVRvalue==""?"0":MVRvalue
+                
+            })
+        })
+        client?res.status(200).json(client):
+        res.status(404).send("Payment error");
+    }
+    catch(e){
+        console.log("Error in payments controller"+ e)
+    }
+}
 const addPayment = async (req,res)=>{
     let { ClientId, LocationId, amount, method,type, creditCardFee, UserId, PIPvalue, NSDvalue, MVRvalue} = req.body
     try{
@@ -14,9 +48,9 @@ const addPayment = async (req,res)=>{
             type: type,
             UserId: UserId,
             creditCardFee:creditCardFee,
-            PIPvalue:PIPvalue,
-            NSDvalue: NSDvalue,
-            MVRvalue:MVRvalue
+            PIPvalue:PIPvalue==""?"0":PIPvalue,
+            NSDvalue: NSDvalue==""?"0":NSDvalue,
+            MVRvalue:MVRvalue==""?"0":MVRvalue
            
             
         })
@@ -164,39 +198,7 @@ const dailyReport=async(req,res)=>{
 }
 }
 
-const ClientPayment =  (req, res) => {
-    let { LocationId, amount, method,type, creditCardFee, UserId,  name, email, phone, notes} = req.body
-    let neww = req.body.new
-    
-    try{
-        const client =  Client.create({
-            name: name,
-            email: email,
-            tel: phone,
-            new:neww,
-            notes:notes
-        })
 
-        .then(Client=>{
-            const pay =  Payments.create({
-                ClientId: Client.id,
-                LocationId: LocationId,
-                amount: amount,
-                method: method,
-                type: type,
-                UserId: UserId,
-                creditCardFee:creditCardFee&&creditCardFee,
-                
-                
-            })
-        })
-        client?res.status(200).json(client):
-        res.status(404).send("Payment error");
-    }
-    catch(e){
-        console.log("Error in payments controller"+ e)
-    }
-}
 const Deposit=async(req, res)=>{
     let id= req.body.id
 

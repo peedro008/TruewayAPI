@@ -29,6 +29,7 @@ const Client= (sequelize)=>{
     dateOfBirth:{
         type: DataTypes.STRING,
     },
+   
     
 
    

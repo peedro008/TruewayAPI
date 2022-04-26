@@ -14,7 +14,7 @@ const QuoteStatus= (sequelize)=>{
             type:DataTypes.TEXT,
         },
         Status:{
-            type:DataTypes.ENUM("Quoted", "Cancelled", "Renew down", "Sold", "Re-install" ),
+            type:DataTypes.ENUM("Quoted", "Cancelled", "Renew down", "Sold", "Re-install", "-" ),
             default: "Quoted",
             
                       
