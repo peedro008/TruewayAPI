@@ -26,6 +26,10 @@ const {
   modifyProducer,
   addManager,
   modifyManager,
+  deleteManager,
+  undeleteManager,
+  getDeletedManager,
+  getDeletedProducer,
 } = require("../controlers/adminControlers");
 const { login, users } = require("../controlers/login");
 const {
@@ -33,6 +37,9 @@ const {
   getProducerFilter,
   getManager,
   getProuducerUser,
+  getOnlyProducer,
+  deleteProducer,
+  undeleteProducer,
 } = require("../controlers/producer");
 const { getCompany } = require("../controlers/company");
 const {
@@ -65,45 +72,45 @@ const {
 
 const router = Router();
 
-router.get("/", get);
-router.get("/Quotes", getQuotes);
-router.get("/getStatus", getStatus);
-router.get("/getUserPayment", getUserPayment);
-router.get("/clients", getClients);
-router.post("/modifyClient", modifyClient);
-router.post("/modifyProducer", modifyProducer);
-router.get("/users", users);
-router.post("/modifyQuote", modifyQuotes);
-router.post("/addCategories", addCategories);
-router.post("/addQuoteStatus", addQuoteStatus);
-router.get("/getQuoteStatus", getQuoteStatus);
-router.get("/producerQuotes", producerQuotes);
-router.get("/locationQuotes", locationQuotes);
-router.get("/clientQuotes", clientQuotes);
-router.get("/companyQuotes", companyQuotes);
-router.get("/dateQuotes", dateQuotes);
-router.get("/getDealer", getDealer);
-router.get("/idquotes", idQuotes);
-router.get("/getProducer", getProducer);
-router.get("/getProducerFilter", getProducerFilter);
-router.get("/getCompany", getCompany);
-router.get("/getCashPayment", getCashPayment);
-router.get("/dailyReport", dailyReport);
-router.get("/getManager", getManager);
-router.post("/modifyManager", modifyManager);
-router.post("/addDailyReport", addDailyReport);
-router.post("/addManager", addManager);
-router.post("/login", login);
-router.post("/addquote", addQuote);
-router.post("/addcompany", addCompany);
-router.post("/addproducer", addProducer);
-router.post("/Deposit", Deposit);
-router.post("/addDealer", addDealer);
-router.post("/addClient", addClient);
-router.post("/addPayment", addPayment);
-router.post("/addClientPayment", ClientPayment);
-router.post("/deleteClient", deleteClient);
-router.get("/getpayments", getPayment),
+  router.get("/", get);
+  router.get("/Quotes", getQuotes);
+  router.get("/getStatus", getStatus);
+  router.get("/getUserPayment", getUserPayment);
+  router.get("/clients", getClients);
+  router.post("/modifyClient", modifyClient);
+  router.post("/modifyProducer", modifyProducer);
+  router.get("/users", users);
+  router.post("/modifyQuote", modifyQuotes);
+  router.post("/addCategories", addCategories);
+  router.post("/addQuoteStatus", addQuoteStatus);
+  router.get("/getQuoteStatus", getQuoteStatus);
+  router.get("/producerQuotes", producerQuotes);
+  router.get("/locationQuotes", locationQuotes);
+  router.get("/clientQuotes", clientQuotes);
+  router.get("/companyQuotes", companyQuotes);
+  router.get("/dateQuotes", dateQuotes);
+  router.get("/getDealer", getDealer);
+  router.get("/idquotes", idQuotes);
+  router.get("/getProducer", getProducer);
+  router.get("/getProducerFilter", getProducerFilter);
+  router.get("/getCompany", getCompany);
+  router.get("/getCashPayment", getCashPayment);
+  router.get("/dailyReport", dailyReport);
+  router.get("/getManager", getManager);
+  router.post("/modifyManager", modifyManager);
+  router.post("/addDailyReport", addDailyReport);
+  router.post("/addManager", addManager);
+  router.post("/login", login);
+  router.post("/addquote", addQuote);
+  router.post("/addcompany", addCompany);
+  router.post("/addproducer", addProducer);
+  router.post("/Deposit", Deposit);
+  router.post("/addDealer", addDealer);
+  router.post("/addClient", addClient);
+  router.post("/addPayment", addPayment);
+  router.post("/addClientPayment", ClientPayment);
+  router.post("/deleteClient", deleteClient);
+  router.get("/getpayments", getPayment),
   router.get("/getDailyReports", getDailyReports),
   router.post("/deleteQuote", deleteQuote),
   router.post("/addNotes", addNotes),
@@ -118,4 +125,11 @@ router.get("/getpayments", getPayment),
   router.post("/addlocation", addLocations),
   router.post("/deletePayment", deletePayment),
   router.get("/getCategories", getCategories),
+  router.get("/getOnlyProducer", getOnlyProducer),
+  router.post("/deleteManager", deleteManager),
+  router.post("/undeleteManager", undeleteManager),
+  router.post("/deleteProducer", deleteProducer),
+  router.post("/undeleteProducer", undeleteProducer),
+  router.get("/getDeletedManager", getDeletedManager),
+  router.get("/getDeletedProducer", getDeletedProducer),
   (module.exports = router);

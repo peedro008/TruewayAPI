@@ -47,7 +47,7 @@ const addPayment = async (req,res)=>{
             method: method,
             type: type,
             UserId: UserId,
-            creditCardFee:creditCardFee,
+            creditCardFee:creditCardFee==""?"0":creditCardFee,
             PIPvalue:PIPvalue==""?"0":PIPvalue,
             NSDvalue: NSDvalue==""?"0":NSDvalue,
             MVRvalue:MVRvalue==""?"0":MVRvalue

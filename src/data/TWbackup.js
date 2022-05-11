@@ -223,7 +223,7 @@ const Pe = function () {
     name: "Dayana Olivera",
     email: "dayana@truewayins.com",
     phone: "5612236595",
-    address: "3751 s congress ave ",
+        deleted: false,
   });
   Manager.create({
     UserId: 9,
@@ -231,74 +231,57 @@ const Pe = function () {
     name: "Daniela ",
     email: "drodriguez@truewayins.com",
     phone: "5615772396",
-    address: "3095 S Military Trail Suit 12 Lake Worth fl 33463",
+        deleted: false,
   });
   Producer.create({
-    
+    deleted: false,
     UserId: 2,
     LocationId: 2,
     name: "Antuanet Cruz",
     email: "antuanet@truewayins.com",
     phone: "5612236595",
-    address: "3751 s congress ave ",
-    updatedAt: "2022-04-13T14:05:39.286Z",
-    
-    },)
-   Producer.create( {
-    
+        updatedAt: "2022-04-13T14:05:39.286Z",
+  });
+  Producer.create({
+    deleted: false,
     UserId: 4,
     LocationId: 2,
     name: "Yaneymi Sotuyo",
     email: "yaneymi@truewayins.com",
     phone: "5612236595",
-    address: "3751 s congress ave ",
-    updatedAt: "2022-04-13T14:07:52.860Z",
-    
-    },)
-   Producer.create( {
-    
+        updatedAt: "2022-04-13T14:07:52.860Z",
+  });
+  Producer.create({
+    deleted: false,
     UserId: 5,
     LocationId: 1,
     name: "Zulien Rabell",
     email: "zulien@truewayins.com",
     phone: "5613185540",
-    address: "3095 s military ste 12",
-    updatedAt: "2022-04-13T14:08:44.364Z",
-    
-    },)
-   Producer.create( {
-    
+        updatedAt: "2022-04-13T14:08:44.364Z",
+  });
+  Producer.create({
+    deleted: false,
     UserId: 6,
     LocationId: 1,
     name: "Erika Rivas",
     email: "erika@truewayins.com",
     phone: "5613185540",
-    address: "3095 s military trail ste 12 ",
-    updatedAt: "2022-04-13T14:09:27.094Z",
-    
-    },)
-   Producer.create( {
-    
+        updatedAt: "2022-04-13T14:09:27.094Z",
+  });
+  Producer.create({
+    deleted: false,
     UserId: 7,
     LocationId: 2,
     name: "Ovi Perez",
     email: "ovi@truewayins.com",
     phone: "5612236595",
-    address: "3751 s congress ave",
-    updatedAt: "2022-04-13T14:10:52.998Z",
-    
-    },)
-   Producer.create( {
-    
-    UserId: 9,
-    LocationId: 1,
-    name: "Daniela ",
-    email: "drodriguez@truewayins.com",
-    phone: "5615772396",
-    address: "3095 S Military Trail Suit 12 Lake Worth fl 33463",
-    updatedAt: "2022-04-14T14:30:25.385Z",
-    
-    })
+        updatedAt: "2022-04-13T14:10:52.998Z",
+  });
+
+
+
+  
 };
 
 module.exports = { Pe };
