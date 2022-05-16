@@ -4,6 +4,10 @@ const { DataTypes, NOW } = require('sequelize');
 
 const Payments= (sequelize)=>{
     sequelize.define('Payments', {
+    DepositId:{
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     LocationId:{
         type: DataTypes.INTEGER,
         allowNull: false

@@ -1,12 +1,14 @@
+require("dotenv").config();
+const { compare } = require("bcryptjs");
+const fs = require("fs");
+const path = require("path");
 
-require('dotenv').config();
-const { compare } = require('bcryptjs');
-const fs = require('fs');
-const path = require('path');
+const { Sequelize } = require("sequelize");
 
-const { Sequelize } = require('sequelize');
-
-  // const sequelize = new Sequelize('postgres://postgres:pesanmene@localhost:5432/test', {logging: false,});
+// const sequelize = new Sequelize(
+//   "postgres://postgres:pesanmene@localhost:5432/test",
+//   { logging: false }
+// );
 
 const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
   host: "aacao4lyn1y73d.cviwhti8ghss.us-east-1.rds.amazonaws.com",
@@ -15,105 +17,147 @@ const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });
 
-
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
 
-fs.readdirSync(path.join(__dirname, '/models'))
-  .filter((file) => (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js'))
+fs.readdirSync(path.join(__dirname, "/models"))
+  .filter(
+    (file) =>
+      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
+  )
   .forEach((file) => {
-    modelDefiners.push(require(path.join(__dirname, '/models', file)));
+    modelDefiners.push(require(path.join(__dirname, "/models", file)));
   });
- // Injectamos la conexion (sequelize) a todos los modelos
-modelDefiners.forEach(model => model(sequelize));
+// Injectamos la conexion (sequelize) a todos los modelos
+modelDefiners.forEach((model) => model(sequelize));
 
 // Capitalizamos los nombres de los modelos ie: product => Product
 let entries = Object.entries(sequelize.models);
-let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
+let capsEntries = entries.map((entry) => [
+  entry[0][0].toUpperCase() + entry[0].slice(1),
+  entry[1],
+]);
 sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Client,Company,Producer,Quote,  Users, Payments, Location, Category, QuoteStatus, Dealer, Manager, DailyReport  } = sequelize.models;
+const {
+  Client,
+  Company,
+  Producer,
+  Quote,
+  Users,
+  Payments,
+  Location,
+  Category,
+  QuoteStatus,
+  Dealer,
+  Manager,
+  DailyReport,
+  Deposit,
+} = sequelize.models;
 
+Users.hasMany(Deposit, {
+  foreignKey: {
+    name: "UserId",
+    allowNull: false,
+  },
+});
+Deposit.belongsTo(Users);
 
+Deposit.hasMany(Payments, {
+  foreignKey: {
+    name: "DepositId",
+    allowNull: true,
+  },
+});
+Payments.belongsTo(Deposit);
+
+Location.hasMany(Deposit, {
+  foreignKey: {
+    name: "LocationId",
+  },
+});
+Deposit.belongsTo(Location);
 
 Category.hasMany(Company, {
-  foreignKey: 'CategoryId'
+  foreignKey: "CategoryId",
 });
-Company.belongsTo(Category)
+Company.belongsTo(Category);
 
 Category.hasMany(Quote, {
-  foreignKey: 'CategoryId'
+  foreignKey: "CategoryId",
 });
-Quote.belongsTo(Category)
+Quote.belongsTo(Category);
 
 Location.hasMany(Quote, {
-  foreignKey: 'LocationId'
+  foreignKey: "LocationId",
 });
-Quote.belongsTo(Location)
+Quote.belongsTo(Location);
 
 Location.hasMany(Producer, {
-  foreignKey: 'LocationId'
+  foreignKey: "LocationId",
 });
-Producer.belongsTo(Location)
+Producer.belongsTo(Location);
 
-DailyReport.hasMany(Payments,{
+DailyReport.hasMany(Payments, {
   foreignKey: {
-    name: 'DailyReportId',
-  allowNull: true}
+    name: "DailyReportId",
+    allowNull: true,
+  },
 });
-Payments.belongsTo(DailyReport)
+Payments.belongsTo(DailyReport);
 
-Location.hasMany(DailyReport,{
+Location.hasMany(DailyReport, {
   foreignKey: {
-    name: 'LocationId',
-  }
+    name: "LocationId",
+  },
 });
-DailyReport.belongsTo(Location)
+DailyReport.belongsTo(Location);
 
 Location.hasMany(Payments, {
-  foreignKey: 'LocationId'
+  foreignKey: "LocationId",
 });
-Payments.belongsTo(Location)
+Payments.belongsTo(Location);
 
-Company.hasMany(Client,{
-  foreignKey: "CompanyId"});
+Company.hasMany(Client, {
+  foreignKey: "CompanyId",
+});
 Client.belongsTo(Company);
 
-
-Client.hasMany(Payments,{
-  foreignKey: "ClientId"});
+Client.hasMany(Payments, {
+  foreignKey: "ClientId",
+});
 Payments.belongsTo(Client);
 
 Users.hasMany(Payments, {
-  foreignKey: 'UserId'
+  foreignKey: "UserId",
 });
 Payments.belongsTo(Users);
 
 Users.hasMany(Quote, {
-  foreignKey: 'UserId'
+  foreignKey: "UserId",
 });
 Quote.belongsTo(Users);
 
 Client.hasMany(Payments, {
-  foreignKey: 'ClientId'
+  foreignKey: "ClientId",
 });
-Payments.belongsTo(Client)
+Payments.belongsTo(Client);
 
 Client.hasMany(Quote, {
-  foreignKey: 'ClientId'
+  foreignKey: "ClientId",
 });
-Quote.belongsTo(Client)
+Quote.belongsTo(Client);
 
 Company.hasMany(Quote, {
-  foreignKey: 'CompanyId'
+  foreignKey: "CompanyId",
 });
 Quote.belongsTo(Company);
 
 Quote.hasMany(Payments, {
-  foreignKey: 'QuoteId'
+  foreignKey: "QuoteId",
 });
 Payments.belongsTo(Company);
 
@@ -121,50 +165,31 @@ Quote.hasMany(QuoteStatus);
 QuoteStatus.belongsTo(Quote);
 
 Users.hasMany(QuoteStatus, {
-  foreignKey: 'UserId'
+  foreignKey: "UserId",
 });
 QuoteStatus.belongsTo(Users);
 
 Dealer.hasMany(Quote, {
-  foreignKey: 'DealerId'
+  foreignKey: "DealerId",
 });
 Quote.belongsTo(Dealer);
 
 Users.hasOne(Producer, {
-  foreignKey: 'UserId'
+  foreignKey: "UserId",
 });
-Producer.belongsTo(Users)
-
-
+Producer.belongsTo(Users);
 
 Users.hasOne(Manager, {
-  foreignKey: 'UserId'
+  foreignKey: "UserId",
 });
-Manager.belongsTo(Users)
+Manager.belongsTo(Users);
 
 Location.hasMany(Manager, {
-  foreignKey: 'LocationId'
+  foreignKey: "LocationId",
 });
-Manager.belongsTo(Location)
-
+Manager.belongsTo(Location);
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
-   sequelize,    // para importart la conexión { conn } = require('./db.js');
+  sequelize, // para importart la conexión { conn } = require('./db.js');
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

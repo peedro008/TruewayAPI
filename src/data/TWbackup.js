@@ -258,7 +258,7 @@ const Pe = function () {
     name: "Zulien Rabell",
     email: "zulien@truewayins.com",
     phone: "5613185540",
-        updatedAt: "2022-04-13T14:08:44.364Z",
+    updatedAt: "2022-04-13T14:08:44.364Z",
   });
   Producer.create({
     deleted: false,

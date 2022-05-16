@@ -7,7 +7,7 @@ const getProducerFilter = async (req, res) => {
   try {
     let QuotesDB = await Producer.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },
-
+      
       where: ID ? { id: ID } : { name: name },
     });
     QuotesDB.length

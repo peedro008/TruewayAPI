@@ -1,257 +1,275 @@
-const {  Producer, Payments, Client, Users, Location } = require("../db")  
+const { Producer, Payments, Client, Users, Location,Deposit } = require("../db");
 
-const { Op } = require('sequelize');
-;
-const ClientPayment =  (req, res) => {
-    let { LocationId, amount, method,type, creditCardFee, UserId,  name, email, phone, notes , PIPvalue, NSDvalue, MVRvalue} = req.body
-    let neww = req.body.new
+const { Op } = require("sequelize");
+const ClientPayment = (req, res) => {
+  let {
+    LocationId,
+    amount,
+    method,
+    type,
+    creditCardFee,
+    UserId,
+    name,
+    email,
+    phone,
+    notes,
+    PIPvalue,
+    NSDvalue,
+    MVRvalue,
+  } = req.body;
+  let neww = req.body.new;
 
-    try{
-        const client =  Client.create({
-            name: name,
-            email: email,
-            tel: phone,
-            new:neww,
-            notes:notes
-        })
-
-        .then(Client=>{
-            const pay =  Payments.create({
-                ClientId: Client.id,
-                LocationId: LocationId,
-                amount: amount,
-                method: method,
-                type: type,
-                UserId: UserId,
-                creditCardFee:creditCardFee&&creditCardFee,
-                PIPvalue:PIPvalue==""?"0":PIPvalue,
-                NSDvalue: NSDvalue==""?"0":NSDvalue,
-                MVRvalue:MVRvalue==""?"0":MVRvalue
-                
-            })
-        })
-        client?res.status(200).json(client):
-        res.status(404).send("Payment error");
-    }
-    catch(e){
-        console.log("Error in payments controller"+ e)
-    }
-}
-const addPayment = async (req,res)=>{
-    let { ClientId, LocationId, amount, method,type, creditCardFee, UserId, PIPvalue, NSDvalue, MVRvalue} = req.body
-    try{
-        const pay = await Payments.create({
-            ClientId: ClientId,
-            LocationId: LocationId,
-            amount: amount,
-            method: method,
-            type: type,
-            UserId: UserId,
-            creditCardFee:creditCardFee==""?"0":creditCardFee,
-            PIPvalue:PIPvalue==""?"0":PIPvalue,
-            NSDvalue: NSDvalue==""?"0":NSDvalue,
-            MVRvalue:MVRvalue==""?"0":MVRvalue
-           
-            
-        })
-        res.status(200).json(pay)
-    }
-    catch(e){
-        console.log("Error in addPayment controller "+ e)       
-        res.status(400).send("Error in addPayment controller")
-    }
-}
-
-const getUserPayment = async (req,res)=>{
-    let papa=req.query.UserId
-    try{
-        const payments = await Payments.findAll({
-            attributes: {exclude:[ "modifiedAt"]},  
-            include:[
-                {model:Client},
-                {model:Users, where:{id: papa}},
-                {model:Location}
-            ],
-            where:{deleted: false}
-      
-       })
-       payments.length?res.status(200).json(payments):
-        res.status(404).send("no Payments");
-    }
-    catch(e){
-    console.log("Error in payments controller"+ e)
-}
-}
-const getPayment = async (req,res)=>{
-    try{
-        const payments = await Payments.findAll({
-            attributes: {exclude:[ "modifiedAt"]},  
-            include:[
-                {model:Client},
-                {model:Users},
-                {model:Location}
-            ],
-            where:{deleted: false}
-       })
-       payments.length?res.status(200).json(payments):
-        res.status(404).send("no Payments");
-    }
-    catch(e){
-    console.log("Error in payments controller"+ e)
-}
-}
-const getDeletedPayment = async (req,res)=>{
-    try{
-        const payments = await Payments.findAll({
-            attributes: {exclude:[ "modifiedAt"]},  
-            include:[
-                {model:Client},
-                {model:Users},
-                {model:Location}
-            ],
-            where:{deleted: true}
-       })
-       payments.length?res.status(200).json(payments):
-        res.status(404).send("no Payments");
-    }
-    catch(e){
-    console.log("Error in payments controller"+ e)
-}
-}
-
-const getCashPayment = async (req,res)=>{
-    const LocationId = req.query.LocationId
-    try{
-        const payments = await Payments.findAll({
-            attributes: {exclude:[ "modifiedAt"]},  
-            where:{deposited: false},
-            include:[
-                {model:Client},
-                {model:Users},
-                {model:Location}
-            ],
-            where:{deleted: false,
-                LocationId:LocationId }
-      
-       })
-       payments.length?res.status(200).json(payments):
-        res.status(404).send("no Payments");
-    }
-    catch(e){
-    console.log("Error in payments controller"+ e)
-}
-}
-const getDepositCashPayment = async (req,res)=>{
-    const UserId = req.query.UserId
-    try{
-        const payments = await Payments.findAll({
-            attributes: {exclude:[ "modifiedAt"]},  
-            where:{
-                deleted: false,
-                deposited: false,
-                UserId:UserId,
-                method: "Cash"},
-            include:[
-                {model:Client},
-                {model:Users},
-                {model:Location}
-            ]
-      
-       })
-       payments.length?res.status(200).json(payments):
-        res.status(404).send("no Payments");
-    }
-    catch(e){
-    console.log("Error in payments controller"+ e)
-}
-}
-const dailyReport=async(req,res)=>{
-    
-    let date = new Date().toJSON();
-    let ated = date.substring(0,10)
-    let LocationId = req.query.LocationId
-    try{
-        let PaymentsDB=await Payments.findAll({
-            attributes: {exclude:["createdAt", "modifiedAt"]},  
-        include:[
-            {model:Client},
-            {model:Users},
-            {model:Location}
-        ],
-        where:{
-            date:ated,
-            LocationId:LocationId,
-            DailyReportId:null
-            
-        }
-        
-        
-        
+  try {
+    const client = Client.create({
+      name: name,
+      email: email,
+      tel: phone,
+      new: neww,
+      notes: notes,
     })
+    .then((Client) => {
+      const pay = Payments.create({
+        ClientId: Client.id,
+        LocationId: LocationId,
+        amount: amount,
+        method: method,
+        DepositId: null,
+        type: type,
+        UserId: UserId,
+        creditCardFee: creditCardFee && creditCardFee,
+        PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
+        NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+        MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+      });
+    });
+    client
+      ? res.status(200).json(client)
+      : res.status(404).send("Payment error");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+const addPayment = async (req, res) => {
+  let {
+    ClientId,
+    LocationId,
+    amount,
+    method,
+    type,
+    creditCardFee,
+    UserId,
+    PIPvalue,
+    NSDvalue,
+    MVRvalue,
+  } = req.body;
+  try {
+    const pay = await Payments.create({
+      ClientId: ClientId,
+      LocationId: LocationId,
+      amount: amount,
+      method: method,
+      type: type,
+      DepositId: null,
+      UserId: UserId,
+      creditCardFee: creditCardFee == "" ? "0" : creditCardFee,
+      PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
+      NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+      MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+    });
+    res.status(200).json(pay);
+  } catch (e) {
+    console.log("Error in addPayment controller " + e);
+    res.status(400).send("Error in addPayment controller");
+  }
+};
+
+const getUserPayment = async (req, res) => {
+  let papa = req.query.UserId;
+  try {
+    const payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [
+        { model: Client },
+        { model: Users, where: { id: papa } },
+        { model: Location },
+      ],
+      where: { deleted: false },
+    });
+    payments.length
+      ? res.status(200).json(payments)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+const getPayment = async (req, res) => {
+  try {
+    const payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [{ model: Client }, { model: Users }, { model: Location }],
+      where: { deleted: false },
+    });
+    payments.length
+      ? res.status(200).json(payments)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+const getDeletedPayment = async (req, res) => {
+  try {
+    const payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [{ model: Client }, { model: Users }, { model: Location }],
+      where: { deleted: true },
+    });
+    payments.length
+      ? res.status(200).json(payments)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+
+const getCashPayment = async (req, res) => {
+  const LocationId = req.query.LocationId;
+  try {
+    const payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+     
+      include: [{ model: Client }, { model: Users }, { model: Location }],
+      where: { deleted: false, LocationId: LocationId, deposited: false },
+    });
+    payments.length
+      ? res.status(200).json(payments)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+const getDepositCashPayment = async (req, res) => {
+  const UserId = req.query.UserId;
+  try {
+    const payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      where: {
+        deleted: false,
+        deposited: false,
+        UserId: UserId,
+        method: "Cash",
+      },
+      include: [{ model: Client }, { model: Users }, { model: Location }],
+    });
+    payments.length
+      ? res.status(200).json(payments)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+const dailyReport = async (req, res) => {
+  let date = new Date().toJSON();
+  let ated = date.substring(0, 10);
+  let LocationId = req.query.LocationId;
+  try {
+    let PaymentsDB = await Payments.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [{ model: Client }, { model: Users }, { model: Location }],
+      where: {
+        date: ated,
+        LocationId: LocationId,
+        DailyReportId: null,
+      },
+    });
+
+    PaymentsDB.length
+      ? res.status(200).json(PaymentsDB)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in GenerateDailyReport controller" + e);
+  }
+};
+const getDeposit = async (req, res) => {
+    try {
+      let deposit = await Deposit.findAll({
+        attributes: { exclude: ["modifiedAt"] },
+        include: [{ model: Payments }, { model: Users }, { model: Location }],
         
-  
-    PaymentsDB.length?res.status(200).json(PaymentsDB):
-        res.status(404).send("no Payments");
+      });
+      deposit.length
+        ? res.status(200).json(deposit)
+        : res.status(404).send("no Deposit");
+    } catch (e) {
+      console.log("Error in getDeposit controller" + e);
     }
-    catch(e){
-    console.log("Error in GenerateDailyReport controller"+ e)
-}
-}
+  };
+const addDeposit = async (req, res) => {
+  let id = req.body.id;
+  let LocationId = req.body.LocationId
+  let UserId = req.body.UserId
+  let note = req.body.note
+  let total = req.body.total
+  try {
+    let deposit = await Deposit.create({
+        note: note,
+        LocationId: LocationId,
+        UserId: UserId,
+        total:total
+    })
+    let pay = await Payments.update(
+      { deposited: true, DepositId: deposit.id },
+      {
+        where: {
+          LocationId: LocationId,
+          id: {
+            [Op.in]: id,
+          },
+        },
+      }
+    );
 
+    res.status(200).json({deposit, pay});
+  } catch (e) {
+    console.log("Error in deposit" + e);
+  }
+};
 
-const Deposit=async(req, res)=>{
-    let id= req.body.id
+const deletePayment = async (req, res) => {
+  let PaymentId = req.body.PaymentId;
+  try {
+    const deleted = await Payments.update(
+      { deleted: true },
+      { where: { id: PaymentId } }
+    );
+    res.status(200).json(deleted);
+  } catch (e) {
+    console.log("Error in deletePayment controller" + e);
+  }
+};
+const undeletePayment = async (req, res) => {
+  let PaymentId = req.body.PaymentId;
+  try {
+    const deleted = await Payments.update(
+      { deleted: false },
+      { where: { id: PaymentId } }
+    );
+    res.status(200).json(deleted);
+  } catch (e) {
+    console.log("Error in deletePayment controller" + e);
+  }
+};
 
-    
-    
-    try{
-      
-            let pay= await Payments.update({deposited: true}, {
-                where:{
-                    id:{
-                        [Op.in]: id  
-                    }     
-                 }
-            })
-          
-            res.status(200).json(pay)
-        }
-        
-    
-    catch(e){
-        console.log("Error in deposit"+ e)
-    }
-
-
-
-
-
-
-
-}
-
-const deletePayment = async (req,res)=>{
-        let PaymentId= req.body.PaymentId
-    try{
-        const deleted = await Payments.update({deleted:true},
-            {where:{id:PaymentId }})
-       res.status(200).json(deleted)
-    }
-    catch(e){
-    console.log("Error in deletePayment controller"+ e)
-}
-}
-const undeletePayment = async (req,res)=>{
-    let PaymentId= req.body.PaymentId
-try{
-    const deleted = await Payments.update({deleted:false},
-        {where:{id:PaymentId }})
-   res.status(200).json(deleted)
-}
-catch(e){
-console.log("Error in deletePayment controller"+ e)
-}
-}
-    
-
-module.exports={getDeletedPayment,undeletePayment,addPayment,getUserPayment , getPayment, deletePayment,ClientPayment, getDepositCashPayment,Deposit, dailyReport,getCashPayment}
+module.exports = {
+  getDeletedPayment,
+  undeletePayment,
+  addPayment,
+  getUserPayment,
+  getPayment,
+  deletePayment,
+  ClientPayment,
+  getDepositCashPayment,
+  addDeposit,
+  getDeposit,
+  dailyReport,
+  getCashPayment,
+};

@@ -49,11 +49,13 @@ const {
   deletePayment,
   undeletePayment,
   getDepositCashPayment,
-  Deposit,
+  
   dailyReport,
   getCashPayment,
   getUserPayment,
   getDeletedPayment,
+  getDeposit,
+  addDeposit,
 } = require("../controlers/payments");
 const {
   getClients,
@@ -104,7 +106,7 @@ const router = Router();
   router.post("/addquote", addQuote);
   router.post("/addcompany", addCompany);
   router.post("/addproducer", addProducer);
-  router.post("/Deposit", Deposit);
+  router.post("/Deposit", addDeposit);
   router.post("/addDealer", addDealer);
   router.post("/addClient", addClient);
   router.post("/addPayment", addPayment);
@@ -132,4 +134,5 @@ const router = Router();
   router.post("/undeleteProducer", undeleteProducer),
   router.get("/getDeletedManager", getDeletedManager),
   router.get("/getDeletedProducer", getDeletedProducer),
+  router.get("/getDeposit", getDeposit),
   (module.exports = router);
