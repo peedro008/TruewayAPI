@@ -23,7 +23,7 @@ const Quote= (sequelize)=>{
         type:DataTypes.INTEGER,
         allowNull:false
     },
-    DealerId:{
+    DealerSalePersonId:{
         type:DataTypes.INTEGER,
         allowNull:true
         
@@ -57,7 +57,10 @@ const Quote= (sequelize)=>{
     monthlyPayment:{
         type: DataTypes.STRING
     },
- 
+    NSDamount:{
+        type: DataTypes.STRING,
+        defaultValue:""
+    },
     NSDvalue:{
         type: DataTypes.STRING
     },

@@ -1,19 +1,13 @@
-const { Company, Producer, Users, Dealer, Manager } = require("../db");
+const { Company, Producer, Users, Dealer, Manager, DealerSalePerson } = require("../db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const addCompany = async (req, res) => {
   let name = req.body.name;
-  let email = req.body.email;
-  let phone = req.body.phone;
-  let address = req.body.address;
   let CategoryId = req.body.CategoryId;
   try {
     Company.create({
       name: name,
-      email: email,
-      phone: phone,
-      address: address,
       CategoryId: CategoryId,
     });
     res.status(200).send("Company Added");
@@ -22,11 +16,11 @@ const addCompany = async (req, res) => {
     res.status(400).send("Error in addCompany controller ");
   }
 };
-const addDealer = async (req, res) => {
+const addDealerSalePerson = async (req, res) => {
   let name = req.body.name;
   let CompanyId = req.body.CompanyId;
   try {
-    Dealer.create({
+    DealerSalePerson.create({
       name: name,
       CompanyId: CompanyId,
     });
@@ -158,9 +152,9 @@ const addManager = async (req, res, next) => {
       console.log("error", err);
     });
 };
-const getDealer = async (req, res) => {
+const getDealerSalePerson = async (req, res) => {
   try {
-    let dealer = await Dealer.findAll({});
+    let dealer = await DealerSalePerson.findAll({});
     dealer.length
       ? res.status(200).json(dealer)
       : res.status(404).send("no dealers");
@@ -386,8 +380,8 @@ module.exports = {
   deleteManager,
   addCompany,
   addProducer,
-  addDealer,
-  getDealer,
+  addDealerSalePerson,
+  getDealerSalePerson,
   addManager,
   modifyProducer,
   modifyManager,

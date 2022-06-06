@@ -10,10 +10,10 @@ sequelize.sync({ force: false }).then(() => {
    
     try{
      
-      //   Promise.all([Pe()])
-      //   .then(res =>console.log("datos cargados!"))      
+        // Promise.all([Pe()])
+        // .then(res =>console.log("datos cargados!"))      
       
-      //  console.log('%s listening at 4000'); 
+       console.log('%s listening at 4000'); 
       
     }
     catch(e){

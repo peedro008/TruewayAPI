@@ -50,13 +50,33 @@ const {
   Users,
   Payments,
   Location,
+  Dealer,
   Category,
   QuoteStatus,
-  Dealer,
+  DealerSalePerson,
   Manager,
   DailyReport,
   Deposit,
 } = sequelize.models;
+
+
+Client.hasOne(Dealer, {
+  foreignKey: {
+    name: "ClientId",
+    allowNull: true
+  }
+})
+Dealer.belongsTo(Client)
+
+DealerSalePerson.hasMany(Dealer, {
+  foreignKey:{
+    name: "DealerSalePersonId",
+    allowNull: true
+  }
+})
+Dealer.belongsTo(DealerSalePerson)
+
+
 
 Users.hasMany(Deposit, {
   foreignKey: {
@@ -90,6 +110,11 @@ Category.hasMany(Quote, {
   foreignKey: "CategoryId",
 });
 Quote.belongsTo(Category);
+
+Category.hasMany(Payments, {
+  foreignKey: "CategoryId",
+});
+Payments.belongsTo(Category);
 
 Location.hasMany(Quote, {
   foreignKey: "LocationId",
@@ -159,7 +184,7 @@ Quote.belongsTo(Company);
 Quote.hasMany(Payments, {
   foreignKey: "QuoteId",
 });
-Payments.belongsTo(Company);
+Payments.belongsTo(Quote);
 
 Quote.hasMany(QuoteStatus);
 QuoteStatus.belongsTo(Quote);
@@ -169,10 +194,10 @@ Users.hasMany(QuoteStatus, {
 });
 QuoteStatus.belongsTo(Users);
 
-Dealer.hasMany(Quote, {
-  foreignKey: "DealerId",
+DealerSalePerson.hasMany(Quote, {
+  foreignKey: "DealerSalePersonId",
 });
-Quote.belongsTo(Dealer);
+Quote.belongsTo(DealerSalePerson);
 
 Users.hasOne(Producer, {
   foreignKey: "UserId",

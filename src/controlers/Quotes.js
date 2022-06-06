@@ -6,9 +6,42 @@ const {
   Location,
   Users,
   QuoteStatus,
-  Dealer,
+  DealerSalePerson,
 } = require("../db");
 const { Op, Sequelize } = require("sequelize");
+
+
+
+const NSDcalculator = (category, amount=0) => {
+ 
+  if(category==1){
+      return amount*40
+  }
+  else if(category==2){
+      return 0
+  }
+  else if(category==3){
+    return amount*25
+  }
+  else if(category==4){
+    return amount*60
+  }
+  else if(category==5){
+    return amount*60
+  }
+  else if(category==6){
+    return amount*60
+  }
+  else if(category==7){
+    return 0
+  }
+  else if(category==8){
+    return amount*40
+  }
+  else if(category==9){
+    return 25
+  }
+}
 
 const getQuotes = async (req, res) => {
   try {
@@ -27,7 +60,7 @@ const getQuotes = async (req, res) => {
 
           include: [Users],
         },
-        { model: Dealer },
+        { model: DealerSalePerson },
         { model: Location },
         { model: Category },
       ],
@@ -83,7 +116,7 @@ const getDeletedQuotes = async (req, res) => {
   }
 };
 const addQuote = async (req, res) => {
-  let dealerId = req.body.DealerId;
+  let dealerId = req.body.DealerSalePersonId;
   let MVRvalue = req.body.MVRvalue;
   let LocationId = req.body.LocationId;
   let CategoryId = req.body.CategoryId;
@@ -95,15 +128,16 @@ const addQuote = async (req, res) => {
   let CompanyId = req.body.CompanyId;
   let UserId = req.body.UserId;
   let down = req.body.down;
-  let dealer = req.body.dealer;
+
   let bound = req.body.Bound;
   let monthlyPayment = req.body.monthlyPayment;
   let neww = req.body.new;
-  let NSDvalue = req.body.NSDvalue;
+ 
   let TotalPremium = req.body.TotalPremium;
   let ClientNotes = req.body.notes;
   let PIPvalue = req.body.PIPvalue;
-
+  let NSDamount = req.body.NSDamount;
+  let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
   try {
     if (!ClientId) {
       await Client.create({
@@ -120,13 +154,13 @@ const addQuote = async (req, res) => {
           UserId: UserId,
           LocationId: LocationId,
           down: down,
-          dealer: dealer,
-          dealerId: dealerId,
+          DealerSalePerson: dealerId,
           monthlyPayment: monthlyPayment,
           totalPremium: TotalPremium,
           PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
-          NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+          NSDvalue: NSDvalue,
           MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+          NSDamount: NSDamount == "" ? "0" : NSDamount,
         }).then((Quote) => {
           QuoteStatus.create({
             note: notes,
@@ -151,8 +185,9 @@ const addQuote = async (req, res) => {
         monthlyPayment: monthlyPayment,
         totalPremium: TotalPremium,
         PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
-        NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+        NSDvalue: NSDvalue,
         MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+        NSDamount:NSDamount == "" ? "0" : NSDamount,
       }).then((Quote) => {
         QuoteStatus.create({
           note: notes,
@@ -266,13 +301,12 @@ const clientQuotes = async (req, res) => {
         {
           model: Client,
           where: {
-            name: {
-              [Op.substring]: Sequelize.literal(papa),
-            },
+            id: papa,
           },
         },
         { model: Company },
         { model: Users },
+        { model: Category },
       ],
 
       where: {

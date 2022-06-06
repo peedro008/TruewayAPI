@@ -21,8 +21,8 @@ const {
 const {
   addCompany,
   addProducer,
-  addDealer,
-  getDealer,
+  addDealerSalePerson,
+  getDealerSalePerson,
   modifyProducer,
   addManager,
   modifyManager,
@@ -70,12 +70,21 @@ const { getCategories, addCategories } = require("../controlers/categories");
 const {
   addDailyReport,
   getDailyReports,
+  resetDailyReport
 } = require("../controlers/dailyReport");
+const {
+  getDealers,
+  addDealer,
+  paidDealer
+} = require("../controlers/Dealer");
 
 const router = Router();
 
   router.get("/", get);
   router.get("/Quotes", getQuotes);
+  router.get("/getDealers", getDealers);
+  router.post("/addDealer", addDealer);
+  router.post("/paidDealer", paidDealer);
   router.get("/getStatus", getStatus);
   router.get("/getUserPayment", getUserPayment);
   router.get("/clients", getClients);
@@ -91,7 +100,7 @@ const router = Router();
   router.get("/clientQuotes", clientQuotes);
   router.get("/companyQuotes", companyQuotes);
   router.get("/dateQuotes", dateQuotes);
-  router.get("/getDealer", getDealer);
+  router.get("/getDealerSalePerson", getDealerSalePerson);
   router.get("/idquotes", idQuotes);
   router.get("/getProducer", getProducer);
   router.get("/getProducerFilter", getProducerFilter);
@@ -107,7 +116,7 @@ const router = Router();
   router.post("/addcompany", addCompany);
   router.post("/addproducer", addProducer);
   router.post("/Deposit", addDeposit);
-  router.post("/addDealer", addDealer);
+  router.post("/addDealerSalePerson", addDealerSalePerson);
   router.post("/addClient", addClient);
   router.post("/addPayment", addPayment);
   router.post("/addClientPayment", ClientPayment);
@@ -115,6 +124,7 @@ const router = Router();
   router.get("/getpayments", getPayment),
   router.get("/getDailyReports", getDailyReports),
   router.post("/deleteQuote", deleteQuote),
+  router.post("/resetDailyReport", resetDailyReport),
   router.post("/addNotes", addNotes),
   router.post("/undeleteQuote", undeleteQuote),
   router.post("/undeletePayment", undeletePayment),
@@ -136,3 +146,5 @@ const router = Router();
   router.get("/getDeletedProducer", getDeletedProducer),
   router.get("/getDeposit", getDeposit),
   (module.exports = router);
+
+  

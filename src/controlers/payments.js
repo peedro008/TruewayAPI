@@ -1,6 +1,38 @@
-const { Producer, Payments, Client, Users, Location,Deposit } = require("../db");
+const { Producer,Quote, Payments, Client, Users, Location,Deposit, QuoteStatus, Category } = require("../db");
 
 const { Op } = require("sequelize");
+const NSDcalculator = (category, amount=0) => {
+ 
+  if(category==1){
+      return amount*40
+  }
+  else if(category==2){
+      return 0
+  }
+  else if(category==3){
+    return amount*25
+  }
+  else if(category==4){
+    return amount*60
+  }
+  else if(category==5){
+    return amount*60
+  }
+  else if(category==6){
+    return amount*60
+  }
+  else if(category==7){
+    return 0
+  }
+  else if(category==8){
+    return amount*40
+  }
+  else if(category==9){
+    return 25
+  }
+}
+
+
 const ClientPayment = (req, res) => {
   let {
     LocationId,
@@ -14,11 +46,12 @@ const ClientPayment = (req, res) => {
     phone,
     notes,
     PIPvalue,
-    NSDvalue,
+    NSDamount,
     MVRvalue,
+    CategoryId
   } = req.body;
   let neww = req.body.new;
-
+  let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
   try {
     const client = Client.create({
       name: name,
@@ -35,10 +68,13 @@ const ClientPayment = (req, res) => {
         method: method,
         DepositId: null,
         type: type,
+        CategoryId:CategoryId,
         UserId: UserId,
+        QuoteId:null,
         creditCardFee: creditCardFee && creditCardFee,
         PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
-        NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+        NSDamount: NSDamount == "" ? "0" : NSDamount,
+        NSDvalue: NSDvalue,
         MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
       });
     });
@@ -59,24 +95,39 @@ const addPayment = async (req, res) => {
     creditCardFee,
     UserId,
     PIPvalue,
-    NSDvalue,
+    NSDamount,
+    CategoryId,
     MVRvalue,
+    notes,
+    QuoteId
   } = req.body;
+  let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
   try {
-    const pay = await Payments.create({
+    let pay = await Payments.create({
       ClientId: ClientId,
+      QuoteId: QuoteId,
       LocationId: LocationId,
       amount: amount,
+      CategoryId:CategoryId,
       method: method,
       type: type,
       DepositId: null,
       UserId: UserId,
+      
       creditCardFee: creditCardFee == "" ? "0" : creditCardFee,
       PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
-      NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+      NSDamount: NSDamount == "" ? "0" : NSDamount,
       MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+      NSDvalue:NSDvalue,
     });
-    res.status(200).json(pay);
+    let quoteStatus = await QuoteStatus.create({
+      note: notes,
+      Status: "Sold",
+      QuoteId: QuoteId,
+      UserId: UserId,
+    });
+    
+    res.status(200).json({pay, quoteStatus});
   } catch (e) {
     console.log("Error in addPayment controller " + e);
     res.status(400).send("Error in addPayment controller");
@@ -92,6 +143,8 @@ const getUserPayment = async (req, res) => {
         { model: Client },
         { model: Users, where: { id: papa } },
         { model: Location },
+        { model: Category}
+       
       ],
       where: { deleted: false },
     });
@@ -106,7 +159,7 @@ const getPayment = async (req, res) => {
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
-      include: [{ model: Client }, { model: Users }, { model: Location }],
+      include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote }],
       where: { deleted: false },
     });
     payments.length

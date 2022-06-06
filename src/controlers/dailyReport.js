@@ -26,7 +26,32 @@ const addDailyReport = async(req,res)=>{
         console.log("Error in company controller"+ e)
     
 }}
-
+const resetDailyReport = async(req,res)=>{
+    let IDs = req.body.IDs
+    let dailyID = req.body.dailyID
+    try{
+        let upPay =await Payments.update(
+            {DailyReportId:null},
+            {
+                where:{
+                    id:IDs
+                }
+            }
+            )
+        let DBdaily =await DailyReport.destroy({
+            where:{
+                id:dailyID
+            }
+        })
+        
+            DBdaily? res.status(200).send("Done")
+        :
+        res.status(404).send("error in addDailyReport controller")
+    }
+    catch(e){
+        console.log("Error in company controller"+ e)
+    
+}}
 const getDailyReports = async (req,res)=>{
     try{
         const locations = await DailyReport.findAll({
@@ -53,5 +78,6 @@ const getDailyReports = async (req,res)=>{
 }
 module.exports={
     addDailyReport,
-    getDailyReports
+    getDailyReports,
+    resetDailyReport
 }

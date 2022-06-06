@@ -18,20 +18,24 @@ const Pe = function () {
     name: "GENERAL LIABILITY",
   });
   Category.create({
-    name: "MOTORCYCLE ",
+    name: "MOTORCYCLE",
   });
   Category.create({
-    name: "BOATS/JETSKIES ",
+    name: "BOATS/JETSKIES",
   });
   Category.create({
     name: "COMMERCIAL AUTO",
   });
   Category.create({
-    name: "HEALTH INSURANCE ",
+    name: "HEALTH INSURANCE",
   });
   Category.create({
-    name: "NON OWNERS ",
+    name: "NON OWNERS",
   });
+  Category.create({
+    name: "RENTERS",
+  });
+
 
   Location.create({
     name: "TRUEWAY 1",
