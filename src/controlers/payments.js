@@ -120,12 +120,14 @@ const addPayment = async (req, res) => {
       MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
       NSDvalue:NSDvalue,
     });
-    let quoteStatus = await QuoteStatus.create({
+    let quoteStatus
+  if(QuoteId){
+     quoteStatus = await QuoteStatus.create({
       note: notes,
       Status: "Sold",
       QuoteId: QuoteId,
       UserId: UserId,
-    });
+    });}
     
     res.status(200).json({pay, quoteStatus});
   } catch (e) {

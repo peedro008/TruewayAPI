@@ -116,7 +116,7 @@ const getDeletedQuotes = async (req, res) => {
   }
 };
 const addQuote = async (req, res) => {
-  let dealerId = req.body.DealerSalePersonId;
+  let DealerSalePersonId = req.body.DealerSalePersonId;
   let MVRvalue = req.body.MVRvalue;
   let LocationId = req.body.LocationId;
   let CategoryId = req.body.CategoryId;
@@ -154,7 +154,7 @@ const addQuote = async (req, res) => {
           UserId: UserId,
           LocationId: LocationId,
           down: down,
-          DealerSalePerson: dealerId,
+          DealerSalePerson: DealerSalePersonId,
           monthlyPayment: monthlyPayment,
           totalPremium: TotalPremium,
           PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
@@ -180,8 +180,7 @@ const addQuote = async (req, res) => {
         UserId: UserId,
         LocationId: LocationId,
         down: down,
-        dealer: dealer,
-        dealerId: dealerId,
+        DealerSalePerson: DealerSalePersonId,
         monthlyPayment: monthlyPayment,
         totalPremium: TotalPremium,
         PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
