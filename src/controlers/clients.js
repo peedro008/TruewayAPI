@@ -66,15 +66,16 @@ const addClient = async (req,res)=>{
 }
 const modifyClient = async (req,res)=>{
     let name= req.body.name
-    let Tel= req.body.Tel
+    let tel= req.body.tel
     let email= req.body.email
     let neww = req.body.new
     let ClientId= req.body.ClientId
     let notes = req.body.notes
     let CompanyId= req.body.CompanyId
     let address= req.body.address
+    let dateOfBirth = req.body.dateOfBirth
     try{
-        const payments = await Client.update({name:name,Tel:Tel,email:email, new:neww, notes:notes, CompanyId:CompanyId, address:address},
+        const payments = await Client.update({name:name,tel:tel,email:email, new:neww, notes:notes, CompanyId:CompanyId, address:address, dateOfBirth:dateOfBirth},
             {where:{id:ClientId }})
        res.status(200).json(payments)
     }

@@ -22,10 +22,10 @@ const Dealer = (sequelize) => {
     paid: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
-      defaultValue: NOW,
+     
     },
     datePaid: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       allowNull: true,
       defaultValue: NOW,
     },

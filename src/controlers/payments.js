@@ -1,4 +1,4 @@
-const { Producer,Quote, Payments, Client, Users, Location,Deposit, QuoteStatus, Category } = require("../db");
+const { Producer,Quote, Payments, Client, Users, Location,Deposit, QuoteStatus, Category, Company } = require("../db");
 
 const { Op } = require("sequelize");
 const NSDcalculator = (category, amount=0) => {
@@ -193,7 +193,7 @@ const getCashPayment = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
      
       include: [{ model: Client }, { model: Users }, { model: Location }],
-      where: { deleted: false, LocationId: LocationId, deposited: false },
+      where: { deleted: false, LocationId: LocationId, deposited: false, method:"Cash" },
     });
     payments.length
       ? res.status(200).json(payments)
@@ -313,7 +313,32 @@ const undeletePayment = async (req, res) => {
     console.log("Error in deletePayment controller" + e);
   }
 };
+const idPayment = async (req, res) => {
+  var ID = req.query.id;
 
+  try {
+    let QuotesDB = await Payments.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      where: {
+        id: ID,
+        deleted: false,
+      },
+      include: [
+        { model: Client },
+        { model: Users },
+        { model: Quote, include: [QuoteStatus, Company] },
+        { model: Location },
+        { model: Category },
+      ],
+    });
+
+    QuotesDB.length
+      ? res.status(200).json(QuotesDB)
+      : res.status(404).send("no Quotes");
+  } catch (e) {
+    console.log("Error in Quote controller" + e);
+  }
+};
 module.exports = {
   getDeletedPayment,
   undeletePayment,
@@ -327,4 +352,5 @@ module.exports = {
   getDeposit,
   dailyReport,
   getCashPayment,
+  idPayment
 };

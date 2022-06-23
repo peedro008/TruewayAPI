@@ -56,6 +56,7 @@ const {
   getDeletedPayment,
   getDeposit,
   addDeposit,
+  idPayment,
 } = require("../controlers/payments");
 const {
   getClients,
@@ -145,6 +146,7 @@ const router = Router();
   router.get("/getDeletedManager", getDeletedManager),
   router.get("/getDeletedProducer", getDeletedProducer),
   router.get("/getDeposit", getDeposit),
+  router.get("/idPayment", idPayment),
   (module.exports = router);
 
   
