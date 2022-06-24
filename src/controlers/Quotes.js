@@ -245,7 +245,7 @@ const producerQuotes = async (req, res) => {
         { model: Company },
 
         { model: QuoteStatus },
-        { model: Dealer },
+      
         { model: Location },
         { model: Category },
       ],
