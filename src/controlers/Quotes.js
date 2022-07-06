@@ -32,6 +32,57 @@ const NSDcalculator = (category, amount = 0) => {
   }
 };
 
+const getQuotesReport = async (req, res) => {
+  let objQ = req.query;
+  let dateFrom = req.query.dateFrom;
+  let dateTo = req.query.dateTo;
+  let offset = req.query.offset;
+  delete objQ.dateFrom;
+  delete objQ.dateTo;
+  delete objQ.offset;
+
+  if (dateFrom !== null && dateFrom !== undefined) {
+    objQ = { ...objQ, date: { [Op.between]: [dateFrom, dateTo] } };
+  }
+
+  objQ = { ...objQ, deleted: false };
+
+  try {
+    let QuotesDB = await Quote.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [
+        { model: Client },
+        { model: Company },
+        { model: Users },
+        {
+          model: QuoteStatus,
+          order: [
+            ["date", "ASC"],
+            [QuoteStatus, "id", "ASC"],
+          ],
+
+          include: [Users],
+        },
+        { model: DealerSalePerson },
+        { model: Location },
+        { model: Category },
+      ],
+      order: [
+        ['id', 'DESC'],
+      ],
+      where: objQ,
+      limit: 20,
+      offset: offset,
+    });
+
+    QuotesDB.length
+      ? res.status(200).json(QuotesDB)
+      : res.status(404).send("no Quotes");
+  } catch (e) {
+    console.log("Error in Quote controller" + e);
+  }
+};
+
 const getQuotes = async (req, res) => {
   try {
     let QuotesDB = await Quote.findAll({
@@ -129,7 +180,7 @@ const addQuote = async (req, res) => {
   let NSDvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(NSDamount));
   let ClientDb;
   let QuoteDb;
-  let QuoteStatusDb
+  let QuoteStatusDb;
   try {
     if (!ClientId) {
       ClientDb = await Client.create({
@@ -138,27 +189,28 @@ const addQuote = async (req, res) => {
         tel: Tel,
         new: neww,
         notes: ClientNotes,
-      }).then((Client) => 
-        QuoteDb=  Quote.create({
-            ClientId: Client.id,
-            CompanyId: CompanyId,
-            CategoryId: CategoryId,
-            UserId: UserId,
-            LocationId: LocationId,
-            down: down,
-            DealerSalePerson: DealerSalePersonId,
-            monthlyPayment: monthlyPayment,
-            totalPremium: TotalPremium,
-            PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
-            NSDvalue: NSDvalue,
-            MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
-            NSDamount: NSDamount == "" ? "0" : NSDamount,
-          })
-          
+      })
+        .then(
+          (Client) =>
+            (QuoteDb = Quote.create({
+              ClientId: Client.id,
+              CompanyId: CompanyId,
+              CategoryId: CategoryId,
+              UserId: UserId,
+              LocationId: LocationId,
+              down: down,
+              DealerSalePerson: DealerSalePersonId,
+              monthlyPayment: monthlyPayment,
+              totalPremium: TotalPremium,
+              PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
+              NSDvalue: NSDvalue,
+              MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+              NSDamount: NSDamount == "" ? "0" : NSDamount,
+            }))
         )
 
         .then((Quote) => {
-         QuoteStatusDb = QuoteStatus.create({
+          QuoteStatusDb = QuoteStatus.create({
             note: notes,
             Status: bound ? "Sold" : "Quoted",
             QuoteId: Quote.id,
@@ -166,8 +218,6 @@ const addQuote = async (req, res) => {
           });
           res.status(200).json(Quote);
         });
-        
-     
     } else {
       Quote.create({
         ClientId: ClientId,
@@ -245,7 +295,7 @@ const producerQuotes = async (req, res) => {
         { model: Company },
 
         { model: QuoteStatus },
-      
+
         { model: Location },
         { model: Category },
       ],
@@ -509,4 +559,5 @@ module.exports = {
   undeleteQuote,
   getDeletedQuotes,
   addNotes,
+  getQuotesReport,
 };

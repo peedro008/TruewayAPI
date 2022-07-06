@@ -17,6 +17,7 @@ const {
   getQuoteStatus,
   deleteQuote,
   getDeletedQuotes,
+  getQuotesReport
 } = require("../controlers/Quotes");
 const {
   addCompany,
@@ -57,6 +58,7 @@ const {
   getDeposit,
   addDeposit,
   idPayment,
+  getPaymentsReport,
 } = require("../controlers/payments");
 const {
   getClients,
@@ -147,6 +149,8 @@ const router = Router();
   router.get("/getDeletedProducer", getDeletedProducer),
   router.get("/getDeposit", getDeposit),
   router.get("/idPayment", idPayment),
+  router.get("/getQuotesReport", getQuotesReport),
+  router.get("/getPaymentsReport", getPaymentsReport),
   (module.exports = router);
 
   

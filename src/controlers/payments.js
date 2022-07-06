@@ -33,6 +33,80 @@ const NSDcalculator = (category, amount=0) => {
 }
 
 
+
+
+
+const getPaymentsReport = async (req, res) => {
+  let objQ = req.query;
+  let dateFrom = req.query.dateFrom;
+  let dateTo = req.query.dateTo;
+  let offset = req.query.offset;
+  delete objQ.dateFrom;
+  delete objQ.dateTo;
+  delete objQ.offset;
+
+  if (dateFrom !== null && dateFrom !== undefined) {
+    objQ = { ...objQ, date: { [Op.between]: [dateFrom, dateTo] } };
+  }
+
+  objQ = { ...objQ, deleted: false };
+
+  try {
+    let PaymentsDB = await Payments.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote }],
+      include: [
+        { model: Client },
+        { model: Users },
+        {
+          model: Quote,
+         include: [QuoteStatus],
+        },
+       
+        { model: Location },
+        
+      ],
+      order: [
+        ['id', 'DESC'],
+      ],
+      where: objQ,
+      limit: 20,
+      offset: offset,
+    });
+
+    PaymentsDB.length
+      ? res.status(200).json(PaymentsDB)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in Payments controller" + e);
+  }
+};
+
+
+
+
+
+
+
+
+
+const getPayment = async (req, res) => {
+  try {
+    const payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote }],
+      where: { deleted: false },
+    });
+    payments.length
+      ? res.status(200).json(payments)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+
+
+
 const ClientPayment = (req, res) => {
   let {
     LocationId,
@@ -157,20 +231,14 @@ const getUserPayment = async (req, res) => {
     console.log("Error in payments controller" + e);
   }
 };
-const getPayment = async (req, res) => {
-  try {
-    const payments = await Payments.findAll({
-      attributes: { exclude: ["modifiedAt"] },
-      include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote }],
-      where: { deleted: false },
-    });
-    payments.length
-      ? res.status(200).json(payments)
-      : res.status(404).send("no Payments");
-  } catch (e) {
-    console.log("Error in payments controller" + e);
-  }
-};
+
+
+
+
+
+
+
+
 const getDeletedPayment = async (req, res) => {
   try {
     const payments = await Payments.findAll({
@@ -352,5 +420,6 @@ module.exports = {
   getDeposit,
   dailyReport,
   getCashPayment,
-  idPayment
+  idPayment,
+  getPaymentsReport
 };
