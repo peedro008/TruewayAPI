@@ -38,7 +38,7 @@ const Pe = function () {
 
 
   Location.create({
-    name: "TRUEWAY 1",
+    name: "Trueway 1",
     email: "customerservice@truewayins.com",
     TEL: null,
     address: "3095 s military trail ste 12 ",
@@ -149,71 +149,8 @@ const Pe = function () {
     createdAt: "2022-04-10T22:50:51.290Z",
     updatedAt: "2022-04-10T22:50:51.290Z",
   });
-  Users.create({
-    name: "Antuanet Cruz",
-    UserName: "antuanet@truewayins.com",
-    Password: "$2a$12$jrlVckd2KptH3vK98CCyWueeEkSonQR8IGLrae.YMLXv6FX60ktGO",
-    UserRole: "Producer",
-    deleted: false,
-    createdAt: "2022-04-13T14:05:39.281Z",
-    updatedAt: "2022-04-13T14:05:39.281Z",
-  });
-  Users.create({
-    name: "Rosali Cruz",
-    UserName: "rosali@truewayins.com",
-    Password: "$2a$12$e9JYY8nSOC2IQMJG0P8yv.so5y51PEluHjNm09PdaKeOlBfkidXVu",
-    UserRole: "Producer",
-    deleted: false,
-    createdAt: "2022-04-13T14:06:40.942Z",
-    updatedAt: "2022-04-13T14:06:40.942Z",
-  });
-  Users.create({
-    name: "Yaneymi Sotuyo",
-    UserName: "yaneymi@truewayins.com",
-    Password: "$2a$12$r3Jt/wcz08gAgORzeHwZGuTPMYHpDeJz2ZiWDWI9QCOPd8b4XQwwi",
-    UserRole: "Producer",
-    deleted: false,
-    createdAt: "2022-04-13T14:07:52.856Z",
-    updatedAt: "2022-04-13T14:07:52.856Z",
-  });
-  Users.create({
-    name: "Zulien Rabell",
-    UserName: "zulien@truewayins.com",
-    Password: "$2a$12$Q9/7NbYZ6Uqro0bG85MnfuicTUJs1VgLLfR30SGFdFVmoRdKNsszi",
-    UserRole: "Producer",
-    deleted: false,
-    createdAt: "2022-04-13T14:08:44.361Z",
-    updatedAt: "2022-04-13T14:08:44.361Z",
-  });
-  Users.create({
-    name: "Erika Rivas",
-    UserName: "erika@truewayins.com",
-    Password: "$2a$12$7YfmHQaO1BWtxDebrGQD5OTe4YiwMAgzcy/697Sh12dOg.wYJdGMu",
-    UserRole: "Producer",
-    deleted: false,
-    createdAt: "2022-04-13T14:09:27.091Z",
-    updatedAt: "2022-04-13T14:09:27.091Z",
-  });
-  Users.create({
-    name: "Ovi Perez",
-    UserName: "ovi@truewayins.com",
-    Password: "$2a$12$DZ3lx.eXronlEAE5QPEhj.HbyzEG5ivi2TX44EyVsottwpklP5BNm",
-    UserRole: "Producer",
-    deleted: false,
-    createdAt: "2022-04-13T14:10:52.995Z",
-    updatedAt: "2022-04-13T14:10:52.995Z",
-  });
-  Users.create({
-    name: "Dayana Olivera",
-    UserName: "dayana@truewayins.com",
-    Password: "$2a$12$iZPOEaa3nL/kq.Qojrgfx.C4lIDu1x5v48pcgZ18sBSCW9fVeNDb2",
-    UserRole: "Manager",
-    deleted: false,
-    createdAt: "2022-04-13T14:12:58.308Z",
-    updatedAt: "2022-04-14T14:03:12.272Z",
-  });
-  Users.create({
-    name: "Daniela ",
+   Users.create({
+    name: "Daniela",
     UserName: "drodriguez@truewayins.com",
     Password: "$2a$12$zfna4P6ogeL.JIRs64MWw.R7IFhk.jcaf5hMAphaphWBKpfHMRinq",
     UserRole: "Manager",
@@ -221,67 +158,16 @@ const Pe = function () {
     createdAt: "2022-04-14T14:29:06.751Z",
     updatedAt: "2022-04-14T14:32:20.405Z",
   });
+ 
   Manager.create({
-    UserId: 8,
-    LocationId: 2,
-    name: "Dayana Olivera",
-    email: "dayana@truewayins.com",
-    phone: "5612236595",
-        deleted: false,
-  });
-  Manager.create({
-    UserId: 9,
+    UserId: 1,
     LocationId: 1,
     name: "Daniela ",
     email: "drodriguez@truewayins.com",
     phone: "5615772396",
         deleted: false,
   });
-  Producer.create({
-    deleted: false,
-    UserId: 2,
-    LocationId: 2,
-    name: "Antuanet Cruz",
-    email: "antuanet@truewayins.com",
-    phone: "5612236595",
-        updatedAt: "2022-04-13T14:05:39.286Z",
-  });
-  Producer.create({
-    deleted: false,
-    UserId: 4,
-    LocationId: 2,
-    name: "Yaneymi Sotuyo",
-    email: "yaneymi@truewayins.com",
-    phone: "5612236595",
-        updatedAt: "2022-04-13T14:07:52.860Z",
-  });
-  Producer.create({
-    deleted: false,
-    UserId: 5,
-    LocationId: 1,
-    name: "Zulien Rabell",
-    email: "zulien@truewayins.com",
-    phone: "5613185540",
-    updatedAt: "2022-04-13T14:08:44.364Z",
-  });
-  Producer.create({
-    deleted: false,
-    UserId: 6,
-    LocationId: 1,
-    name: "Erika Rivas",
-    email: "erika@truewayins.com",
-    phone: "5613185540",
-        updatedAt: "2022-04-13T14:09:27.094Z",
-  });
-  Producer.create({
-    deleted: false,
-    UserId: 7,
-    LocationId: 2,
-    name: "Ovi Perez",
-    email: "ovi@truewayins.com",
-    phone: "5612236595",
-        updatedAt: "2022-04-13T14:10:52.998Z",
-  });
+ 
 
 
 

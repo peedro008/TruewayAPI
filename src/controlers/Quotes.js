@@ -157,7 +157,6 @@ const getDeletedQuotes = async (req, res) => {
 };
 const addQuote = async (req, res) => {
   let DealerSalePersonId = req.body.DealerSalePersonId;
-  let MVRvalue = req.body.MVRvalue;
   let LocationId = req.body.LocationId;
   let CategoryId = req.body.CategoryId;
   let notes = req.body.notes;
@@ -172,12 +171,15 @@ const addQuote = async (req, res) => {
   let bound = req.body.Bound;
   let monthlyPayment = req.body.monthlyPayment;
   let neww = req.body.new;
-
+  
   let TotalPremium = req.body.TotalPremium;
   let ClientNotes = req.body.notes;
-  let PIPvalue = req.body.PIPvalue;
+  let PIPamount = req.body.PIPamount;
+ // let PIPvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(PIPamount));
   let NSDamount = req.body.NSDamount;
-  let NSDvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(NSDamount));
+  //let NSDvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(NSDamount));
+  let MVRamount = req.body.MVRamount;
+  //let MVRvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(MVRamount));
   let ClientDb;
   let QuoteDb;
   let QuoteStatusDb;
@@ -202,9 +204,9 @@ const addQuote = async (req, res) => {
               DealerSalePerson: DealerSalePersonId,
               monthlyPayment: monthlyPayment,
               totalPremium: TotalPremium,
-              PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
-              NSDvalue: NSDvalue,
-              MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+              PIPvalue: PIPamount == "" ? "0" : PIPamount,
+              NSDvalue: NSDamount,
+              MVRvalue: MVRamount == "" ? "0" : MVRamount,
               NSDamount: NSDamount == "" ? "0" : NSDamount,
             }))
         )
@@ -229,9 +231,9 @@ const addQuote = async (req, res) => {
         DealerSalePerson: DealerSalePersonId,
         monthlyPayment: monthlyPayment,
         totalPremium: TotalPremium,
-        PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
-        NSDvalue: NSDvalue,
-        MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+        PIPvalue: PIPamount == "" ? "0" : PIPamount,
+        NSDvalue: NSDamount,
+        MVRvalue: MVRamount == "" ? "0" : MVRamount,
         NSDamount: NSDamount == "" ? "0" : NSDamount,
       }).then((Quote) => {
         QuoteStatus.create({
