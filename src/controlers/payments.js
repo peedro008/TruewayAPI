@@ -175,11 +175,11 @@ const addPayment = async (req, res) => {
     notes,
     QuoteId
   } = req.body;
- // let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
+  let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
   
- // let PIPvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(PIPamount));
+  let PIPvalue =  PIPamount?10*parseFloat(PIPamount):0
  
-  //let MVRvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(MVRamount));
+  let MVRvalue = MVRamount?9*parseFloat(MVRamount):0
   try {
     let pay = await Payments.create({
       ClientId: ClientId,
@@ -193,10 +193,10 @@ const addPayment = async (req, res) => {
       UserId: UserId,
       
       creditCardFee: creditCardFee == "" ? "0" : creditCardFee,
-      PIPvalue: PIPamount == "" ? "0" : PIPamount,
-      NSDamount: NSDamount == "" ? "0" : NSDamount,
-      MVRvalue: MVRamount == "" ? "0" : MVRamount,
-      NSDvalue:NSDamount,
+      PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
+      NSDValue: NSDvalue == "" ? "0" : NSDvalue,
+      MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+   
     });
     let quoteStatus
   if(QuoteId){

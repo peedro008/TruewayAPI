@@ -175,11 +175,11 @@ const addQuote = async (req, res) => {
   let TotalPremium = req.body.TotalPremium;
   let ClientNotes = req.body.notes;
   let PIPamount = req.body.PIPamount;
- // let PIPvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(PIPamount));
+  let PIPvalue =  PIPamount?10*parseFloat(PIPamount):0
   let NSDamount = req.body.NSDamount;
-  //let NSDvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(NSDamount));
+  let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
   let MVRamount = req.body.MVRamount;
-  //let MVRvalue = NSDcalculator(parseFloat(CategoryId), parseFloat(MVRamount));
+  let MVRvalue = MVRamount?9*parseFloat(MVRamount):0
   let ClientDb;
   let QuoteDb;
   let QuoteStatusDb;
@@ -204,10 +204,10 @@ const addQuote = async (req, res) => {
               DealerSalePerson: DealerSalePersonId,
               monthlyPayment: monthlyPayment,
               totalPremium: TotalPremium,
-              PIPvalue: PIPamount == "" ? "0" : PIPamount,
-              NSDvalue: NSDamount,
-              MVRvalue: MVRamount == "" ? "0" : MVRamount,
-              NSDamount: NSDamount == "" ? "0" : NSDamount,
+              PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
+              NSDValue: NSDvalue == "" ? "0" : NSDvalue,
+              MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+        
             }))
         )
 
