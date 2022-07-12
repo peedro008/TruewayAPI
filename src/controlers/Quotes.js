@@ -205,8 +205,8 @@ const addQuote = async (req, res) => {
               monthlyPayment: monthlyPayment,
               totalPremium: TotalPremium,
               PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
-              NSDValue: NSDvalue == "" ? "0" : NSDvalue,
               MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+              NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
         
             }))
         )
@@ -231,10 +231,9 @@ const addQuote = async (req, res) => {
         DealerSalePerson: DealerSalePersonId,
         monthlyPayment: monthlyPayment,
         totalPremium: TotalPremium,
-        PIPvalue: PIPamount == "" ? "0" : PIPamount,
-        NSDvalue: NSDamount,
-        MVRvalue: MVRamount == "" ? "0" : MVRamount,
-        NSDamount: NSDamount == "" ? "0" : NSDamount,
+        PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
+        MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+        NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
       }).then((Quote) => {
         QuoteStatus.create({
           note: notes,
