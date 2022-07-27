@@ -6,6 +6,9 @@ const Category= (sequelize)=>{
         type:DataTypes.STRING,
         allowNull: false
      },
+     NSDvalue:{
+        type:DataTypes.INTEGER,
+     }
    
     
 });

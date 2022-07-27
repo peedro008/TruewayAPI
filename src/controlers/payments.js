@@ -30,6 +30,9 @@ const NSDcalculator = (category, amount=0) => {
   else if(category==9){
     return 25
   }
+  else if(category==10){
+    return amount*60
+  }
 }
 
 
@@ -118,6 +121,7 @@ const ClientPayment = (req, res) => {
     name,
     email,
     phone,
+    CategoryNsd,
     notes,
 
     CategoryId
@@ -126,7 +130,7 @@ const ClientPayment = (req, res) => {
   let PIPamount = req.body.PIPamount;
   let PIPvalue =  PIPamount?10*parseFloat(PIPamount):0
   let NSDamount = req.body.NSDamount;
-  let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
+  let NSDvalue =  CategoryNsd*NSDamount
   let MVRamount = req.body.MVRamount;
   let MVRvalue = MVRamount?9*parseFloat(MVRamount):0
   console.log(NSDamount, NSDvalue)
@@ -173,12 +177,13 @@ const addPayment = async (req, res) => {
     UserId,
     PIPamount,
     NSDamount,
+    CategoryNsd,
     CategoryId,
     MVRamount,
     notes,
     QuoteId
   } = req.body;
-  let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
+  let NSDvalue =  CategoryNsd*NSDamount
   
   let PIPvalue =  PIPamount?10*parseFloat(PIPamount):0
  

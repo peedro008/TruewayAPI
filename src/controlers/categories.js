@@ -16,9 +16,11 @@ const getCategories = async (req,res)=>{
 }
 const addCategories = async (req,res)=>{
     let name = req.body.name
+    let NSDvalue = req.body.NSDvalue
     try{
         const Categories = await Category.create({
-            name: name
+            name: name,
+            NSDvalue:NSDvalue
       
        })
       res.status(200).json(Categories)

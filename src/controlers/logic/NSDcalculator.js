@@ -29,6 +29,9 @@ const NSDcalculator = (category, amount=0) => {
   else if(category==9){
     return 25
   }
+  else if(category==10){
+    return amount*60
+  }
 }
 
 

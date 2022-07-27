@@ -29,6 +29,8 @@ const NSDcalculator = (category, amount = 0) => {
     return amount * 40;
   } else if (category == 9) {
     return 25;
+  } else if (category == 10) {
+    return amount * 60;
   }
 };
 
@@ -67,9 +69,7 @@ const getQuotesReport = async (req, res) => {
         { model: Location },
         { model: Category },
       ],
-      order: [
-        ['id', 'DESC'],
-      ],
+      order: [["id", "DESC"]],
       where: objQ,
       limit: 20,
       offset: offset,
@@ -167,19 +167,19 @@ const addQuote = async (req, res) => {
   let CompanyId = req.body.CompanyId;
   let UserId = req.body.UserId;
   let down = req.body.down;
-
+  let CategoryNsd = req.body.CategoryNsd;
   let bound = req.body.Bound;
   let monthlyPayment = req.body.monthlyPayment;
   let neww = req.body.new;
-  
+
   let TotalPremium = req.body.TotalPremium;
   let ClientNotes = req.body.notes;
   let PIPamount = req.body.PIPamount;
-  let PIPvalue =  PIPamount?10*parseFloat(PIPamount):0
+  let PIPvalue = PIPamount ? 10 * parseFloat(PIPamount) : 0;
   let NSDamount = req.body.NSDamount;
-  let NSDvalue =  NSDcalculator( parseFloat(CategoryId), parseFloat(NSDamount))
+  let NSDvalue = CategoryNsd*NSDamount
   let MVRamount = req.body.MVRamount;
-  let MVRvalue = MVRamount?9*parseFloat(MVRamount):0
+  let MVRvalue = MVRamount ? 9 * parseFloat(MVRamount) : 0;
   let ClientDb;
   let QuoteDb;
   let QuoteStatusDb;
@@ -207,7 +207,6 @@ const addQuote = async (req, res) => {
               PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
               MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
               NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
-        
             }))
         )
 
