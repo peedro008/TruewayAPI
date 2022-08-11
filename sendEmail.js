@@ -22,7 +22,7 @@ const nodemailer = require("nodemailer");
       subject: "Reset Password", // Subject line
       text: `https://www.truewayagents.com/87545856985854145256?id=${email}`, // plain text body
       html: `<p>Click on the following link to recover your password.</p>
-      <b>http://localhost:3000/87545856985854145256?id=${email}</b>`, // html body
+      <b>https://www.truewayagents.com/87545856985854145256?id=${email}</b>`, // html body
     });
   
     console.log("Message sent: %s", info.messageId);
