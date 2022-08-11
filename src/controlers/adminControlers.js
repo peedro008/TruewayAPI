@@ -1,6 +1,20 @@
 const { Company, Producer, Users, Dealer, Manager, DealerSalePerson } = require("../db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const {Main} =require("../../sendEmail")
+
+
+
+const sendMail = async (req, res) => {
+  let email = req.body.email;
+  try {
+    Main( email)
+    res.status(200).send("email sended");
+  } catch (e) {
+    console.log("Error in addCompany controller " + e);
+    res.status(400).send("Error in addCompany controller ");
+  }
+};
 
 const addCompany = async (req, res) => {
   let name = req.body.name;
@@ -388,4 +402,5 @@ module.exports = {
   deletet,
   getDeletedProducer,
   getDeletedManager,
+  sendMail
 };

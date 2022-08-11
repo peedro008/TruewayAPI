@@ -34,6 +34,33 @@ const login = (req, res, next) => {
 
 
 
+const resetPass = (req, res, next) => {
+    // checks if email exists
+   
+    let UserName = req.body.UserName;
+  
+  
+    bcrypt.hash(req.body.Password, 12, (err, passwordHash) => {
+        if (err) {
+          return res.status(500).json({ message: "couldnt hash the password" });
+        } else if (passwordHash) {
+          console.log(passwordHash);
+          const user = Users.update(
+            {
+              Password: passwordHash,
+            },
+            {
+              where: { UserName: UserName },
+            }
+          )
+          user
+            ? res.status(200).json(user)
+            : res.status(404).send("Error");
+        }
+      });
+    }
+
+
 const users = async(req, res)=>{
     try{
         let dbUsers = await Users.findAll({
@@ -51,5 +78,6 @@ catch{
 
 module.exports={
     login,
-    users
+    users,
+    resetPass
 }

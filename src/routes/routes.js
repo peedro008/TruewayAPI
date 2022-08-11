@@ -31,8 +31,9 @@ const {
   undeleteManager,
   getDeletedManager,
   getDeletedProducer,
+  sendMail,
 } = require("../controlers/adminControlers");
-const { login, users } = require("../controlers/login");
+const { login, users, resetPass } = require("../controlers/login");
 const {
   getProducer,
   getProducerFilter,
@@ -84,6 +85,8 @@ const {
 const router = Router();
 
   router.get("/", get);
+  router.post("/send", sendMail);
+router.post("/resetPass", resetPass);
   router.get("/Quotes", getQuotes);
   router.get("/getDealers", getDealers);
   router.post("/addDealer", addDealer);
