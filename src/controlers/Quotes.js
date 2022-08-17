@@ -39,6 +39,7 @@ const getQuotesReport = async (req, res) => {
   let dateFrom = req.query.dateFrom;
   let dateTo = req.query.dateTo;
   let offset = req.query.offset;
+  let status = req.query.Status
   delete objQ.dateFrom;
   delete objQ.dateTo;
   delete objQ.offset;
@@ -48,7 +49,48 @@ const getQuotesReport = async (req, res) => {
   }
 
   objQ = { ...objQ, deleted: false };
-
+  if(objQ.Status){
+    delete objQ.Status
+  
+    try {
+      let QuotesDB = await Quote.findAll({
+        attributes: { exclude: ["createdAt", "modifiedAt"] },
+        include: [
+          { model: Client },
+          { model: Company },
+          { model: Users },
+          {
+            model: QuoteStatus,
+            order: [
+              ["date", "ASC"],
+              [QuoteStatus, "id", "ASC"],
+            ],
+            where:{
+              Status:status
+            },
+  
+            include: [Users],
+          },
+          { model: DealerSalePerson },
+          { model: Location },
+          { model: Category },
+        ],
+        order: [["id", "DESC"]],
+        where: objQ,
+      
+        limit: 20,
+        offset: offset,
+      });
+  
+      QuotesDB.length
+        ? res.status(200).json(QuotesDB)
+        : res.status(404).send("no Quotes");
+    }
+    catch (e) {
+      console.log("Error in Quote controller" + e);
+    }
+  }
+  else{
   try {
     let QuotesDB = await Quote.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },
@@ -82,7 +124,7 @@ const getQuotesReport = async (req, res) => {
     console.log("Error in Quote controller" + e);
   }
 };
-
+};
 const getQuotes = async (req, res) => {
   try {
     let QuotesDB = await Quote.findAll({
@@ -117,8 +159,8 @@ const getQuotes = async (req, res) => {
       : res.status(404).send("no Quotes");
   } catch (e) {
     console.log("Error in Quote controller" + e);
-  }
-};
+  }}
+
 const getDeletedQuotes = async (req, res) => {
   try {
     let QuotesDB = await Quote.findAll({
