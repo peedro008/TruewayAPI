@@ -34,6 +34,115 @@ const NSDcalculator = (category, amount = 0) => {
   }
 };
 
+
+
+
+
+const getQuotesStats = async (req, res) => {
+  let objQ = req.query;
+  let dateFrom = req.query.dateFrom;
+  let dateTo = req.query.dateTo;
+
+  let status = req.query.Status
+  delete objQ.dateFrom;
+  delete objQ.dateTo;
+  delete objQ.offset;
+
+  if (dateFrom !== null && dateFrom !== undefined) {
+    objQ = { ...objQ, date: { [Op.between]: [dateFrom, dateTo] } };
+  }
+
+  objQ = { ...objQ, deleted: false };
+  if(objQ.Status){
+    delete objQ.Status
+  
+    try {
+      let QuotesDB = await Quote.findAll({
+        attributes: { exclude: ["createdAt", "modifiedAt"] },
+        include: [
+          { model: Client },
+          { model: Company },
+          { model: Users },
+          {
+            model: QuoteStatus,
+            order: [
+              ["date", "ASC"],
+              [QuoteStatus, "id", "ASC"],
+            ],
+            where:{
+              Status:status
+            },
+  
+            include: [Users],
+          },
+          { model: DealerSalePerson },
+          { model: Location },
+          { model: Category },
+        ],
+        order: [["id", "DESC"]],
+        where: objQ,
+      
+     
+      });
+  
+      QuotesDB.length
+        ? res.status(200).json(QuotesDB)
+        : res.status(404).send("no Quotes");
+    }
+    catch (e) {
+      console.log("Error in Quote controller" + e);
+    }
+  }
+  else{
+  try {
+    let QuotesDB = await Quote.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [
+        { model: Client },
+        { model: Company },
+        { model: Users },
+        {
+          model: QuoteStatus,
+          order: [
+            ["date", "ASC"],
+            [QuoteStatus, "id", "ASC"],
+          ],
+
+          include: [Users],
+        },
+        { model: DealerSalePerson },
+        { model: Location },
+        { model: Category },
+      ],
+      order: [["id", "DESC"]],
+      where: objQ,
+
+    });
+
+    QuotesDB.length
+      ? res.status(200).json(QuotesDB)
+      : res.status(404).send("no Quotes");
+  } catch (e) {
+    console.log("Error in Quote controller" + e);
+  }
+};
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const getQuotesReport = async (req, res) => {
   let objQ = req.query;
   let dateFrom = req.query.dateFrom;
@@ -602,4 +711,5 @@ module.exports = {
   getDeletedQuotes,
   addNotes,
   getQuotesReport,
+  getQuotesStats
 };

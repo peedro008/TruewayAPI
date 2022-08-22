@@ -87,6 +87,50 @@ const getPaymentsReport = async (req, res) => {
 
 
 
+const getPaymentsStats = async (req, res) => {
+  let objQ = req.query;
+  let dateFrom = req.query.dateFrom;
+  let dateTo = req.query.dateTo;
+
+  delete objQ.dateFrom;
+  delete objQ.dateTo;
+
+
+  if (dateFrom !== null && dateFrom !== undefined) {
+    objQ = { ...objQ, date: { [Op.between]: [dateFrom, dateTo] } };
+  }
+
+  objQ = { ...objQ, deleted: false };
+
+  try {
+    let PaymentsDB = await Payments.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote }],
+      include: [
+        { model: Client },
+        { model: Users },
+        {
+          model: Quote,
+         include: [QuoteStatus],
+        },
+       
+        { model: Location },
+        
+      ],
+      order: [
+        ['id', 'DESC'],
+      ],
+      where: objQ,
+
+    });
+
+    PaymentsDB.length
+      ? res.status(200).json(PaymentsDB)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in Payments controller" + e);
+  }
+};
 
 
 
@@ -434,5 +478,6 @@ module.exports = {
   dailyReport,
   getCashPayment,
   idPayment,
-  getPaymentsReport
+  getPaymentsReport,
+  getPaymentsStats
 };

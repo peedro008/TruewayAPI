@@ -17,7 +17,8 @@ const {
   getQuoteStatus,
   deleteQuote,
   getDeletedQuotes,
-  getQuotesReport
+  getQuotesReport,
+  getQuotesStats
 } = require("../controlers/Quotes");
 const {
   addCompany,
@@ -32,6 +33,7 @@ const {
   getDeletedManager,
   getDeletedProducer,
   sendMail,
+  killDealer,
 } = require("../controlers/adminControlers");
 const { login, users, resetPass } = require("../controlers/login");
 const {
@@ -60,6 +62,7 @@ const {
   addDeposit,
   idPayment,
   getPaymentsReport,
+  getPaymentsStats,
 } = require("../controlers/payments");
 const {
   getClients,
@@ -83,7 +86,7 @@ const {
 } = require("../controlers/Dealer");
 
 const router = Router();
-
+router.post("/killDealer", killDealer);
   router.get("/", get);
   router.post("/send", sendMail);
 router.post("/resetPass", resetPass);
@@ -154,6 +157,8 @@ router.post("/resetPass", resetPass);
   router.get("/idPayment", idPayment),
   router.get("/getQuotesReport", getQuotesReport),
   router.get("/getPaymentsReport", getPaymentsReport),
+  router.get("/getPaymentsStats", getPaymentsStats),
+  router.get("/getQuotesStats", getQuotesStats),
   (module.exports = router);
 
   
