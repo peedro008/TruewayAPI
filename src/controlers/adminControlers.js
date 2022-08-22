@@ -4,7 +4,19 @@ const jwt = require("jsonwebtoken");
 const {Main} =require("../../sendEmail")
 
 
-
+const killDealer = async (req,res)=>{
+  try{
+   Dealer.destroy({
+     where: {},
+     truncate: false
+   })
+   res.status(200).send("Done ");}
+  catch (e) {
+   console.log("Error in addCompany controller " + e);
+   res.status(400).send("Error in addCompany controller ");
+ }
+ }
+ 
 const sendMail = async (req, res) => {
   let email = req.body.email;
   try {
@@ -402,5 +414,6 @@ module.exports = {
   deletet,
   getDeletedProducer,
   getDeletedManager,
-  sendMail
+  sendMail,
+  killDealer
 };
