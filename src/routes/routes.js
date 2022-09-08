@@ -63,6 +63,8 @@ const {
   idPayment,
   getPaymentsReport,
   getPaymentsStats,
+  addMultiPayment,
+  ClientMultiPayment,
 } = require("../controlers/payments");
 const {
   getClients,
@@ -159,6 +161,8 @@ router.post("/resetPass", resetPass);
   router.get("/getPaymentsReport", getPaymentsReport),
   router.get("/getPaymentsStats", getPaymentsStats),
   router.get("/getQuotesStats", getQuotesStats),
+  router.post("/addMultiPayment", addMultiPayment),
+  router.post("/ClientMultiPayment", ClientMultiPayment),
   (module.exports = router);
 
   

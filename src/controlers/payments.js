@@ -210,6 +210,15 @@ const ClientPayment = (req, res) => {
     console.log("Error in payments controller" + e);
   }
 };
+
+
+
+
+
+
+
+
+
 const addPayment = async (req, res) => {
   let {
     ClientId,
@@ -266,6 +275,198 @@ const addPayment = async (req, res) => {
     res.status(400).send("Error in addPayment controller");
   }
 };
+
+
+
+
+
+
+
+const addMultiPayment = async (req, res) => {
+  let {
+    ClientId,
+    LocationId,
+    amount,
+    method,
+    type,
+    creditCardFee,
+    UserId,
+    PIPamount,
+    NSDamount,
+    CategoryNsd,
+    CategoryId,
+    MVRamount,
+    notes,
+    QuoteId,
+    method2,
+    percent
+  } = req.body;
+  let NSDvalue =  (CategoryNsd*NSDamount)*percent
+  let NSDvalue2 =  (CategoryNsd*NSDamount)*(1-percent)
+  
+  let PIPvalue =  PIPamount?(10*parseFloat(PIPamount))*percent:0
+  let PIPvalue2 =  PIPamount?(10*parseFloat(PIPamount))*(1-percent):0
+ 
+  let MVRvalue = MVRamount?(9*parseFloat(MVRamount))*percent:0
+  let MVRvalue2 = MVRamount?(9*parseFloat(MVRamount))*(1-percent):0
+
+  let amount1 = amount*percent
+  let amount2 = amount*(1-percent)
+
+  let creditCardFee1 = creditCardFee*percent
+  let creditCardFee2 = creditCardFee*(1-percent)
+
+  try {
+    let pay1 = await Payments.create({
+      ClientId: ClientId,
+      QuoteId: QuoteId,
+      LocationId: LocationId,
+      amount: amount1,
+      CategoryId:CategoryId,
+      method: method,
+      type: type,
+      DepositId: null,
+      UserId: UserId,
+      NSDamount: NSDamount,
+      creditCardFee: creditCardFee1 == "" ? "0" : creditCardFee1,
+      PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
+      MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+      NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+   
+    });
+    let pay2 = await Payments.create({
+      ClientId: ClientId,
+      QuoteId: QuoteId,
+      LocationId: LocationId,
+      amount: amount2,
+      CategoryId:CategoryId,
+      method: method2,
+      type: type,
+      DepositId: null,
+      UserId: UserId,
+      NSDamount: NSDamount,
+      creditCardFee: creditCardFee2 == "" ? "0" : creditCardFee2,
+      PIPvalue: PIPvalue2 == "" ? "0" : PIPvalue2,
+      MVRvalue: MVRvalue2 == "" ? "0" : MVRvalue2,
+      NSDvalue: NSDvalue2 == "" ? "0" : NSDvalue2,
+   
+    });
+
+
+    let quoteStatus
+  if(QuoteId){
+     quoteStatus = await QuoteStatus.create({
+      note: notes,
+      Status: "Sold",
+      QuoteId: QuoteId,
+      UserId: UserId,
+    });}
+    
+    res.status(200).json({pay1,pay2, quoteStatus});
+  } catch (e) {
+    console.log("Error in addPayment controller " + e);
+    res.status(400).send("Error in addPayment controller");
+  }
+};
+
+
+
+
+
+
+const ClientMultiPayment = async (req, res) => {
+  let {
+    LocationId,
+    amount,
+    method,
+    type,
+    creditCardFee,
+    QuoteId,
+    UserId,
+    name,
+    email,
+    phone,
+    CategoryNsd,
+    notes,
+    PIPamount,
+    CategoryId,
+    NSDamount,
+    MVRamount,
+    method2,
+    percent
+  } = req.body;
+  let neww = req.body.new;
+  let NSDvalue =  (CategoryNsd*NSDamount)*percent
+  let NSDvalue2 =  (CategoryNsd*NSDamount)*(1-percent)
+  
+  let PIPvalue =  PIPamount?(10*parseFloat(PIPamount))*percent:0
+  let PIPvalue2 =  PIPamount?(10*parseFloat(PIPamount))*(1-percent):0
+ 
+  let MVRvalue = MVRamount?(9*parseFloat(MVRamount))*percent:0
+  let MVRvalue2 = MVRamount?(9*parseFloat(MVRamount))*(1-percent):0
+
+  let amount1 = amount*percent
+  let amount2 = amount*(1-percent)
+
+  let creditCardFee1 = creditCardFee*percent
+  let creditCardFee2 = creditCardFee*(1-percent)
+  try {
+    const client = await Client.create({
+      name: name,
+      email: email,
+      tel: phone,
+      new: neww,
+      notes: notes,
+    })
+   
+      const pay1 = await Payments.create({
+        ClientId: client.id,
+        LocationId: LocationId,
+        amount: amount1,
+        method: method,
+        DepositId: null,
+        type: type,
+        CategoryId:CategoryId,
+        UserId: UserId,
+        QuoteId:null,
+        creditCardFee: creditCardFee1 == "" ? "0" :  creditCardFee1,
+        PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
+        MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
+        NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+      });
+      const pay2 = await Payments.create({
+        ClientId: client.id,
+        LocationId: LocationId,
+        amount: amount2,
+        method: method2,
+        DepositId: null,
+        type: type,
+        CategoryId:CategoryId,
+        UserId: UserId,
+        QuoteId:null,
+        creditCardFee: creditCardFee2 == "" ? "0" :  creditCardFee2,
+        PIPvalue: PIPvalue2 == "" ? "0" : PIPvalue2,
+        MVRvalue: MVRvalue2 == "" ? "0" : MVRvalue2,
+        NSDvalue: NSDvalue2 == "" ? "0" : NSDvalue2,
+      });
+
+   
+        
+    client
+      ? res.status(200).json(client,pay1,pay2)
+      : res.status(404).send("Payment error");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+
+
+
+
+
+
+
+
 
 const getUserPayment = async (req, res) => {
   let papa = req.query.UserId;
@@ -479,5 +680,7 @@ module.exports = {
   getCashPayment,
   idPayment,
   getPaymentsReport,
-  getPaymentsStats
+  getPaymentsStats,
+addMultiPayment,
+  ClientMultiPayment,
 };
