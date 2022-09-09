@@ -1,4 +1,4 @@
-const {Client, Company} =require("../db")
+const {Client, Company, Quote,QuoteStatus} =require("../db")
 
 const getClients = async (req,res)=>{
     try{
@@ -7,11 +7,18 @@ const getClients = async (req,res)=>{
             where:{deleted:false},
             include:[
                 {model:Company},
+                {
+                    model: Quote,
+                   include: [QuoteStatus],
+            
+           
+                  },
            
              
                 
                 
             ],
+
       
        })
        Clients.length?res.status(200).json(Clients):
