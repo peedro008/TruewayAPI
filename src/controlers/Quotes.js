@@ -26,7 +26,7 @@ const getQuotesStats = async (req, res) => {
   delete objQ.offset;
 
   if (dateFrom !== null && dateFrom !== undefined) {
-    objQ = { ...objQ, date: { [Op.between]: [dateFrom, dateTo] } };
+    objQ = { ...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo] } };
   }
 
   objQ = { ...objQ, deleted: false };
@@ -131,7 +131,7 @@ const getQuotesReport = async (req, res) => {
   delete objQ.offset;
 
   if (dateFrom !== null && dateFrom !== undefined) {
-    objQ = { ...objQ, date: { [Op.between]: [dateFrom, dateTo] } };
+    objQ = { ...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo] } };
   }
 
   objQ = { ...objQ, deleted: false };
@@ -299,7 +299,7 @@ const addQuote = async (req, res) => {
   let bound = req.body.Bound;
   let monthlyPayment = req.body.monthlyPayment;
   let neww = req.body.new;
-
+  let date = req.body.date
   let TotalPremium = req.body.TotalPremium;
   let ClientNotes = req.body.notes;
   let PIPamount = req.body.PIPamount;
@@ -339,6 +339,8 @@ const addQuote = async (req, res) => {
               PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
               MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
               NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+              date:date
+             
             }))
         )
 
@@ -362,6 +364,7 @@ const addQuote = async (req, res) => {
         DealerSalePerson: DealerSalePersonId,
         monthlyPayment: monthlyPayment,
         totalPremium: TotalPremium,
+        date:date,
         PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
         MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
         NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
@@ -594,13 +597,14 @@ const modifyQuotes = async (req, res) => {
   let down = req.body.down;
   let UserId = req.body.UserId;
   let CompanyId = req.body.CompanyId
-
+  let date = req.body.date
   try {
     if (Status == "Cancelled") {
       let quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: Status,
         QuoteId: QuoteId,
+        date:date,
         UserId: UserId,
       });
       res.status(200).json(quoteStatus);
@@ -618,6 +622,7 @@ const modifyQuotes = async (req, res) => {
         Status: Status,
         QuoteId: QuoteId,
         UserId: UserId,
+        date:date
       });
       res.status(200).json(quote);
     }
