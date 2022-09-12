@@ -312,7 +312,7 @@ const addQuote = async (req, res) => {
   let QuoteDb;
   let QuoteStatusDb;
   let address = req.body.address
-  let clientCompany = req.body.clientCompany
+
   try {
     if (!ClientId) {
       ClientDb = await Client.create({
@@ -322,7 +322,7 @@ const addQuote = async (req, res) => {
         new: neww,
         notes: ClientNotes,
         address:address,
-        CompanyId:clientCompany
+        CompanyId:CompanyId
       })
         .then(
           (Client) =>
@@ -593,6 +593,7 @@ const modifyQuotes = async (req, res) => {
   let monthly = req.body.monthly;
   let down = req.body.down;
   let UserId = req.body.UserId;
+  let CompanyId = req.body.CompanyId
 
   try {
     if (Status == "Cancelled") {
@@ -605,7 +606,7 @@ const modifyQuotes = async (req, res) => {
       res.status(200).json(quoteStatus);
     } else {
       let quote = await Quote.update(
-        { down: down, monthlyPayment: monthly },
+        { down: down, monthlyPayment: monthly,CompanyId:CompanyId },
         {
           where: {
             id: QuoteId,
