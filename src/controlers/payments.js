@@ -109,6 +109,7 @@ const getPaymentsStats = async (req, res) => {
       include: [
         { model: Client },
         { model: Users },
+        { model: Category },
         {
           model: Quote,
          include: [QuoteStatus],
