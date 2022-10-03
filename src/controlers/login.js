@@ -20,7 +20,7 @@ const login = (req, res, next) => {
                 } else if (compareRes) { // password match
                     console.log(dbUser)
                     const token = jwt.sign({ email: req.body.email }, 'secret', { expiresIn: '1h' });
-                    res.status(200).json({message: "User logged in", "token": token, UserRole: dbUser.UserRole, userId:dbUser.id, Name:dbUser.name, LocationId: dbUser.LocationId});
+                    res.status(200).json({message: "User logged in", "token": token, UserRole: dbUser.UserRole, userId:dbUser.id, Name:dbUser.name});
                 } else { // password doesnt match
                     res.status(401).json({message: "Invalid credentials"});
                 };

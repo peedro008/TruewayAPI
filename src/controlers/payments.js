@@ -142,7 +142,7 @@ const getPayment = async (req, res) => {
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
-      include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote }],
+      include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote },  { model: Category}],
       where: { deleted: false },
     });
     payments.length
@@ -514,13 +514,15 @@ const getDeletedPayment = async (req, res) => {
 };
 
 const getCashPayment = async (req, res) => {
+  let date_ob = new Date();
+  const DATE = date_ob.getFullYear() + "-0" + (date_ob.getMonth() + 1) + "-" + date_ob.getDate()
   const LocationId = req.query.LocationId;
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
      
       include: [{ model: Client }, { model: Users }, { model: Location }],
-      where: { deleted: false, LocationId: LocationId, deposited: false, method:"Cash" },
+      where: { deleted: false, LocationId: LocationId, deposited: false, method:"Cash", date: DATE},
     });
     payments.length
       ? res.status(200).json(payments)
@@ -551,14 +553,17 @@ const getDepositCashPayment = async (req, res) => {
 };
 const dailyReport = async (req, res) => {
   let date = new Date().toJSON();
+  let date1 = new Date()
   let ated = date.substring(0, 10);
+  let reya = new Date(date1.getTime()-86400000).toJSON();
   let LocationId = req.query.LocationId;
+  let yesterday = req.query.yesterday
   try {
     let PaymentsDB = await Payments.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },
       include: [{ model: Client }, { model: Users }, { model: Location }],
       where: {
-        date: ated,
+        date: !yesterday?ated:reya,
         LocationId: LocationId,
         DailyReportId: null,
       },
