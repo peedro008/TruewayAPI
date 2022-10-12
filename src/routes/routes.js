@@ -88,7 +88,7 @@ const {
 } = require("../controlers/Dealer");
 
 const router = Router();
-router.post("/killDealer", killDealer);
+//router.post("/killDealer", killDealer);
   router.get("/", get);
   router.post("/send", sendMail);
 router.post("/resetPass", resetPass);

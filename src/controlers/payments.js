@@ -566,6 +566,7 @@ const dailyReport = async (req, res) => {
         date: !yesterday?ated:reya,
         LocationId: LocationId,
         DailyReportId: null,
+        deleted: false
       },
     });
 
