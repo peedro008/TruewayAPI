@@ -549,14 +549,14 @@ const getStatus = async (req, res) => {
         { model: Quote, include: [{ model: Client }] },
         { model: Users },
       ],
-
+      order: [["id", "DESC"]],
       where: {
         deleted: false,
       },
     });
 
     quoteStatus.length
-      ? res.status(200).json(quoteStatus)
+      ? res.status(200).json(quoteStatus.splice(0,20))
       : res.status(404).send("no QuoteStatus");
   } catch (e) {
     console.log("Error in QuoteStatus controller" + e);
