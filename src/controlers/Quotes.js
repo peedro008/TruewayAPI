@@ -648,6 +648,7 @@ const getUsersAverage = async (req, res) => {
       temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)])?
       temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].unsold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]?.unsold+1:
       err++
+      
     }})
 
     result = temp.map(e=>{      return{...e, avg: e.sold+e.unsold?
