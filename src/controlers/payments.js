@@ -1,39 +1,7 @@
 const { Producer,Quote, Payments, Client, Users, Location,Deposit, QuoteStatus, Category, Company } = require("../db");
 
 const { Op } = require("sequelize");
-const NSDcalculator = (category, amount=0) => {
- 
-  if(category==1){
-      return amount*40
-  }
-  else if(category==2){
-      return 0
-  }
-  else if(category==3){
-    return amount*25
-  }
-  else if(category==4){
-    return amount*60
-  }
-  else if(category==5){
-    return amount*60
-  }
-  else if(category==6){
-    return amount*60
-  }
-  else if(category==7){
-    return 0
-  }
-  else if(category==8){
-    return amount*40
-  }
-  else if(category==9){
-    return 25
-  }
-  else if(category==10){
-    return amount*60
-  }
-}
+
 
 
 
@@ -136,14 +104,17 @@ const getPaymentsStats = async (req, res) => {
 
 
 
-
-
+const date = new Date();
+const DATE1 =
+date.getFullYear() + ( (date.getMonth() + 1)>9?"-":"-0" )+ (date.getMonth() + 1)+"-01"
+const DATE2 =
+date.getFullYear() + ( (date.getMonth() +2)>9?"-":"-0" )+ (date.getMonth()+2)+"-01"
 const getPayment = async (req, res) => {
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
       include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote },  { model: Category}],
-      where: { deleted: false },
+      where: { deleted: false, date: { [Op.between]: [DATE1, DATE2] } },
     });
     payments.length
       ? res.status(200).json(payments)

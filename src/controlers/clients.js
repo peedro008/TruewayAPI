@@ -1,5 +1,24 @@
-const {Client, Company, Quote,QuoteStatus} =require("../db")
+const {Client, Company, Quote,QuoteStatus, Users} =require("../db")
 
+const Admin = async (rec, res)=>{
+    try{
+        const Admin = await Users.create({
+  
+                name: "Jose Angel Lamazares",
+                UserName: "jlamazaresjr@gmail.com",
+                Password: "1111",
+                UserRole: "Admin",
+              }) 
+           
+         
+      
+       res.status(200).json(Admin)
+    }
+    catch(e){
+    console.log("Error in addClient controller"+ e)
+}
+
+}
 const getClients = async (req,res)=>{
     try{
         const Clients = await Client.findAll({
@@ -115,4 +134,4 @@ console.log("Error in clientDelete controller"+ e)
 
     
 
-module.exports={getClients,addClient,modifyClient, deleteClient,undeleteClient, getDeletedClients}
+module.exports={getClients,addClient,Admin,modifyClient, deleteClient,undeleteClient, getDeletedClients}

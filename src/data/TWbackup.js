@@ -10,30 +10,39 @@ const {
 const Pe = function () {
   Category.create({
     name: "PERSONAL AUTO ",
+    NSDvalue: 25
   });
   Category.create({
     name: "HOMEOWNERS",
+    NSDvalue: 25
   });
   Category.create({
     name: "GENERAL LIABILITY",
+    NSDvalue: 25
   });
   Category.create({
     name: "MOTORCYCLE",
+    NSDvalue: 25
   });
   Category.create({
     name: "BOATS/JETSKIES",
+    NSDvalue: 25
   });
   Category.create({
     name: "COMMERCIAL AUTO",
+    NSDvalue: 25
   });
   Category.create({
     name: "HEALTH INSURANCE",
+    NSDvalue: 25
   });
   Category.create({
     name: "NON OWNERS",
+    NSDvalue: 25
   });
   Category.create({
     name: "RENTERS",
+    NSDvalue: 25
   });
 
 

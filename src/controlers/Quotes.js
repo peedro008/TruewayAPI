@@ -9,6 +9,8 @@ const {
   DealerSalePerson,
 } = require("../db");
 const { Op, Sequelize } = require("sequelize");
+const sequelize = require("sequelize");
+
 
 
 
@@ -241,7 +243,7 @@ const getQuotes = async (req, res) => {
       },
     });
     QuotesDB.length
-      ? res.status(200).json(QuotesDB)
+      ? res.status(200).json(QuotesDB.splice(0,20))
       : res.status(404).send("no Quotes");
   } catch (e) {
     console.log("Error in Quote controller" + e);
@@ -425,11 +427,11 @@ const producerQuotes = async (req, res) => {
     let QuotesDB = await Quote.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },
       include: [
-        { model: Users, where: { id: papa } },
+        { model: Users },
         { model: Client },
         { model: Company },
 
-        { model: QuoteStatus },
+        { model: QuoteStatus ,where: { UserId: papa }},
 
         { model: Location },
         { model: Category },
@@ -562,6 +564,136 @@ const getStatus = async (req, res) => {
     console.log("Error in QuoteStatus controller" + e);
   }
 };
+const getUserStatus = async (req, res) => {
+  let id = req.query.UserId
+  try {
+    let quoteStatus = await QuoteStatus.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [
+        { model: Quote, include: [{ model: Client }] },
+        { model: Users },
+      ],
+      order: [["id", "DESC"]],
+      where: {
+        UserId:id,
+        deleted: false,
+      },
+    });
+
+    quoteStatus.length
+      ? res.status(200).json(quoteStatus)
+      : res.status(404).send("no QuoteStatus");
+  } catch (e) {
+    console.log("Error in QuoteStatus controller" + e);
+  }
+};
+
+
+const getUsersAverage = async (req, res) => {
+   
+
+  try {
+    let dateFrom = req.query.dateFrom;
+    let dateTo = req.query.dateTo;
+    let result 
+    let quotes
+    if(!dateFrom){
+    quotes = await Quote.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [
+        { model: QuoteStatus, order: [["id", "DESC"]] },
+        { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
+      ],
+      order: [["id", "DESC"]],
+      where: {
+          deleted: false,
+      },
+    });}
+    else{
+      quotes = await Quote.findAll({
+        attributes: { exclude: ["modifiedAt"] },
+        include: [
+          { model: QuoteStatus , order: [["id", "DESC"]]},
+          { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
+        ],
+        order: [["id", "DESC"]],
+        where: {
+            deleted: false,
+            updatedAt: { [Op.between]: [dateFrom, dateTo] }
+        },
+      });
+    }
+    let Userx = await Users.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+    
+      order: [["id", "DESC"]],
+      where:{UserRole:{  [sequelize.Op.not]: 'Admin'}, deleted: false,} 
+    });
+
+    let temp =Userx.map(e=>{
+      return {id:e.id,
+        name:e.name,
+              sold:0,
+              unsold:0}
+    })
+
+    quotes.map(e=>{
+      if(temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]){
+      e.QuoteStatuses.sort(function(a,b){return b.id-a.id})[0].Status==="Sold"?
+      temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].sold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].sold+1
+      :
+      temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].unsold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].unsold+1
+    }})
+
+    result = temp.map(e=>{      return{...e, avg: e.sold+e.unsold?
+      (100*e.sold/(e.sold+e.unsold)).toFixed(0):0}
+
+    })
+
+
+
+
+
+
+    result.length
+      ? res.status(200).json(result)
+      : res.status(404).json({message:"ERROR"});
+
+
+    
+  } catch (e) {
+    console.log("Error in QuoteStatus controller" + e);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const idQuotes = async (req, res) => {
   var ID = req.query.id;
@@ -698,5 +830,7 @@ module.exports = {
   getDeletedQuotes,
   addNotes,
   getQuotesReport,
-  getQuotesStats
+  getQuotesStats,
+  getUserStatus,
+  getUsersAverage
 };

@@ -360,6 +360,18 @@ const deleteManager = async (req, res) => {
     console.log("Error in deleteProducer controller" + e);
   }
 };
+const deleteUser = async (req, res) => {
+  let Id = req.body.UserId;
+  try {
+    const deleted = await Users.update(
+      { deleted: true },
+      { where: { id: Id } }
+    );
+    res.status(200).json(deleted);
+  } catch (e) {
+    console.log("Error in deleteProducer controller" + e);
+  }
+};
 const undeleteManager = async (req, res) => {
   let ManagerId = req.body.ManagerId;
   try {
@@ -404,6 +416,7 @@ const getDeletedManager = async (req, res) => {
 module.exports = {
   undeleteManager,
   deleteManager,
+  deleteUser,
   addCompany,
   addProducer,
   addDealerSalePerson,
@@ -415,5 +428,6 @@ module.exports = {
   getDeletedProducer,
   getDeletedManager,
   sendMail,
-  killDealer
+  killDealer,
+
 };
