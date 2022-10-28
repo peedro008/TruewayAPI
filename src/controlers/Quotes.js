@@ -627,7 +627,7 @@ const getUsersAverage = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
     
       order: [["id", "DESC"]],
-      where:{UserRole:{  [sequelize.Op.not]: 'Admin'}, deleted: false,} 
+      where:{UserRole:{  [sequelize.Op.not]: 'Admin'}} 
     });
 
     let temp =Userx.map(e=>{
@@ -639,7 +639,7 @@ const getUsersAverage = async (req, res) => {
 
     quotes.map(e=>{
       if(temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]){
-      e.QuoteStatuses.sort(function(a,b){return b.id-a.id})[0].Status==="Sold"?
+      e.QuoteStatuses[0].Status==="Sold"?
       temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].sold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].sold+1
       :
       temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].unsold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].unsold+1
