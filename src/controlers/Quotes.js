@@ -643,7 +643,7 @@ const getUsersAverage = async (req, res) => {
       e.QuoteStatuses.sort(function(a,b){return b.id-a.id})[0].Status==="Sold" && temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]?
 
       temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]?.sold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]?.sold+1
-      
+       
       :(
       temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)])?
       temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]?.unsold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]?.unsold+1:
