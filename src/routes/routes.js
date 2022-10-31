@@ -96,8 +96,8 @@ const router = Router();
 //router.post("/killDealer", killDealer);
   router.get("/", get);
   router.post("/send", sendMail);
-  router.get("/GetUserStatus", getUserStatus);
-  router.get("/getUsersAverage", getUsersAverage);
+  // router.get("/GetUserStatus", getUserStatus);
+  // router.get("/getUsersAverage", getUsersAverage);
 router.post("/resetPass", resetPass);
   router.get("/Quotes", getQuotes);
   router.get("/getDealers", getDealers);
@@ -168,7 +168,7 @@ router.post("/resetPass", resetPass);
   router.get("/getPaymentsReport", getPaymentsReport),
   router.get("/getPaymentsStats", getPaymentsStats),
   router.get("/getQuotesStats", getQuotesStats),
-  router.get("/getUserAverage", getUserAverage)
+  // router.get("/getUserAverage", getUserAverage)
   router.post("/addMultiPayment", addMultiPayment),
   router.post("/ClientMultiPayment", ClientMultiPayment),
 
