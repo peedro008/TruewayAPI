@@ -696,10 +696,8 @@ const getComission =(payments,quotes )=>{
         pes += 10;
       }
    
-        pes +=
-          5 *
-          (e?.NSDvalue?.length?
-             parseFloat(e.NSDvalue)/parseFloat(e.Category?.NSDvalue):0
+        pes +=5 *(e.NSDvalue.length?
+             parseFloat(e.NSDvalue)/parseFloat(e.Category.NSDvalue):0
             );
  
     }
@@ -788,7 +786,7 @@ const getUserAverage = async (req, res) => {
 
 
     let temp ={id:UserId,
-        name:payments[0]?.User?.name,
+        name:payments[0].User.name,
            NSDcomm:0}
 
 
