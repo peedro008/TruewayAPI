@@ -6,10 +6,12 @@ const {
   Location,
   Users,
   QuoteStatus,
+  Payments,
   DealerSalePerson,
 } = require("../db");
 const { Op, Sequelize } = require("sequelize");
 const sequelize = require("sequelize");
+const moment = require("moment/moment");
 
 
 
@@ -602,7 +604,7 @@ const getUsersAverage = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
       include: [
         { model: QuoteStatus, order: [["id", "DESC"]] },
-        { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
+        { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'}, deleted: false,} },
       ],
       order: [["id", "DESC"]],
       where: {
@@ -613,7 +615,7 @@ const getUsersAverage = async (req, res) => {
       quotes = await Quote.findAll({
         attributes: { exclude: ["modifiedAt"] },
         include: [
-          { model: QuoteStatus , order: [["id", "DESC"]]},
+          { model: QuoteStatus },
           { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
         ],
         order: [["id", "DESC"]],
@@ -627,7 +629,7 @@ const getUsersAverage = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
     
       order: [["id", "DESC"]],
-      where:{UserRole:{  [sequelize.Op.not]: 'Admin'}} 
+      where:{UserRole:{  [sequelize.Op.not]: 'Admin', }, deleted:false} 
     });
 
     let temp =Userx.map(e=>{
@@ -639,10 +641,16 @@ const getUsersAverage = async (req, res) => {
 
     quotes.map(e=>{
       if(temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]){
-      e.QuoteStatuses[0].Status==="Sold"?
-      temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].sold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].sold+1
+      e.QuoteStatuses.sort(function (a, b) {
+        return b.id - a.id ;
+      })[0].Status==="Sold"?
+      temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {return b.id - a.id})[0].UserId)].sold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {return b.id - a.id})[0].UserId)].sold+1
       :
-      temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].unsold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)].unsold+1
+      temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {
+        return b.id - a.id ;
+      })[0].UserId)].unsold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {
+        return b.id - a.id ;
+      })[0].UserId)].unsold+1
     }})
 
     result = temp.map(e=>{      return{...e, avg: e.sold+e.unsold?
@@ -671,12 +679,145 @@ const getUsersAverage = async (req, res) => {
 
 
 
+const getComission =(payments,quotes )=>{
+  let pes = 0;
+
+  if(quotes.length)  {quotes.map((e) => {
+    if ( e.CategoryId== 2&&!e.Payment&& e.QuoteStatuses.sort(function (a, b) {
+      return b.id - a.id ;
+    })[0].Status=="Sold") {
+      pes += 10;
+    }
+  })}
+  if(payments.length){
+   payments.map((e) => {
+     if (e.CategoryId !== 7) {
+      if ( e.CategoryId == 2) {
+        pes += 10;
+      }
+   
+        pes +=
+          5 *
+          (e?.NSDvalue?.length?
+             parseFloat(e.NSDvalue)/parseFloat(e.Category?.NSDvalue):0
+            );
+ 
+    }
+  });}
+  return pes
+}
+
+
+
+
+
+const getUserAverage = async (req, res) => {
+   
+
+  try {
+    let dateFrom = req.query.dateFrom;
+    let dateTo = req.query.dateTo;
+    let UserId = req.query.UserId;
+    let result 
+    let quotes
+    let payments
+    if(!dateFrom){
+    quotes = await Quote.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [
+        { model: QuoteStatus, order: [["id", "DESC"]], where:{
+          UserId:UserId
+        } },
+        { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
+      ],
+      order: [["id", "DESC"]],
+      where: {
+          deleted: false,
+      },
+    });
+    payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [
+        { model: Client },
+        { model: Users, where: { id: UserId } },
+        { model: Location },
+        { model: Category}
+       
+      ],
+      where: { deleted: false ,
+        NSDvalue:{  [sequelize.Op.not]: '0'},
+        UserId: UserId,},
+    });
+  
+  
+  }
+    else{
+      quotes = await Quote.findAll({
+        attributes: { exclude: ["modifiedAt"] },
+        include: [
+          { model: QuoteStatus , order: [["id", "DESC"]], where:{
+            UserId:UserId
+          }},
+          { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
+        ],
+        order: [["id", "DESC"]],
+        where: {
+            deleted: false,
+            updatedAt: { [Op.between]: [dateFrom, dateTo] } 
+        },
+      });
+      payments = await Payments.findAll({
+        attributes: { exclude: ["modifiedAt"] },
+        include: [
+          { model: Client },
+          { model: Users, },
+          { model: Location },
+          { model: Category}
+         
+        ],
+        
+        where: {
+          UserId: UserId,
+          NSDvalue:{  [sequelize.Op.not]: '0'},
+          deleted: false,
+          date: { [Op.between]: [dateFrom, dateTo] }
+      },
+      });
+    }
+   
+
+
+    let temp ={id:UserId,
+        name:payments[0]?.User?.name,
+           NSDcomm:0}
+
+
+      temp.NSDcomm=getComission(payments, quotes)
+
+
+
+
+
+    // result = {...temp, avg: temp.sold+temp.unsold?
+    //   (100*temp.sold/(temp.sold+e.unsold)).toFixed(0):0}
+
+    
 
 
 
 
 
 
+    temp
+      ? res.status(200).json(temp)
+      : res.status(404).json({message:"ERROR"});
+
+
+    
+  } catch (e) {
+    console.log("Error in QuoteStatus controller" + e);
+  }
+};
 
 
 
@@ -832,5 +973,6 @@ module.exports = {
   getQuotesReport,
   getQuotesStats,
   getUserStatus,
-  getUsersAverage
+  getUsersAverage,
+  getUserAverage
 };

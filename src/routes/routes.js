@@ -20,7 +20,8 @@ const {
   getQuotesReport,
   getQuotesStats,
   getUserStatus,
-  getUsersAverage
+  getUsersAverage,
+  getUserAverage
 } = require("../controlers/Quotes");
 const {
   addCompany,
@@ -167,6 +168,7 @@ router.post("/resetPass", resetPass);
   router.get("/getPaymentsReport", getPaymentsReport),
   router.get("/getPaymentsStats", getPaymentsStats),
   router.get("/getQuotesStats", getQuotesStats),
+  router.get("/getUserAverage", getUserAverage)
   router.post("/addMultiPayment", addMultiPayment),
   router.post("/ClientMultiPayment", ClientMultiPayment),
 
