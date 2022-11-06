@@ -30,7 +30,7 @@ const getQuotesStats = async (req, res) => {
   delete objQ.offset;
 
   if (dateFrom !== null && dateFrom !== undefined) {
-    objQ = { ...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo] } };
+    objQ = { ...objQ, deleted:false };
   }
 
   objQ = { ...objQ, deleted: false };
@@ -41,17 +41,19 @@ const getQuotesStats = async (req, res) => {
       let QuotesDB = await Quote.findAll({
         attributes: { exclude: ["createdAt", "modifiedAt"] },
         include: [
-          { model: Client },
+          { model: Client, where:{
+            deleted:false
+          } },
           { model: Company },
           { model: Users },
           {
             model: QuoteStatus,
             order: [
-              ["date", "ASC"],
-              [QuoteStatus, "id", "ASC"],
+             [QuoteStatus, "id", "ASC"],
             ],
             where:{
-              Status:status
+              Status:status,
+             date: { [Op.between]: [dateFrom, dateTo]}
             },
   
             include: [Users],
@@ -79,16 +81,18 @@ const getQuotesStats = async (req, res) => {
     let QuotesDB = await Quote.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },
       include: [
-        { model: Client },
+        {model: Client, where:{
+          deleted:false
+        } },
         { model: Company },
         { model: Users },
         {
           model: QuoteStatus,
           order: [
-            ["date", "ASC"],
+            
             [QuoteStatus, "id", "ASC"],
           ],
-
+          where:{updatedAt: { [Op.between]: [dateFrom, dateTo]}},
           include: [Users],
         },
         { model: DealerSalePerson },
@@ -268,7 +272,6 @@ const getDeletedQuotes = async (req, res) => {
 
           include: [Users],
         },
-        { model: Dealer },
         { model: Location },
         { model: Category },
       ],
@@ -615,13 +618,13 @@ const getUsersAverage = async (req, res) => {
       quotes = await Quote.findAll({
         attributes: { exclude: ["modifiedAt"] },
         include: [
-          { model: QuoteStatus },
+          { model: QuoteStatus, where: {updatedAt:{ [Op.between]: [dateFrom, dateTo] }} },
           { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
         ],
         order: [["id", "DESC"]],
         where: {
             deleted: false,
-            updatedAt: { [Op.between]: [dateFrom, dateTo] }
+       
         },
       });
     }
@@ -724,7 +727,8 @@ const getUserAverage = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
       include: [
         { model: QuoteStatus, order: [["id", "DESC"]], where:{
-          UserId:UserId
+          UserId:UserId,
+          updatedAt: { [Op.between]: [dateFrom, dateTo] }
         } },
         { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
       ],
@@ -754,6 +758,7 @@ const getUserAverage = async (req, res) => {
         attributes: { exclude: ["modifiedAt"] },
         include: [
           { model: QuoteStatus , order: [["id", "DESC"]], where:{
+            updatedAt: { [Op.between]: [dateFrom, dateTo] } ,
             UserId:UserId
           }},
           { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
@@ -761,7 +766,7 @@ const getUserAverage = async (req, res) => {
         order: [["id", "DESC"]],
         where: {
             deleted: false,
-            updatedAt: { [Op.between]: [dateFrom, dateTo] } 
+            
         },
       });
       payments = await Payments.findAll({
