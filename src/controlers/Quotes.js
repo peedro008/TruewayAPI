@@ -607,7 +607,7 @@ const getUsersAverage = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
       include: [
         { model: QuoteStatus, order: [["id", "DESC"]] },
-        { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'}, deleted: false,} },
+        { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'}} },
       ],
       order: [["id", "DESC"]],
       where: {
@@ -639,11 +639,13 @@ const getUsersAverage = async (req, res) => {
       return {id:e.id,
         name:e.name,
               sold:0,
-              unsold:0}
+              unsold:0,
+            deleted:false}
     })
 
     quotes.map(e=>{
-      if(temp[temp.map(object => object.id).indexOf(e.QuoteStatuses[0].UserId)]){
+      
+      if(temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {return b.id - a.id})[0].UserId)]){
       e.QuoteStatuses.sort(function (a, b) {
         return b.id - a.id ;
       })[0].Status==="Sold"?
