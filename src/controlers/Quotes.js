@@ -53,7 +53,7 @@ const getQuotesStats = async (req, res) => {
             ],
             where:{
               Status:status,
-             date: { [Op.between]: [dateFrom, dateTo]}
+       
             },
   
             include: [Users],
@@ -63,7 +63,7 @@ const getQuotesStats = async (req, res) => {
           { model: Category },
         ],
         order: [["id", "DESC"]],
-        where: objQ,
+        where: {...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo]}},
       
      
       });
@@ -73,7 +73,7 @@ const getQuotesStats = async (req, res) => {
         : res.status(404).send("no Quotes");
     }
     catch (e) {
-      console.log("Error in Quote controll" + e);
+      console.log("Error in Quote controller" + e);
     }
   }
   else{
@@ -89,11 +89,10 @@ const getQuotesStats = async (req, res) => {
         {
           model: QuoteStatus,
           order: [
-
             
             [QuoteStatus, "id", "ASC"],
           ],
-          where:{updatedAt: { [Op.between]: [dateFrom, dateTo]}},
+
           include: [Users],
         },
         { model: DealerSalePerson },
@@ -101,7 +100,7 @@ const getQuotesStats = async (req, res) => {
         { model: Category },
       ],
       order: [["id", "DESC"]],
-      where: objQ,
+      where: {...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo]}},
 
     });
 

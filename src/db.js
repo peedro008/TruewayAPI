@@ -5,17 +5,17 @@ const path = require("path");
 
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(
-  "postgres://postgres:pesanmene@localhost:5432/test",
-  { logging: false }
-);
+// const sequelize = new Sequelize(
+//   "postgres://postgres:pesanmene@localhost:5432/test",
+//   { logging: false }
+// );
 
-// const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
-//   host: "aacao4lyn1y73d.cviwhti8ghss.us-east-1.rds.amazonaws.com",
-//   dialect:'postgres',
-//   logging: false, // set to console.log to see the raw SQL queries
-//   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-// });
+const sequelize = new Sequelize( "postgres", "postgres", "pesanmene",  {
+  host: "aacao4lyn1y73d.cviwhti8ghss.us-east-1.rds.amazonaws.com",
+  dialect:'postgres',
+  logging: false, // set to console.log to see the raw SQL queries
+  native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+});
 
 const basename = path.basename(__filename);
 
