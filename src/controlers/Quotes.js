@@ -73,7 +73,7 @@ const getQuotesStats = async (req, res) => {
         : res.status(404).send("no Quotes");
     }
     catch (e) {
-      console.log("Error in Quote controller" + e);
+      console.log("Error in Quote controll" + e);
     }
   }
   else{
@@ -89,6 +89,7 @@ const getQuotesStats = async (req, res) => {
         {
           model: QuoteStatus,
           order: [
+
             
             [QuoteStatus, "id", "ASC"],
           ],
