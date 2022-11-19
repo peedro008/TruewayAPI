@@ -53,7 +53,7 @@ const getQuotesStats = async (req, res) => {
             ],
             where:{
               Status:status,
-             date: { [Op.between]: [dateFrom, dateTo]}
+          
             },
   
             include: [Users],
@@ -63,7 +63,7 @@ const getQuotesStats = async (req, res) => {
           { model: Category },
         ],
         order: [["id", "DESC"]],
-        where: objQ,
+        where: {...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo]}},
       
      
       });
@@ -92,7 +92,7 @@ const getQuotesStats = async (req, res) => {
             
             [QuoteStatus, "id", "ASC"],
           ],
-          where:{updatedAt: { [Op.between]: [dateFrom, dateTo]}},
+         
           include: [Users],
         },
         { model: DealerSalePerson },
@@ -100,7 +100,7 @@ const getQuotesStats = async (req, res) => {
         { model: Category },
       ],
       order: [["id", "DESC"]],
-      where: objQ,
+      where: {...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo]}},
 
     });
 
