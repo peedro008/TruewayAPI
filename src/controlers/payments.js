@@ -5,7 +5,11 @@ const { Op } = require("sequelize");
 
 
 
-
+const date = new Date();
+const DATE1 =
+date.getFullYear() + ( (date.getMonth() + 1)>9?"-":"-0" )+ (date.getMonth() + 1)+"-01"
+const DATE2 =
+date.getFullYear() + ( (date.getMonth() +2)>9?"-":"-0" )+ (date.getMonth()+2)+"-01"
 
 const getPaymentsReport = async (req, res) => {
   let objQ = req.query;
