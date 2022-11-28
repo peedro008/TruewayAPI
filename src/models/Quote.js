@@ -39,6 +39,18 @@ const Quote= (sequelize)=>{
         defaultValue: NOW,
         
     },
+    closingDate:{
+        type:DataTypes.DATE,
+        
+        defaultValue: null,
+        
+    },
+    SoldBy:{
+        type:DataTypes.INTEGER,
+        
+        defaultValue: null,
+        
+    },
     down:{
          type: DataTypes.STRING,
          allowNull: false

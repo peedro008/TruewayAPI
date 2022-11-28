@@ -13,49 +13,39 @@ const { Op, Sequelize } = require("sequelize");
 const sequelize = require("sequelize");
 const moment = require("moment/moment");
 
-
-
-
-
-
-
 const getQuotesStats = async (req, res) => {
   let objQ = req.query;
   let dateFrom = req.query.dateFrom;
   let dateTo = req.query.dateTo;
 
-  let status = req.query.Status
+  let status = req.query.Status;
   delete objQ.dateFrom;
   delete objQ.dateTo;
   delete objQ.offset;
 
-  if (dateFrom !== null && dateFrom !== undefined) {
-    objQ = { ...objQ, deleted:false };
-  }
-
   objQ = { ...objQ, deleted: false };
-  if(objQ.Status){
-    delete objQ.Status
-  
+  if (objQ.Status) {
+    delete objQ.Status;
+
     try {
       let QuotesDB = await Quote.findAll({
         attributes: { exclude: ["createdAt", "modifiedAt"] },
         include: [
-          { model: Client, where:{
-            deleted:false
-          } },
+          {
+            model: Client,
+            where: {
+              deleted: false,
+            },
+          },
           { model: Company },
           { model: Users },
           {
             model: QuoteStatus,
-            order: [
-             [QuoteStatus, "id", "ASC"],
-            ],
-            where:{
-              Status:status,
-       
+            order: [[QuoteStatus, "id", "ASC"]],
+            where: {
+              Status: status,
             },
-  
+
             include: [Users],
           },
           { model: DealerSalePerson },
@@ -63,77 +53,69 @@ const getQuotesStats = async (req, res) => {
           { model: Category },
         ],
         order: [["id", "DESC"]],
-        where: {...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo]}},
-      
-     
+        where: {
+          ...objQ,
+          [Op.or]: [
+            { date: { [Op.between]: [dateFrom, dateTo] } },
+            { closingDate: { [Op.between]: [dateFrom, dateTo] } },
+          ],
+        },
       });
-  
+
       QuotesDB.length
         ? res.status(200).json(QuotesDB)
         : res.status(404).send("no Quotes");
+    } catch (e) {
+      console.log("Error in Quote controller" + e);
     }
-    catch (e) {
+  } else {
+    try {
+      let QuotesDB = await Quote.findAll({
+        attributes: { exclude: ["createdAt", "modifiedAt"] },
+        include: [
+          {
+            model: Client,
+            where: {
+              deleted: false,
+            },
+          },
+          { model: Company },
+          { model: Users },
+          {
+            model: QuoteStatus,
+            order: [[QuoteStatus, "id", "ASC"]],
+
+            include: [Users],
+          },
+          { model: DealerSalePerson },
+          { model: Location },
+          { model: Category },
+        ],
+        order: [["id", "DESC"]],
+        where: {
+          ...objQ,
+          [Op.or]: [
+            { date: { [Op.between]: [dateFrom, dateTo] } },
+            { closingDate: { [Op.between]: [dateFrom, dateTo] } },
+          ],
+        },
+      });
+
+      QuotesDB.length
+        ? res.status(200).json(QuotesDB)
+        : res.status(404).send("no Quotes");
+    } catch (e) {
       console.log("Error in Quote controller" + e);
     }
   }
-  else{
-  try {
-    let QuotesDB = await Quote.findAll({
-      attributes: { exclude: ["createdAt", "modifiedAt"] },
-      include: [
-        {model: Client, where:{
-          deleted:false
-        } },
-        { model: Company },
-        { model: Users },
-        {
-          model: QuoteStatus,
-          order: [
-            
-            [QuoteStatus, "id", "ASC"],
-          ],
-
-          include: [Users],
-        },
-        { model: DealerSalePerson },
-        { model: Location },
-        { model: Category },
-      ],
-      order: [["id", "DESC"]],
-      where: {...objQ, updatedAt: { [Op.between]: [dateFrom, dateTo]}},
-
-    });
-
-    QuotesDB.length
-      ? res.status(200).json(QuotesDB)
-      : res.status(404).send("no Quotes");
-  } catch (e) {
-    console.log("Error in Quote controller" + e);
-  }
 };
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const getQuotesReport = async (req, res) => {
   let objQ = req.query;
   let dateFrom = req.query.dateFrom;
   let dateTo = req.query.dateTo;
   let offset = req.query.offset;
-  let status = req.query.Status
+  let status = req.query.Status;
   delete objQ.dateFrom;
   delete objQ.dateTo;
   delete objQ.offset;
@@ -143,9 +125,9 @@ const getQuotesReport = async (req, res) => {
   }
 
   objQ = { ...objQ, deleted: false };
-  if(objQ.Status){
-    delete objQ.Status
-  
+  if (objQ.Status) {
+    delete objQ.Status;
+
     try {
       let QuotesDB = await Quote.findAll({
         attributes: { exclude: ["createdAt", "modifiedAt"] },
@@ -159,10 +141,10 @@ const getQuotesReport = async (req, res) => {
               ["date", "ASC"],
               [QuoteStatus, "id", "ASC"],
             ],
-            where:{
-              Status:status
+            where: {
+              Status: status,
             },
-  
+
             include: [Users],
           },
           { model: DealerSalePerson },
@@ -171,53 +153,51 @@ const getQuotesReport = async (req, res) => {
         ],
         order: [["id", "DESC"]],
         where: objQ,
-      
+
         limit: 20,
         offset: offset,
       });
-  
+
       QuotesDB.length
         ? res.status(200).json(QuotesDB)
         : res.status(404).send("no Quotes");
+    } catch (e) {
+      console.log("Error in Quote controller" + e);
     }
-    catch (e) {
+  } else {
+    try {
+      let QuotesDB = await Quote.findAll({
+        attributes: { exclude: ["createdAt", "modifiedAt"] },
+        include: [
+          { model: Client },
+          { model: Company },
+          { model: Users },
+          {
+            model: QuoteStatus,
+            order: [
+              ["date", "ASC"],
+              [QuoteStatus, "id", "ASC"],
+            ],
+
+            include: [Users],
+          },
+          { model: DealerSalePerson },
+          { model: Location },
+          { model: Category },
+        ],
+        order: [["id", "DESC"]],
+        where: objQ,
+        limit: 20,
+        offset: offset,
+      });
+
+      QuotesDB.length
+        ? res.status(200).json(QuotesDB)
+        : res.status(404).send("no Quotes");
+    } catch (e) {
       console.log("Error in Quote controller" + e);
     }
   }
-  else{
-  try {
-    let QuotesDB = await Quote.findAll({
-      attributes: { exclude: ["createdAt", "modifiedAt"] },
-      include: [
-        { model: Client },
-        { model: Company },
-        { model: Users },
-        {
-          model: QuoteStatus,
-          order: [
-            ["date", "ASC"],
-            [QuoteStatus, "id", "ASC"],
-          ],
-
-          include: [Users],
-        },
-        { model: DealerSalePerson },
-        { model: Location },
-        { model: Category },
-      ],
-      order: [["id", "DESC"]],
-      where: objQ,
-      limit: 20,
-      offset: offset,
-    });
-
-    QuotesDB.length
-      ? res.status(200).json(QuotesDB)
-      : res.status(404).send("no Quotes");
-  } catch (e) {
-    console.log("Error in Quote controller" + e);
-  }
-};
 };
 const getQuotes = async (req, res) => {
   try {
@@ -249,11 +229,12 @@ const getQuotes = async (req, res) => {
       },
     });
     QuotesDB.length
-      ? res.status(200).json(QuotesDB.splice(0,20))
+      ? res.status(200).json(QuotesDB.splice(0, 20))
       : res.status(404).send("no Quotes");
   } catch (e) {
     console.log("Error in Quote controller" + e);
-  }}
+  }
+};
 
 const getDeletedQuotes = async (req, res) => {
   try {
@@ -306,19 +287,19 @@ const addQuote = async (req, res) => {
   let bound = req.body.Bound;
   let monthlyPayment = req.body.monthlyPayment;
   let neww = req.body.new;
-  let date = req.body.date
+  let date = req.body.date;
   let TotalPremium = req.body.TotalPremium;
   let ClientNotes = req.body.notes;
   let PIPamount = req.body.PIPamount;
   let PIPvalue = PIPamount ? 10 * parseFloat(PIPamount) : 0;
   let NSDamount = req.body.NSDamount;
-  let NSDvalue = CategoryNsd*NSDamount
+  let NSDvalue = CategoryNsd * NSDamount;
   let MVRamount = req.body.MVRamount;
   let MVRvalue = MVRamount ? 9 * parseFloat(MVRamount) : 0;
   let ClientDb;
   let QuoteDb;
   let QuoteStatusDb;
-  let address = req.body.address
+  let address = req.body.address;
 
   try {
     if (!ClientId) {
@@ -328,8 +309,8 @@ const addQuote = async (req, res) => {
         tel: Tel,
         new: neww,
         notes: ClientNotes,
-        address:address,
-        CompanyId:CompanyId
+        address: address,
+        CompanyId: CompanyId,
       })
         .then(
           (Client) =>
@@ -346,8 +327,9 @@ const addQuote = async (req, res) => {
               PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
               MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
               NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
-              date:date
-             
+              date: date,
+              SoldBy: bound ? UserId : null,
+              closingDate: bound ? date : null,
             }))
         )
 
@@ -371,10 +353,12 @@ const addQuote = async (req, res) => {
         DealerSalePerson: DealerSalePersonId,
         monthlyPayment: monthlyPayment,
         totalPremium: TotalPremium,
-        date:date,
+        date: date,
         PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
         MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
         NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+        SoldBy: bound ? UserId : null,
+        closingDate: bound ? date : null,
       }).then((Quote) => {
         QuoteStatus.create({
           note: notes,
@@ -436,7 +420,7 @@ const producerQuotes = async (req, res) => {
         { model: Client },
         { model: Company },
 
-        { model: QuoteStatus ,where: { UserId: papa }},
+        { model: QuoteStatus, where: { UserId: papa } },
 
         { model: Location },
         { model: Category },
@@ -563,14 +547,14 @@ const getStatus = async (req, res) => {
     });
 
     quoteStatus.length
-      ? res.status(200).json(quoteStatus.splice(0,20))
+      ? res.status(200).json(quoteStatus.splice(0, 20))
       : res.status(404).send("no QuoteStatus");
   } catch (e) {
     console.log("Error in QuoteStatus controller" + e);
   }
 };
 const getUserStatus = async (req, res) => {
-  let id = req.query.UserId
+  let id = req.query.UserId;
   try {
     let quoteStatus = await QuoteStatus.findAll({
       attributes: { exclude: ["modifiedAt"] },
@@ -580,7 +564,7 @@ const getUserStatus = async (req, res) => {
       ],
       order: [["id", "DESC"]],
       where: {
-        UserId:id,
+        UserId: id,
         deleted: false,
       },
     });
@@ -593,253 +577,230 @@ const getUserStatus = async (req, res) => {
   }
 };
 
-
 const getUsersAverage = async (req, res) => {
-   
-
   try {
     let dateFrom = req.query.dateFrom;
     let dateTo = req.query.dateTo;
-    let result 
-    let quotes
-    if(!dateFrom){
-    quotes = await Quote.findAll({
-      attributes: { exclude: ["modifiedAt"] },
-      include: [
-        { model: QuoteStatus, order: [["id", "DESC"]] },
-        { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'}} },
-      ],
-      order: [["id", "DESC"]],
-      where: {
-          deleted: false,
-      },
-    });}
-    else{
+    let result;
+    let quotes;
+    if (!dateFrom) {
       quotes = await Quote.findAll({
         attributes: { exclude: ["modifiedAt"] },
         include: [
-          { model: QuoteStatus, where: {updatedAt:{ [Op.between]: [dateFrom, dateTo] }} },
-          { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
+          { model: QuoteStatus, order: [["id", "DESC"]] },
+          {
+            model: Users,
+            where: { UserRole: { [sequelize.Op.not]: "Admin" } },
+          },
         ],
         order: [["id", "DESC"]],
         where: {
-            deleted: false,
-       
+          deleted: false,
+        },
+      });
+    } else {
+      quotes = await Quote.findAll({
+        attributes: { exclude: ["modifiedAt"] },
+        include: [{ model: QuoteStatus }],
+        order: [["id", "DESC"]],
+        where: {
+          deleted: false,
+
+          [Op.or]: [
+            { date: { [Op.between]: [dateFrom, dateTo] } },
+            { closingDate: { [Op.between]: [dateFrom, dateTo] } },
+          ],
         },
       });
     }
     let Userx = await Users.findAll({
       attributes: { exclude: ["modifiedAt"] },
-    
+
       order: [["id", "DESC"]],
-      where:{UserRole:{  [sequelize.Op.not]: 'Admin', }, deleted:false} 
+      where: { UserRole: { [sequelize.Op.not]: "Admin" }, deleted: false },
     });
 
-    let temp =Userx.map(e=>{
-      return {id:e.id,
-        name:e.name,
-              sold:0,
-              unsold:0,
-            deleted:false}
-    })
+    let temp = Userx.map((e) => {
+      return { id: e.id, name: e.name, sold: 0, unsold: 0, deleted: false };
+    });
 
-    quotes.map(e=>{
-      
-      if(temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {return b.id - a.id})[0].UserId)]){
-      e.QuoteStatuses.sort(function (a, b) {
-        return b.id - a.id ;
-      })[0].Status==="Sold"?
-      temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {return b.id - a.id})[0].UserId)].sold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {return b.id - a.id})[0].UserId)].sold+1
-      :
-      temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {
-        return b.id - a.id ;
-      })[0].UserId)].unsold= temp[temp.map(object => object.id).indexOf(e.QuoteStatuses.sort(function (a, b) {
-        return b.id - a.id ;
-      })[0].UserId)].unsold+1
-    }})
+    quotes.map((e) => {
+      if (
+        temp[
+          temp
+            .map((object) => object.id)
+            .indexOf(
+              e.QuoteStatuses.sort(function (a, b) {
+                return b.id - a.id;
+              })[0].UserId
+            )
+        ]
+      ) {
+        e.SoldBy
+          ? (temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold =
+              temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold + 1)
+          : (temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold =
+              temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold +
+              1);
+      }
+    });
 
-    result = temp.map(e=>{      return{...e, avg: e.sold+e.unsold?
-      (100*e.sold/(e.sold+e.unsold)).toFixed(0):0}
-
-    })
-
-
-
-
-
+    result = temp.map((e) => {
+      return {
+        ...e,
+        avg:
+          e.sold + e.unsold
+            ? ((100 * e.sold) / (e.sold + e.unsold)).toFixed(0)
+            : 0,
+      };
+    });
 
     result.length
       ? res.status(200).json(result)
-      : res.status(404).json({message:"ERROR"});
-
-
-    
+      : res.status(404).json({ message: "ERROR" });
   } catch (e) {
     console.log("Error in QuoteStatus controller" + e);
   }
 };
 
-
-
-
-
-
-const getComission =(payments,quotes )=>{
+const getComission = (payments, quotes) => {
   let pes = 0;
 
-  if(quotes.length)  {quotes.map((e) => {
-    if ( e.CategoryId== 2&&!e.Payment&& e.QuoteStatuses.sort(function (a, b) {
-      return b.id - a.id ;
-    })[0].Status=="Sold") {
-      pes += 10;
-    }
-  })}
-  if(payments.length){
-   payments.map((e) => {
-     if (e.CategoryId !== 7) {
-      if ( e.CategoryId == 2) {
+  if (quotes.length) {
+    quotes.map((e) => {
+      if (
+        e.CategoryId == 2 &&
+        !e.Payment &&
+        e.QuoteStatuses.sort(function (a, b) {
+          return b.id - a.id;
+        })[0].Status == "Sold"
+      ) {
         pes += 10;
       }
-   
-        pes +=5 *(e.NSDvalue.length?
-             parseFloat(e.NSDvalue)/parseFloat(e.Category.NSDvalue):0
-            );
- 
-    }
-  });}
-  return pes
-}
+    });
+  }
+  if (payments.length) {
+    payments.map((e) => {
+      if (e.CategoryId !== 7) {
+        if (e.CategoryId == 2) {
+          pes += 10;
+        }
 
-
-
-
+        pes +=
+          5 *
+          (e.NSDvalue.length
+            ? parseFloat(e.NSDvalue) / parseFloat(e.Category.NSDvalue)
+            : 0);
+      }
+    });
+  }
+  return pes;
+};
 
 const getUserAverage = async (req, res) => {
-   
-
   try {
     let dateFrom = req.query.dateFrom;
     let dateTo = req.query.dateTo;
     let UserId = req.query.UserId;
-    let result 
-    let quotes
-    let payments
-    if(!dateFrom){
-    quotes = await Quote.findAll({
-      attributes: { exclude: ["modifiedAt"] },
-      include: [
-        { model: QuoteStatus, order: [["id", "DESC"]], where:{
-          UserId:UserId,
-          updatedAt: { [Op.between]: [dateFrom, dateTo] }
-        } },
-        { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
-      ],
-      order: [["id", "DESC"]],
-      where: {
-          deleted: false,
-      },
-    });
-    payments = await Payments.findAll({
-      attributes: { exclude: ["modifiedAt"] },
-      include: [
-        { model: Client },
-        { model: Users, where: { id: UserId } },
-        { model: Location },
-        { model: Category}
-       
-      ],
-      where: { deleted: false ,
-        NSDvalue:{  [sequelize.Op.not]: '0'},
-        UserId: UserId,},
-    });
-  
-  
-  }
-    else{
+    let result;
+    let quotes;
+    let payments;
+    if (!dateFrom) {
       quotes = await Quote.findAll({
         attributes: { exclude: ["modifiedAt"] },
         include: [
-          { model: QuoteStatus , order: [["id", "DESC"]], where:{
-            updatedAt: { [Op.between]: [dateFrom, dateTo] } ,
-            UserId:UserId
-          }},
-          { model: Users, where:{UserRole:{  [sequelize.Op.not]: 'Admin'},deleted: false,} },
+          {
+            model: QuoteStatus,
+            order: [["id", "DESC"]],
+            where: {
+              UserId: UserId,
+              updatedAt: { [Op.between]: [dateFrom, dateTo] },
+            },
+          },
+          {
+            model: Users,
+            where: {
+              UserRole: { [sequelize.Op.not]: "Admin" },
+              deleted: false,
+            },
+          },
         ],
         order: [["id", "DESC"]],
         where: {
-            deleted: false,
-            
+          deleted: false,
         },
       });
       payments = await Payments.findAll({
         attributes: { exclude: ["modifiedAt"] },
         include: [
           { model: Client },
-          { model: Users, },
+          { model: Users, where: { id: UserId } },
           { model: Location },
-          { model: Category}
-         
+          { model: Category },
         ],
-        
+        where: {
+          deleted: false,
+          NSDvalue: { [sequelize.Op.not]: "0" },
+          UserId: UserId,
+        },
+      });
+    } else {
+      quotes = await Quote.findAll({
+        attributes: { exclude: ["modifiedAt"] },
+        include: [
+          {
+            model: QuoteStatus,
+            order: [["id", "DESC"]],
+            where: {
+              updatedAt: { [Op.between]: [dateFrom, dateTo] },
+              UserId: UserId,
+            },
+          },
+          {
+            model: Users,
+            where: {
+              UserRole: { [sequelize.Op.not]: "Admin" },
+              deleted: false,
+            },
+          },
+        ],
+        order: [["id", "DESC"]],
+        where: {
+          deleted: false,
+        },
+      });
+      payments = await Payments.findAll({
+        attributes: { exclude: ["modifiedAt"] },
+        include: [
+          { model: Client },
+          { model: Users },
+          { model: Location },
+          { model: Category },
+        ],
+
         where: {
           UserId: UserId,
-          NSDvalue:{  [sequelize.Op.not]: '0'},
+          NSDvalue: { [sequelize.Op.not]: "0" },
           deleted: false,
-          date: { [Op.between]: [dateFrom, dateTo] }
-      },
+          date: { [Op.between]: [dateFrom, dateTo] },
+        },
       });
     }
-   
 
+    let temp = { id: UserId, name: payments[0].User.name, NSDcomm: 0 };
 
-    let temp ={id:UserId,
-        name:payments[0].User.name,
-           NSDcomm:0}
-
-
-      temp.NSDcomm=getComission(payments, quotes)
-
-
-
-
+    temp.NSDcomm = getComission(payments, quotes);
 
     // result = {...temp, avg: temp.sold+temp.unsold?
     //   (100*temp.sold/(temp.sold+e.unsold)).toFixed(0):0}
 
-    
-
-
-
-
-
-
     temp
       ? res.status(200).json(temp)
-      : res.status(404).json({message:"ERROR"});
-
-
-    
+      : res.status(404).json({ message: "ERROR" });
   } catch (e) {
     console.log("Error in QuoteStatus controller" + e);
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const idQuotes = async (req, res) => {
   var ID = req.query.id;
@@ -874,21 +835,33 @@ const modifyQuotes = async (req, res) => {
   let monthly = req.body.monthly;
   let down = req.body.down;
   let UserId = req.body.UserId;
-  let CompanyId = req.body.CompanyId
-  let date = req.body.date
+  let CompanyId = req.body.CompanyId;
+  let date = req.body.date;
   try {
     if (Status == "Cancelled") {
       let quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: Status,
         QuoteId: QuoteId,
-        date:date,
+        date: date,
         UserId: UserId,
       });
       res.status(200).json(quoteStatus);
     } else {
+      let quoteRef = await Quote.findAll({
+        where:{id:QuoteId},
+        order: [["id", "DESC"]],
+        raw:true, nest:true
+  
+      });
       let quote = await Quote.update(
-        { down: down, monthlyPayment: monthly,CompanyId:CompanyId },
+        {
+          down: down,
+          monthlyPayment: monthly,
+          CompanyId: CompanyId,
+          closingDate: quoteRef.closingDate ? quoteRef.closingDate :new Date().toISOString().split('T')[0],
+          SoldBy:quoteRef.SoldBy ? quoteRef.SoldBy : UserId
+        },
         {
           where: {
             id: QuoteId,
@@ -900,7 +873,7 @@ const modifyQuotes = async (req, res) => {
         Status: Status,
         QuoteId: QuoteId,
         UserId: UserId,
-        date:date
+        date: date,
       });
       res.status(200).json(quote);
     }
@@ -979,5 +952,5 @@ module.exports = {
   getQuotesStats,
   getUserStatus,
   getUsersAverage,
-  getUserAverage
+  getUserAverage,
 };

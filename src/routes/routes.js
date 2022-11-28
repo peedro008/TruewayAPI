@@ -38,6 +38,7 @@ const {
   sendMail,
   killDealer,
   deleteUser,
+  tremendoscript,
 } = require("../controlers/adminControlers");
 const { login, users, resetPass } = require("../controlers/login");
 const {
@@ -93,7 +94,7 @@ const {
 } = require("../controlers/Dealer");
 
 const router = Router();
-//router.post("/killDealer", killDealer);
+router.post("/tremendoscript", tremendoscript);
   router.get("/", get);
   router.post("/send", sendMail);
   router.get("/GetUserStatus", getUserStatus);

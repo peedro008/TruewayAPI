@@ -1,26 +1,94 @@
-const { Company, Producer, Users, Dealer, Manager, DealerSalePerson } = require("../db");
+const {
+  Company,
+  Producer,
+  Users,
+  Dealer,
+  Manager,
+  DealerSalePerson,
+  Quote,
+  QuoteStatus,
+} = require("../db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const {Main} =require("../../sendEmail")
+const { Main } = require("../../sendEmail");
 
+const tremendoscript = async (req, res) => {
+  try {
+    let QuotesDB = await Quote.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [
 
-const killDealer = async (req,res)=>{
-  try{
-   Dealer.destroy({
-     where: {},
-     truncate: false
-   })
-   res.status(200).send("Done ");}
-  catch (e) {
-   console.log("Error in addCompany controller " + e);
-   res.status(400).send("Error in addCompany controller ");
- }
- }
+        { model: Company },
+        { model: Users },
+        {
+          model: QuoteStatus,
+          order: [
+            ["date", "ASC"],
+            [QuoteStatus, "id", "ASC"],
+          ],
+    
+
+    
+        },
+
+      ],
+      order: [["id", "DESC"]],
+
+    
+
+    });
+
  
+ 
+    let temp = 0
+    QuotesDB.map(async (e) => {
+      console.log (temp)
+      temp++
+      if (e.QuoteStatuses.length&& e.QuoteStatuses.find((e) => e.Status == "Sold")) {
+        
+        await Quote.update(
+          {
+            SoldBy: e.QuoteStatuses.sort(function (a, b) {
+              return a.id - b.id;
+            }).find((e) => e.Status == "Sold").UserId,
+            closingDate: e.QuoteStatuses.sort(function (a, b) {
+              return a.id - b.id;
+            }).find((e) => e.Status == "Sold").date,
+          },
+          {
+            where: {
+              id: e.id,
+            },
+          }
+        );
+      }
+  
+    });
+
+    res.status(200).send(QuotesDB);
+  } catch (e) {
+    console.log("Error in addCompany controller " + e);
+    res.status(400).send("Error in addCompany controller ");
+  }
+};
+
+const killDealer = async (req, res) => {
+  try {
+    Dealer.destroy({
+      where: {},
+      truncate: false,
+    });
+    res.status(200).send("Done ");
+  } catch (e) {
+    console.log("Error in addCompany controller " + e);
+    res.status(400).send("Error in addCompany controller ");
+  }
+};
+
 const sendMail = async (req, res) => {
   let email = req.body.email;
   try {
-    Main( email)
+    Main(email);
     res.status(200).send("email sended");
   } catch (e) {
     console.log("Error in addCompany controller " + e);
@@ -429,5 +497,5 @@ module.exports = {
   getDeletedManager,
   sendMail,
   killDealer,
-
+  tremendoscript,
 };

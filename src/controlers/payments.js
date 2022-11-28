@@ -104,11 +104,7 @@ const getPaymentsStats = async (req, res) => {
 
 
 
-const date = new Date();
-const DATE1 =
-date.getFullYear() + ( (date.getMonth() + 1)>9?"-":"-0" )+ (date.getMonth() + 1)+"-01"
-const DATE2 =
-date.getFullYear() + ( (date.getMonth() +2)>9?"-":"-0" )+ (date.getMonth()+2)+"-01"
+
 const getPayment = async (req, res) => {
   try {
     const payments = await Payments.findAll({
@@ -239,7 +235,26 @@ const addPayment = async (req, res) => {
       Status: "Sold",
       QuoteId: QuoteId,
       UserId: UserId,
-    });}
+    });
+    let quoteRef = await Quote.findAll({
+      where:{id:QuoteId},
+      order: [["id", "DESC"]],
+      raw:true, nest:true
+
+    });
+    console.log(quoteRef)
+    let quote = await Quote.update(
+      {
+        down: amount,
+        closingDate: quoteRef.closingDate ? quoteRef.closingDate : new Date().toISOString().split('T')[0],
+        SoldBy:quoteRef.SoldBy ? quoteRef.SoldBy : UserId
+      },
+      {
+        where: {
+          id: QuoteId,
+        },
+      }
+    );}
     
     res.status(200).json({pay, quoteStatus});
   } catch (e) {
@@ -332,7 +347,25 @@ const addMultiPayment = async (req, res) => {
       Status: "Sold",
       QuoteId: QuoteId,
       UserId: UserId,
-    });}
+    });
+    let quoteRef = await Quote.findAll({
+      where:{id:QuoteId},
+      order: [["id", "DESC"]],
+      raw:true, nest:true
+
+    });[0];
+    let quote = await Quote.update(
+      {
+        down: amount,
+        closingDate: quoteRef.closingDate ? quoteRef.closingDate : new Date().toISOString().split('T')[0],
+        SoldBy:quoteRef.SoldBy ? quoteRef.SoldBy : UserId
+      },
+      {
+        where: {
+          id: QuoteId,
+        },
+      }
+    );}
     
     res.status(200).json({pay1,pay2, quoteStatus});
   } catch (e) {
@@ -421,7 +454,31 @@ const ClientMultiPayment = async (req, res) => {
         MVRvalue: MVRvalue2 == "" ? "0" : MVRvalue2,
         NSDvalue: NSDvalue2 == "" ? "0" : NSDvalue2,
       });
+      if(QuoteId){
+        let quoteStatus = await QuoteStatus.create({
+         note: notes,
+         Status: "Sold",
+         QuoteId: QuoteId,
+         UserId: UserId,
+       });
+       let quoteRef = await Quote.findAll({
 
+      order: [["id", "DESC"]],
+        raw:true, nest:true
+
+    });[0];
+       let quote = await Quote.update(
+         {
+           down: amount,
+           closingDate: quoteRef.closingDate ? quoteRef.closingDate : new Date().toISOString().split('T')[0],
+           SoldBy:quoteRef.SoldBy ? quoteRef.SoldBy : UserId
+         },
+         {
+           where: {
+             id: QuoteId,
+           },
+         }
+       );}
    
         
     client
