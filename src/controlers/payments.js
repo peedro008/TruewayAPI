@@ -2,19 +2,31 @@ const { Producer,Quote, Payments, Client, Users, Location,Deposit, QuoteStatus, 
 
 const { Op } = require("sequelize");
 
-
-
-
 const date = new Date();
-const DATE1 =
-date.getFullYear() + ( (date.getMonth() + 1)>9?"-":"-0" )+ (date.getMonth() + 1)+"-01"
-const DATE2 =
-date.getFullYear() + ( (date.getMonth() +2)>9?"-":"-0" )+ (date.getMonth()+2)+"-01"
+function sumarDias(fecha, dias){
+  const date = new Date(fecha)
+  date.setDate(date.getDate() + dias);
+  return date;
+}
+let yearBy = date.getFullYear()
+let monthBy =  ( (date.getMonth() + 1)>9?"-":"-0" ) + (date.getMonth() + 1)
+let yearTo = date.getFullYear()
+let monthTo = ( (date.getMonth() +2)>9?"-":"-0" ) + (date.getMonth()+2)
+
+if(monthTo === '-13') monthTo = '-01', yearTo = date.getFullYear() + 1
+
+const DATE1 = yearBy + monthBy + "-01"
+const DATE2 = new Date(yearTo + monthTo + "-01")
+console.log(sumarDias(DATE2, -1))
+
 
 const getPaymentsReport = async (req, res) => {
+
+
+
   let objQ = req.query;
   let dateFrom = req.query.dateFrom;
-  let dateTo = req.query.dateTo;
+  let dateTo = sumarDias(req.query.dateTo);
   let offset = req.query.offset;
   delete objQ.dateFrom;
   delete objQ.dateTo;
@@ -60,9 +72,17 @@ const getPaymentsReport = async (req, res) => {
 
 
 const getPaymentsStats = async (req, res) => {
+
+  function sumarDias(fecha, dias){
+    const date = new Date(fecha)
+    date.setDate(date.getDate() + dias);
+    return date;
+  }
+
   let objQ = req.query;
   let dateFrom = req.query.dateFrom;
-  let dateTo = req.query.dateTo;
+  let dateTo = sumarDias(req.query.dateTo, -1);
+
 
   delete objQ.dateFrom;
   delete objQ.dateTo;
@@ -75,6 +95,7 @@ const getPaymentsStats = async (req, res) => {
   objQ = { ...objQ, deleted: false };
 
   try {
+   
     let PaymentsDB = await Payments.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },
       include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote }],
@@ -110,11 +131,12 @@ const getPaymentsStats = async (req, res) => {
 
 
 const getPayment = async (req, res) => {
+
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
       include: [{ model: Client }, { model: Users }, { model: Location },  { model: Quote },  { model: Category}],
-      where: { deleted: false, date: { [Op.between]: [DATE1, DATE2] } },
+      where: { deleted: false, date: { [Op.between]: [DATE1, sumarDias(DATE2, -1)] } },
     });
     payments.length
       ? res.status(200).json(payments)
