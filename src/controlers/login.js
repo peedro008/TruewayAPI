@@ -64,6 +64,7 @@ const resetPass = (req, res, next) => {
 const users = async(req, res)=>{
     try{
         let dbUsers = await Users.findAll({
+        where: {id: {[sequelize.Op.not]: 8}}, 
         atributtes:["UserName"]
     }
         

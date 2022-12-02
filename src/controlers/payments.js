@@ -17,7 +17,6 @@ if(monthTo === '-13') monthTo = '-01', yearTo = date.getFullYear() + 1
 
 const DATE1 = yearBy + monthBy + "-01"
 const DATE2 = new Date(yearTo + monthTo + "-01")
-console.log(sumarDias(DATE2, -1))
 
 
 const getPaymentsReport = async (req, res) => {

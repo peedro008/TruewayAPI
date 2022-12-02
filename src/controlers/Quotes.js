@@ -617,7 +617,7 @@ const getUsersAverage = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
 
       order: [["id", "DESC"]],
-      where: { UserRole: { [sequelize.Op.not]: "Admin" }, deleted: false },
+      where: { UserRole: { [sequelize.Op.not]: "Admin"  },id: {[sequelize.Op.not]: 8}, deleted: false },
     });
 
     let temp = Userx.map((e) => {
