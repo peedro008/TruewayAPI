@@ -617,35 +617,23 @@ const getUsersAverage = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
 
       order: [["id", "DESC"]],
-      where: { UserRole: { [sequelize.Op.not]: "Admin" }, deleted: false },
+
     });
 
     let temp = Userx.map((e) => {
-      return { id: e.id, name: e.name, sold: 0, unsold: 0, deleted: false };
+      return { id: e.id, name: e.name, sold: 0, unsold: 0, deleted: e.deleted };
     });
+    console.log(temp)
+  
     quotes.map((e) => {
-      if (
-        temp[
-          temp
-            .map((object) => object.id)
-            .indexOf(
-              e.UserId
-            )
-        ]&&
-        temp[
-          temp
-            .map((object) => object.id)
-            .indexOf(
-              e.SoldBy
-            )
-        ]
-      ) {
-        e.SoldBy
-          ? (temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold =
-              temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold + 1)
-          : (temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold =
-              temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold +
-              1);
+      if(!e.SoldBy){
+        temp[temp.findIndex(h=>h.id==e.UserId)].unsold++
+  
+      }
+      else{
+     
+        temp[temp.findIndex(h=>h.id==e.SoldBy)].sold++
+     
       }
     });
 
@@ -666,7 +654,33 @@ const getUsersAverage = async (req, res) => {
     console.log("Error in QuoteStatus controller" + e);
   }
 };
-
+//if (
+  //   temp[
+  //     temp
+  //       .map((object) => object.id)
+  //       .indexOf(
+  //         e.QuoteStatuses.sort(function (a, b) {
+  //           return b.id - a.id;
+  //         })[0].UserId
+  //       )
+  //   ]&&
+  //   temp[
+  //     temp
+  //       .map((object) => object.id)
+  //       .indexOf(
+  //         e.QuoteStatuses.sort(function (a, b) {
+  //           return b.id - a.id;
+  //         })[0].SoldBy
+  //       )
+  //   ]
+  // ) {
+  //   e.SoldBy
+  //     ? (temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold =
+  //         temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold + 1)
+  //     : (temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold =
+  //         temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold +
+  //         1);
+  // }
 const getComission = (payments, quotes) => {
   let pes = 0;
 
