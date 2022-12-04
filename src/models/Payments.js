@@ -46,6 +46,10 @@ const Payments = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    policyNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     method: {
       type: DataTypes.ENUM("credit/debit", "EFT", "Cash"),
     },
