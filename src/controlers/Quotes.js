@@ -420,19 +420,38 @@ const producerQuotes = async (req, res) => {
         { model: Client },
         { model: Company },
 
-        { model: QuoteStatus, where: { UserId: papa } },
+        { model: QuoteStatus },
 
         { model: Location },
         { model: Category },
       ],
-
       where: {
+        UserId: papa ,
+        deleted: false,
+        SoldBy:null
+      },
+    });
+
+    let QuotesDB2 = await Quote.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [
+        { model: Users },
+        { model: Client },
+        { model: Company },
+
+        { model: QuoteStatus },
+
+        { model: Location },
+        { model: Category },
+      ],
+      where: {
+        SoldBy: papa ,
         deleted: false,
       },
     });
 
     QuotesDB.length
-      ? res.status(200).json(QuotesDB)
+      ? res.status(200).json([QuotesDB, QuotesDB2])
       : res.status(404).send("no Quotes");
   } catch (e) {
     console.log("Error in Quote controller" + e);

@@ -220,6 +220,7 @@ const addPayment = async (req, res) => {
     method,
     type,
     creditCardFee,
+    policyNumber,
     UserId,
     PIPamount,
     NSDamount,
@@ -241,6 +242,7 @@ const addPayment = async (req, res) => {
       QuoteId: QuoteId,
       LocationId: LocationId,
       amount: amount,
+      policyNumber: policyNumber,
       CategoryId:CategoryId,
       method: method,
       type: type,
@@ -251,7 +253,6 @@ const addPayment = async (req, res) => {
       PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
       MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
       NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
-   
     });
     let quoteStatus
   if(QuoteId){

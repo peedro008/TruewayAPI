@@ -25,10 +25,10 @@ const Payments = (sequelize) => {
 
     date: {
       type: DataTypes.DATEONLY,
-
       defaultValue: NOW,
       allowNull: false,
     },
+
     time: {
       type: DataTypes.DATE,
       defaultValue: NOW,
