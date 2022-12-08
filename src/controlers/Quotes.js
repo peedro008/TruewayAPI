@@ -301,6 +301,12 @@ const addQuote = async (req, res) => {
   let QuoteStatusDb;
   let address = req.body.address;
 
+  let New_York_Time = new Date().toLocaleString("en-US", 
+  {timeZone:'America/New_York',timestyle:'full',hourCycle:'h24'})
+
+  let New_York_Date = new Date().toLocaleDateString("en-US", 
+  {timeZone:'America/New_York',timestyle:'full',hourCycle:'h24'})
+
   try {
     if (!ClientId) {
       ClientDb = await Client.create({
@@ -310,7 +316,7 @@ const addQuote = async (req, res) => {
         new: neww,
         notes: ClientNotes,
         address: address,
-        CompanyId: CompanyId,
+        CompanyId: Com*panyId,
       })
         .then(
           (Client) =>
@@ -320,6 +326,7 @@ const addQuote = async (req, res) => {
               CategoryId: CategoryId,
               UserId: UserId,
               LocationId: LocationId,
+              time: New_York_Time,
               down: down,
               DealerSalePerson: DealerSalePersonId,
               monthlyPayment: monthlyPayment,
@@ -337,6 +344,7 @@ const addQuote = async (req, res) => {
           QuoteStatusDb = QuoteStatus.create({
             note: notes,
             Status: bound ? "Sold" : "Quoted",
+            date: New_York_Date,
             QuoteId: Quote.id,
             UserId: UserId,
           });
@@ -349,6 +357,7 @@ const addQuote = async (req, res) => {
         CategoryId: CategoryId,
         UserId: UserId,
         LocationId: LocationId,
+        time: New_York_Time,
         down: down,
         DealerSalePerson: DealerSalePersonId,
         monthlyPayment: monthlyPayment,
@@ -363,6 +372,7 @@ const addQuote = async (req, res) => {
         QuoteStatus.create({
           note: notes,
           Status: bound ? "Sold" : "Quoted",
+          date: New_York_Date,
           QuoteId: Quote.id,
           UserId: UserId,
         });

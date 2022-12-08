@@ -13,8 +13,9 @@ const sequelize = new Sequelize( "TEMP", "postgres", "pesanmene",  {
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });
+
 // const sequelize = new Sequelize(
-//   "postgres://postgres:pesanmene@localhost:5432/TEMP",
+//   "postgres://postgres:Messiyyaco@localhost:5432/test",
 //   { logging: false }
 // );
 

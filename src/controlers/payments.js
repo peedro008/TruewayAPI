@@ -231,6 +231,14 @@ const addPayment = async (req, res) => {
     QuoteId
   } = req.body;
   let NSDvalue =  CategoryNsd*NSDamount
+
+  let New_York_Time = new Date().toLocaleString("en-US", 
+   {timeZone:'America/New_York',timestyle:'full',hourCycle:'h24'})
+
+   let New_York_Date = new Date().toLocaleDateString("en-US", 
+   {timeZone:'America/New_York',timestyle:'full',hourCycle:'h24'})
+  //  console.log(New_York_Date)
+ 
   
   let PIPvalue =  PIPamount?10*parseFloat(PIPamount):0
  
@@ -242,6 +250,7 @@ const addPayment = async (req, res) => {
       QuoteId: QuoteId,
       LocationId: LocationId,
       amount: amount,
+      time: New_York_Time,
       policyNumber: policyNumber,
       CategoryId:CategoryId,
       method: method,
@@ -259,6 +268,7 @@ const addPayment = async (req, res) => {
      quoteStatus = await QuoteStatus.create({
       note: notes,
       Status: "Sold",
+      date: New_York_Date,
       QuoteId: QuoteId,
       UserId: UserId,
     });

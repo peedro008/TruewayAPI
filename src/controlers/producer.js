@@ -1,5 +1,5 @@
 const { Producer, Manager, Users } = require("../db");
-
+const { Op } = require("sequelize");
 const getProducerFilter = async (req, res) => {
   let ID = req.query.Id;
   let UserRole = req.query.UserRole;
@@ -55,7 +55,7 @@ const getProducer = async (req, res) => {
     let QuotesDB = await Producer.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },
       include: [{ model: Users }],
-      where: { deleted: false },
+      where: { deleted: false, UserId: { [Op.not]: 24 },},
     });
     let manager = await Manager.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },

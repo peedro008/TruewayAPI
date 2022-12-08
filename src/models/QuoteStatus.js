@@ -15,13 +15,10 @@ const QuoteStatus= (sequelize)=>{
         },
         Status:{
             type:DataTypes.ENUM("Quoted", "Cancelled", "Renew down", "Sold", "Re-install", "-" ),
-            default: "Quoted",
-            
-                      
+            default: "Quoted",   
         },
         date:{
             type:DataTypes.DATEONLY,
-            
             defaultValue: NOW,
         },
         deleted:{
