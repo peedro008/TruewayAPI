@@ -301,11 +301,17 @@ const addQuote = async (req, res) => {
   let QuoteStatusDb;
   let address = req.body.address;
 
-  let New_York_Time = new Date().toLocaleString("en-US", 
-  {timeZone:'America/New_York',timestyle:'full',hourCycle:'h24'})
+  let New_York_Time = new Date().toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
 
-  let New_York_Date = new Date().toLocaleDateString("en-US", 
-  {timeZone:'America/New_York',timestyle:'full',hourCycle:'h24'})
+  let New_York_Date = new Date().toLocaleDateString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
 
   try {
     if (!ClientId) {
@@ -316,7 +322,7 @@ const addQuote = async (req, res) => {
         new: neww,
         notes: ClientNotes,
         address: address,
-        CompanyId: Com*panyId,
+        CompanyId: Com * panyId,
       })
         .then(
           (Client) =>
@@ -326,7 +332,7 @@ const addQuote = async (req, res) => {
               CategoryId: CategoryId,
               UserId: UserId,
               LocationId: LocationId,
-              time: New_York_Time,
+              //   time: New_York_Time,
               down: down,
               DealerSalePerson: DealerSalePersonId,
               monthlyPayment: monthlyPayment,
@@ -344,7 +350,7 @@ const addQuote = async (req, res) => {
           QuoteStatusDb = QuoteStatus.create({
             note: notes,
             Status: bound ? "Sold" : "Quoted",
-            date: New_York_Date,
+            // date: New_York_Date,
             QuoteId: Quote.id,
             UserId: UserId,
           });
@@ -357,7 +363,7 @@ const addQuote = async (req, res) => {
         CategoryId: CategoryId,
         UserId: UserId,
         LocationId: LocationId,
-        time: New_York_Time,
+        // time: New_York_Time,
         down: down,
         DealerSalePerson: DealerSalePersonId,
         monthlyPayment: monthlyPayment,
@@ -372,7 +378,7 @@ const addQuote = async (req, res) => {
         QuoteStatus.create({
           note: notes,
           Status: bound ? "Sold" : "Quoted",
-          date: New_York_Date,
+          //   date: New_York_Date,
           QuoteId: Quote.id,
           UserId: UserId,
         });
@@ -429,16 +435,14 @@ const producerQuotes = async (req, res) => {
         { model: Users },
         { model: Client },
         { model: Company },
-
         { model: QuoteStatus },
-
         { model: Location },
         { model: Category },
       ],
       where: {
-        UserId: papa ,
+        UserId: papa,
         deleted: false,
-        SoldBy:null
+        SoldBy: null,
       },
     });
 
@@ -448,14 +452,12 @@ const producerQuotes = async (req, res) => {
         { model: Users },
         { model: Client },
         { model: Company },
-
         { model: QuoteStatus },
-
         { model: Location },
         { model: Category },
       ],
       where: {
-        SoldBy: papa ,
+        SoldBy: papa,
         deleted: false,
       },
     });
@@ -646,23 +648,18 @@ const getUsersAverage = async (req, res) => {
       attributes: { exclude: ["modifiedAt"] },
 
       order: [["id", "DESC"]],
-
     });
 
     let temp = Userx.map((e) => {
       return { id: e.id, name: e.name, sold: 0, unsold: 0, deleted: e.deleted };
     });
-    console.log(temp)
-  
+    console.log(temp);
+
     quotes.map((e) => {
-      if(!e.SoldBy){
-        temp[temp.findIndex(h=>h.id==e.UserId)].unsold++
-  
-      }
-      else{
-     
-        temp[temp.findIndex(h=>h.id==e.SoldBy)].sold++
-     
+      if (!e.SoldBy) {
+        temp[temp.findIndex((h) => h.id == e.UserId)].unsold++;
+      } else {
+        temp[temp.findIndex((h) => h.id == e.SoldBy)].sold++;
       }
     });
 
@@ -684,32 +681,32 @@ const getUsersAverage = async (req, res) => {
   }
 };
 //if (
-  //   temp[
-  //     temp
-  //       .map((object) => object.id)
-  //       .indexOf(
-  //         e.QuoteStatuses.sort(function (a, b) {
-  //           return b.id - a.id;
-  //         })[0].UserId
-  //       )
-  //   ]&&
-  //   temp[
-  //     temp
-  //       .map((object) => object.id)
-  //       .indexOf(
-  //         e.QuoteStatuses.sort(function (a, b) {
-  //           return b.id - a.id;
-  //         })[0].SoldBy
-  //       )
-  //   ]
-  // ) {
-  //   e.SoldBy
-  //     ? (temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold =
-  //         temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold + 1)
-  //     : (temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold =
-  //         temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold +
-  //         1);
-  // }
+//   temp[
+//     temp
+//       .map((object) => object.id)
+//       .indexOf(
+//         e.QuoteStatuses.sort(function (a, b) {
+//           return b.id - a.id;
+//         })[0].UserId
+//       )
+//   ]&&
+//   temp[
+//     temp
+//       .map((object) => object.id)
+//       .indexOf(
+//         e.QuoteStatuses.sort(function (a, b) {
+//           return b.id - a.id;
+//         })[0].SoldBy
+//       )
+//   ]
+// ) {
+//   e.SoldBy
+//     ? (temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold =
+//         temp[temp.map((object) => object.id).indexOf(e.SoldBy)].sold + 1)
+//     : (temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold =
+//         temp[temp.map((object) => object.id).indexOf(e.UserId)].unsold +
+//         1);
+// }
 const getComission = (payments, quotes) => {
   let pes = 0;
 
@@ -896,18 +893,20 @@ const modifyQuotes = async (req, res) => {
       res.status(200).json(quoteStatus);
     } else {
       let quoteRef = await Quote.findAll({
-        where:{id:QuoteId},
+        where: { id: QuoteId },
         order: [["id", "DESC"]],
-        raw:true, nest:true
-  
+        raw: true,
+        nest: true,
       });
       let quote = await Quote.update(
         {
           down: down,
           monthlyPayment: monthly,
           CompanyId: CompanyId,
-          closingDate: quoteRef.closingDate ? quoteRef.closingDate :new Date().toISOString().split('T')[0],
-          SoldBy:quoteRef.SoldBy ? quoteRef.SoldBy : UserId
+          closingDate: quoteRef.closingDate
+            ? quoteRef.closingDate
+            : new Date().toISOString().split("T")[0],
+          SoldBy: quoteRef.SoldBy ? quoteRef.SoldBy : UserId,
         },
         {
           where: {
