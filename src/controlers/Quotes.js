@@ -332,7 +332,7 @@ const addQuote = async (req, res) => {
               CategoryId: CategoryId,
               UserId: UserId,
               LocationId: LocationId,
-              //   time: New_York_Time,
+                time: New_York_Time,
               down: down,
               DealerSalePerson: DealerSalePersonId,
               monthlyPayment: monthlyPayment,
@@ -350,7 +350,7 @@ const addQuote = async (req, res) => {
           QuoteStatusDb = QuoteStatus.create({
             note: notes,
             Status: bound ? "Sold" : "Quoted",
-            // date: New_York_Date,
+            date: New_York_Date,
             QuoteId: Quote.id,
             UserId: UserId,
           });
@@ -363,7 +363,7 @@ const addQuote = async (req, res) => {
         CategoryId: CategoryId,
         UserId: UserId,
         LocationId: LocationId,
-        // time: New_York_Time,
+        time: New_York_Time,
         down: down,
         DealerSalePerson: DealerSalePersonId,
         monthlyPayment: monthlyPayment,
@@ -378,7 +378,7 @@ const addQuote = async (req, res) => {
         QuoteStatus.create({
           note: notes,
           Status: bound ? "Sold" : "Quoted",
-          //   date: New_York_Date,
+            date: New_York_Date,
           QuoteId: Quote.id,
           UserId: UserId,
         });
