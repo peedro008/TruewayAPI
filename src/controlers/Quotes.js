@@ -316,7 +316,7 @@ const addQuote = async (req, res) => {
         new: neww,
         notes: ClientNotes,
         address: address,
-        CompanyId: Com*panyId,
+        CompanyId: CompanyId,
       })
         .then(
           (Client) =>
