@@ -81,8 +81,6 @@ const addClient = async (req,res)=>{
             address:address,
             dateOfBirth:dateOfBirth,
             CompanyId:CompanyId
-         
-      
        })
        res.status(200).json(Clientt)
     }

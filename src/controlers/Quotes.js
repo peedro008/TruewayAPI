@@ -356,7 +356,8 @@ const addQuote = async (req, res) => {
           });
           res.status(200).json(Quote);
         });
-    } else {
+    } else 
+    {
       Quote.create({
         ClientId: ClientId,
         CompanyId: CompanyId,
