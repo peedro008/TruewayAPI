@@ -176,7 +176,7 @@ const ClientPayment = (req, res) => {
   let NSDvalue = CategoryNsd * NSDamount;
   let MVRamount = req.body.MVRamount;
   let MVRvalue = MVRamount ? 9 * parseFloat(MVRamount) : 0;
-  console.log(NSDamount, NSDvalue);
+ 
   try {
     const client = Client.create({
       name: name,
@@ -240,19 +240,19 @@ const addPayment = async (req, res) => {
     timestyle: "full",
     hourCycle: "h24",
   });
-  //  console.log(New_York_Date)
+
 
   let PIPvalue = PIPamount ? 10 * parseFloat(PIPamount) : 0;
 
   let MVRvalue = MVRamount ? 9 * parseFloat(MVRamount) : 0;
-  console.log(NSDamount, NSDvalue);
+
   try {
     let pay = await Payments.create({
       ClientId: ClientId,
       QuoteId: QuoteId,
       LocationId: LocationId,
       amount: amount,
-      //   time: New_York_Time,
+      // time: New_York_Time,
       policyNumber: policyNumber,
       CategoryId: CategoryId,
       method: method,
@@ -270,7 +270,7 @@ const addPayment = async (req, res) => {
       quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        //   date: New_York_Date,
+        // date: New_York_Date,
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -280,7 +280,7 @@ const addPayment = async (req, res) => {
         raw: true,
         nest: true,
       });
-      console.log(quoteRef);
+      
       let quote = await Quote.update(
         {
           down: amount,
@@ -543,6 +543,28 @@ const getUserPayment = async (req, res) => {
   }
 };
 
+const getPolicyNumber = async (req, res) => {
+  let policyNumber = req.query.policyNumber;
+  try {
+    const payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [
+        { model: Client },
+        { model: Quote },
+        { model: Location },
+        { model: Category },
+      ],
+      where: { policyNumber: { [Op.iLike]: `%${policyNumber}%` } },
+    });
+    payments.length
+      ? res.status(200).json(payments)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+
+
 const getDeletedPayment = async (req, res) => {
   try {
     const payments = await Payments.findAll({
@@ -745,4 +767,5 @@ module.exports = {
   getPaymentsStats,
   addMultiPayment,
   ClientMultiPayment,
+  getPolicyNumber
 };

@@ -654,8 +654,7 @@ const getUsersAverage = async (req, res) => {
     let temp = Userx.map((e) => {
       return { id: e.id, name: e.name, sold: 0, unsold: 0, deleted: e.deleted };
     });
-    console.log(temp);
-
+  
     quotes.map((e) => {
       if (!e.SoldBy) {
         temp[temp.findIndex((h) => h.id == e.UserId)].unsold++;

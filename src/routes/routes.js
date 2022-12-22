@@ -70,6 +70,7 @@ const {
   getPaymentsStats,
   addMultiPayment,
   ClientMultiPayment,
+  getPolicyNumber,
 } = require("../controlers/payments");
 const {
   getClients,
@@ -143,6 +144,7 @@ router.post("/resetPass", resetPass);
   router.post("/addClientPayment", ClientPayment);
   router.post("/deleteClient", deleteClient);
   router.get("/getpayments", getPayment),
+  router.get("/getPolicyNumber", getPolicyNumber),
   router.get("/getDailyReports", getDailyReports),
   router.post("/deleteQuote", deleteQuote),
   router.post("/resetDailyReport", resetDailyReport),
