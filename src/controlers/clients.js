@@ -36,12 +36,28 @@ const getClients = async (req, res) => {
   }
 };
 
+const getLastClients = async (req, res) => {
+
+  try {
+    const Clients = await Client.findAll({
+    
+      attributes: { exclude: ["modifiedAt", 'CompanyId', 'address', 'dateOfBirth', 'email', 'notes', 'tel', 'updatedAt', 'createdAt', 'new', 'deleted'] },
+      where: { deleted: false},
+    });
+    Clients.length
+      ? res.status(200).json(Clients)
+      : res.status(404).send("no Clients");
+  } catch (e) {
+    console.log("Error in Clients controller" + e);
+  }
+};
+
 const getClientsByName = async (req, res) => {
     let name = req.query.name;
     try {
       const Clients = await Client.findAll({
         attributes: { exclude: ["createdAt", "modifiedAt"] },
-        where: { name: { [Op.iLike]: `%${name}%`, deleted: false } },
+        where: { name: { [Op.iLike]: `%${name}%` }, deleted: false },
         include: [
           { model: Company },
           {
@@ -159,5 +175,6 @@ module.exports = {
   deleteClient,
   undeleteClient,
   getDeletedClients,
-  getClientsByName
+  getClientsByName,
+  getLastClients
 };

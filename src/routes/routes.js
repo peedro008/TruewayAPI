@@ -81,6 +81,7 @@ const {
   getDeletedClients,
   Admin,
   getClientsByName,
+  getLastClients,
 } = require("../controlers/clients");
 const { getLocations, addLocations } = require("../controlers/location");
 const { getCategories, addCategories } = require("../controlers/categories");
@@ -109,6 +110,7 @@ router.post("/resetPass", resetPass);
   router.get("/getStatus", getStatus);
   router.get("/getUserPayment", getUserPayment);
   router.get("/clients", getClients);
+  router.get("/clientsLast", getLastClients);
   router.get("/clientsByName", getClientsByName);
   router.post("/modifyClient", modifyClient);
   router.post("/modifyProducer", modifyProducer);
