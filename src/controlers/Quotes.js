@@ -470,6 +470,71 @@ const producerQuotes = async (req, res) => {
     console.log("Error in Quote controller" + e);
   }
 };
+
+const producerQuotesThisMonth = async (req, res) => {
+
+  const date = new Date();
+  function sumarDias(fecha, dias) {
+    const date = new Date(fecha);
+    date.setDate(date.getDate() + dias);
+    return date;
+  }
+  let yearBy = date.getFullYear();
+  let monthBy = (date.getMonth() + 1 > 9 ? "-" : "-0") + (date.getMonth() + 1);
+  let yearTo = date.getFullYear();
+  let monthTo = (date.getMonth() + 2 > 9 ? "-" : "-0") + (date.getMonth() + 2);
+  
+  if (monthTo === "-13") (monthTo = "-01"), (yearTo = date.getFullYear() + 1);
+  
+  const DATE1 = yearBy + monthBy + "-01";
+  const DATE2 = new Date(yearTo + monthTo + "-01");
+
+
+  let papa = req.query.UserId;
+
+  try {
+    let QuotesDB = await Quote.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [
+        { model: Users },
+        { model: Client },
+        { model: Company },
+        { model: QuoteStatus },
+        { model: Location },
+        { model: Category },
+      ],
+      where: {
+        date: { [Op.between]: [DATE1, sumarDias(DATE2, -1)] },
+        UserId: papa,
+        deleted: false,
+        SoldBy: null,
+      },
+    });
+
+    let QuotesDB2 = await Quote.findAll({
+      attributes: { exclude: ["createdAt", "modifiedAt"] },
+      include: [
+        { model: Users },
+        { model: Client },
+        { model: Company },
+        { model: QuoteStatus },
+        { model: Location },
+        { model: Category },
+      ],
+      where: {
+        closingDate: { [Op.between]: [DATE1, sumarDias(DATE2, -1)] },
+        SoldBy: papa,
+        deleted: false,
+      },
+    });
+
+    QuotesDB.length
+      ? res.status(200).json([QuotesDB, QuotesDB2])
+      : res.status(404).send("no Quotes");
+  } catch (e) {
+    console.log("Error in Quote controller" + e);
+  }
+};
 const companyQuotes = async (req, res) => {
   let papa = req.query.company;
 
@@ -608,6 +673,7 @@ const getUserStatus = async (req, res) => {
     console.log("Error in QuoteStatus controller" + e);
   }
 };
+
 
 const getUsersAverage = async (req, res) => {
   try {
@@ -999,4 +1065,5 @@ module.exports = {
   getUserStatus,
   getUsersAverage,
   getUserAverage,
+  producerQuotesThisMonth
 };

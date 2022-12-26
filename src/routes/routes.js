@@ -21,7 +21,8 @@ const {
   getQuotesStats,
   getUserStatus,
   getUsersAverage,
-  getUserAverage
+  getUserAverage,
+  producerQuotesThisMonth,
 } = require("../controlers/Quotes");
 const {
   addCompany,
@@ -58,7 +59,7 @@ const {
   deletePayment,
   undeletePayment,
   getDepositCashPayment,
-  
+
   dailyReport,
   getCashPayment,
   getUserPayment,
@@ -88,64 +89,61 @@ const { getCategories, addCategories } = require("../controlers/categories");
 const {
   addDailyReport,
   getDailyReports,
-  resetDailyReport
+  resetDailyReport,
 } = require("../controlers/dailyReport");
-const {
-  getDealers,
-  addDealer,
-  paidDealer
-} = require("../controlers/Dealer");
+const { getDealers, addDealer, paidDealer } = require("../controlers/Dealer");
 
 const router = Router();
 router.post("/tremendoscript", tremendoscript);
-  router.get("/", get);
-  router.post("/send", sendMail);
-  router.get("/GetUserStatus", getUserStatus);
-  router.get("/getUsersAverage", getUsersAverage);
+router.get("/", get);
+router.post("/send", sendMail);
+router.get("/GetUserStatus", getUserStatus);
+router.get("/producerQuotesThisMonth", producerQuotesThisMonth);
+router.get("/getUsersAverage", getUsersAverage);
 router.post("/resetPass", resetPass);
-  router.get("/Quotes", getQuotes);
-  router.get("/getDealers", getDealers);
-  router.post("/addDealer", addDealer);
-  router.post("/paidDealer", paidDealer);
-  router.get("/getStatus", getStatus);
-  router.get("/getUserPayment", getUserPayment);
-  router.get("/clients", getClients);
-  router.get("/clientsLast", getLastClients);
-  router.get("/clientsByName", getClientsByName);
-  router.post("/modifyClient", modifyClient);
-  router.post("/modifyProducer", modifyProducer);
-  router.get("/users", users);
-  router.post("/modifyQuote", modifyQuotes);
-  router.post("/addCategories", addCategories);
-  router.post("/addQuoteStatus", addQuoteStatus);
-  router.get("/getQuoteStatus", getQuoteStatus);
-  router.get("/producerQuotes", producerQuotes);
-  router.get("/locationQuotes", locationQuotes);
-  router.get("/clientQuotes", clientQuotes);
-  router.get("/companyQuotes", companyQuotes);
-  router.get("/dateQuotes", dateQuotes);
-  router.get("/getDealerSalePerson", getDealerSalePerson);
-  router.get("/idquotes", idQuotes);
-  router.get("/getProducer", getProducer);
-  router.get("/getProducerFilter", getProducerFilter);
-  router.get("/getCompany", getCompany);
-  router.get("/getCashPayment", getCashPayment);
-  router.get("/dailyReport", dailyReport);
-  router.get("/getManager", getManager);
-  router.post("/modifyManager", modifyManager);
-  router.post("/addDailyReport", addDailyReport);
-  router.post("/addManager", addManager);
-  router.post("/login", login);
-  router.post("/addquote", addQuote);
-  router.post("/addcompany", addCompany);
-  router.post("/addproducer", addProducer);
-  router.post("/Deposit", addDeposit);
-  router.post("/addDealerSalePerson", addDealerSalePerson);
-  router.post("/addClient", addClient);
-  router.post("/addPayment", addPayment);
-  router.post("/addClientPayment", ClientPayment);
-  router.post("/deleteClient", deleteClient);
-  router.get("/getpayments", getPayment),
+router.get("/Quotes", getQuotes);
+router.get("/getDealers", getDealers);
+router.post("/addDealer", addDealer);
+router.post("/paidDealer", paidDealer);
+router.get("/getStatus", getStatus);
+router.get("/getUserPayment", getUserPayment);
+router.get("/clients", getClients);
+router.get("/clientsLast", getLastClients);
+router.get("/clientsByName", getClientsByName);
+router.post("/modifyClient", modifyClient);
+router.post("/modifyProducer", modifyProducer);
+router.get("/users", users);
+router.post("/modifyQuote", modifyQuotes);
+router.post("/addCategories", addCategories);
+router.post("/addQuoteStatus", addQuoteStatus);
+router.get("/getQuoteStatus", getQuoteStatus);
+router.get("/producerQuotes", producerQuotes);
+router.get("/locationQuotes", locationQuotes);
+router.get("/clientQuotes", clientQuotes);
+router.get("/companyQuotes", companyQuotes);
+router.get("/dateQuotes", dateQuotes);
+router.get("/getDealerSalePerson", getDealerSalePerson);
+router.get("/idquotes", idQuotes);
+router.get("/getProducer", getProducer);
+router.get("/getProducerFilter", getProducerFilter);
+router.get("/getCompany", getCompany);
+router.get("/getCashPayment", getCashPayment);
+router.get("/dailyReport", dailyReport);
+router.get("/getManager", getManager);
+router.post("/modifyManager", modifyManager);
+router.post("/addDailyReport", addDailyReport);
+router.post("/addManager", addManager);
+router.post("/login", login);
+router.post("/addquote", addQuote);
+router.post("/addcompany", addCompany);
+router.post("/addproducer", addProducer);
+router.post("/Deposit", addDeposit);
+router.post("/addDealerSalePerson", addDealerSalePerson);
+router.post("/addClient", addClient);
+router.post("/addPayment", addPayment);
+router.post("/addClientPayment", ClientPayment);
+router.post("/deleteClient", deleteClient);
+router.get("/getpayments", getPayment),
   router.get("/getPolicyNumber", getPolicyNumber),
   router.get("/getDailyReports", getDailyReports),
   router.post("/deleteQuote", deleteQuote),
@@ -175,10 +173,7 @@ router.post("/resetPass", resetPass);
   router.get("/getPaymentsReport", getPaymentsReport),
   router.get("/getPaymentsStats", getPaymentsStats),
   router.get("/getQuotesStats", getQuotesStats),
-  router.get("/getUserAverage", getUserAverage)
-  router.post("/addMultiPayment", addMultiPayment),
+  router.get("/getUserAverage", getUserAverage);
+router.post("/addMultiPayment", addMultiPayment),
   router.post("/ClientMultiPayment", ClientMultiPayment),
-
   (module.exports = router);
-
-  
