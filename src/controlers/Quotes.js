@@ -332,7 +332,7 @@ const addQuote = async (req, res) => {
               CategoryId: CategoryId,
               UserId: UserId,
               LocationId: LocationId,
-                time: New_York_Time,
+              time: New_York_Time,
               down: down,
               DealerSalePerson: DealerSalePersonId,
               monthlyPayment: monthlyPayment,
@@ -356,8 +356,7 @@ const addQuote = async (req, res) => {
           });
           res.status(200).json(Quote);
         });
-    } else 
-    {
+    } else {
       Quote.create({
         ClientId: ClientId,
         CompanyId: CompanyId,
@@ -379,7 +378,7 @@ const addQuote = async (req, res) => {
         QuoteStatus.create({
           note: notes,
           Status: bound ? "Sold" : "Quoted",
-            date: New_York_Date,
+          date: New_York_Date,
           QuoteId: Quote.id,
           UserId: UserId,
         });
@@ -463,16 +462,20 @@ const producerQuotes = async (req, res) => {
       },
     });
 
-    QuotesDB.length
-      ? res.status(200).json([QuotesDB, QuotesDB2])
-      : res.status(404).send("no Quotes");
+    if (QuotesDB.length) {
+      res.status(200).json([QuotesDB, QuotesDB2]);
+    } else if (QuotesDB2.length){
+      res.status(200).json([QuotesDB, QuotesDB2]);
+    }
+    else{
+      res.status(404).send("no Quotes");
+    }
   } catch (e) {
     console.log("Error in Quote controller" + e);
   }
 };
 
 const producerQuotesThisMonth = async (req, res) => {
-
   const date = new Date();
   function sumarDias(fecha, dias) {
     const date = new Date(fecha);
@@ -483,12 +486,11 @@ const producerQuotesThisMonth = async (req, res) => {
   let monthBy = (date.getMonth() + 1 > 9 ? "-" : "-0") + (date.getMonth() + 1);
   let yearTo = date.getFullYear();
   let monthTo = (date.getMonth() + 2 > 9 ? "-" : "-0") + (date.getMonth() + 2);
-  
+
   if (monthTo === "-13") (monthTo = "-01"), (yearTo = date.getFullYear() + 1);
-  
+
   const DATE1 = yearBy + monthBy + "-01";
   const DATE2 = new Date(yearTo + monthTo + "-01");
-
 
   let papa = req.query.UserId;
 
@@ -528,9 +530,14 @@ const producerQuotesThisMonth = async (req, res) => {
       },
     });
 
-    QuotesDB.length
-      ? res.status(200).json([QuotesDB, QuotesDB2])
-      : res.status(404).send("no Quotes");
+    if (QuotesDB.length) {
+      res.status(200).json([QuotesDB, QuotesDB2]);
+    } else if (QuotesDB2.length){
+      res.status(200).json([QuotesDB, QuotesDB2]);
+    }
+    else{
+      res.status(404).send("no Quotes");
+    }
   } catch (e) {
     console.log("Error in Quote controller" + e);
   }
@@ -674,7 +681,6 @@ const getUserStatus = async (req, res) => {
   }
 };
 
-
 const getUsersAverage = async (req, res) => {
   try {
     let dateFrom = req.query.dateFrom;
@@ -720,7 +726,7 @@ const getUsersAverage = async (req, res) => {
     let temp = Userx.map((e) => {
       return { id: e.id, name: e.name, sold: 0, unsold: 0, deleted: e.deleted };
     });
-  
+
     quotes.map((e) => {
       if (!e.SoldBy) {
         temp[temp.findIndex((h) => h.id == e.UserId)].unsold++;
@@ -1065,5 +1071,5 @@ module.exports = {
   getUserStatus,
   getUsersAverage,
   getUserAverage,
-  producerQuotesThisMonth
+  producerQuotesThisMonth,
 };
