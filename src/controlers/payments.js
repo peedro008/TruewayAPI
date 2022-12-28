@@ -166,7 +166,8 @@ const ClientPayment = (req, res) => {
     phone,
     CategoryNsd,
     notes,
-
+    increasePremium,
+    CompanyId,
     CategoryId,
   } = req.body;
   let neww = req.body.new;
@@ -191,6 +192,8 @@ const ClientPayment = (req, res) => {
         amount: amount,
         method: method,
         DepositId: null,
+        increasePremium: increasePremium,
+        CompanyId: CompanyId,
         type: type,
         CategoryId: CategoryId,
         UserId: UserId,
@@ -225,6 +228,8 @@ const addPayment = async (req, res) => {
     CategoryId,
     MVRamount,
     notes,
+    increasePremium,
+    CompanyId,
     QuoteId,
   } = req.body;
   let NSDvalue = CategoryNsd * NSDamount;
@@ -252,8 +257,10 @@ const addPayment = async (req, res) => {
       QuoteId: QuoteId,
       LocationId: LocationId,
       amount: amount,
-      // time: New_York_Time,
+      time: New_York_Time,
       policyNumber: policyNumber,
+      increasePremium: increasePremium,
+      CompanyId:CompanyId,
       CategoryId: CategoryId,
       method: method,
       type: type,
@@ -270,7 +277,7 @@ const addPayment = async (req, res) => {
       quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        // date: New_York_Date,
+        date: New_York_Date,
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -320,6 +327,8 @@ const addMultiPayment = async (req, res) => {
     MVRamount,
     notes,
     QuoteId,
+    increasePremium,
+    CompanyId,
     method2,
     percent,
   } = req.body;
@@ -343,6 +352,8 @@ const addMultiPayment = async (req, res) => {
       ClientId: ClientId,
       QuoteId: QuoteId,
       LocationId: LocationId,
+      increasePremium:increasePremium,
+      CompanyId:CompanyId,
       amount: amount1,
       CategoryId: CategoryId,
       method: method,
@@ -359,6 +370,8 @@ const addMultiPayment = async (req, res) => {
       ClientId: ClientId,
       QuoteId: QuoteId,
       LocationId: LocationId,
+      increasePremium:increasePremium,
+      CompanyId:CompanyId,
       amount: amount2,
       CategoryId: CategoryId,
       method: method2,
@@ -428,6 +441,8 @@ const ClientMultiPayment = async (req, res) => {
     CategoryId,
     NSDamount,
     MVRamount,
+    increasePremium,
+    CompanyId,
     method2,
     percent,
   } = req.body;
@@ -459,6 +474,8 @@ const ClientMultiPayment = async (req, res) => {
       ClientId: client.id,
       LocationId: LocationId,
       amount: amount1,
+      increasePremium:increasePremium,
+      CompanyId:CompanyId,
       method: method,
       DepositId: null,
       type: type,
@@ -476,6 +493,8 @@ const ClientMultiPayment = async (req, res) => {
       amount: amount2,
       method: method2,
       DepositId: null,
+      increasePremium:increasePremium,
+      CompanyId: CompanyId,
       type: type,
       CategoryId: CategoryId,
       UserId: UserId,
