@@ -23,7 +23,7 @@ const Payments = (sequelize) => {
       allowNull: false,
     },
     increasePremium: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.NUMBER,
       allowNull: true,
     },
     CompanyId: {
