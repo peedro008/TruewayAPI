@@ -32,19 +32,6 @@ const DATE0 = yearLast + monthLast + '-25';
 const DATE1 = yearBy + monthBy + "-01";
 const DATE2 = new Date(yearTo + monthTo + "-01");
 
-
-let New_York_Time = new Date().toLocaleString("en-US", {
-  timeZone: "America/New_York",
-  timestyle: "full",
-  hourCycle: "h24",
-});
-
-let New_York_Date = new Date().toLocaleDateString("en-US", {
-  timeZone: "America/New_York",
-  timestyle: "full",
-  hourCycle: "h24",
-});
-
 const getPaymentsReport = async (req, res) => {
   let objQ = req.query;
   let dateFrom = req.query.dateFrom;
@@ -199,6 +186,18 @@ const getLastPayments = async (req, res) => {
 };
 
 const ClientPayment = (req, res) => {
+  let New_York_Time = new Date().toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
+  
+  let New_York_Date = new Date().toLocaleDateString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
+
   let {
     LocationId,
     amount,
@@ -261,6 +260,17 @@ const ClientPayment = (req, res) => {
 };
 
 const addPayment = async (req, res) => {
+  let New_York_Time = new Date().toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
+  
+  let New_York_Date = new Date().toLocaleDateString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
   let {
     ClientId,
     LocationId,
@@ -313,7 +323,7 @@ const addPayment = async (req, res) => {
       quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        // date: New_York_Date,
+        date: New_York_Date,
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -348,6 +358,17 @@ const addPayment = async (req, res) => {
 };
 
 const addMultiPayment = async (req, res) => {
+  let New_York_Time = new Date().toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
+  
+  let New_York_Date = new Date().toLocaleDateString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
   let {
     ClientId,
     LocationId,
@@ -431,7 +452,7 @@ const addMultiPayment = async (req, res) => {
       quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        // date: New_York_Date,
+        date: New_York_Date,
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -466,6 +487,17 @@ const addMultiPayment = async (req, res) => {
 };
 
 const ClientMultiPayment = async (req, res) => {
+  let New_York_Time = new Date().toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
+  
+  let New_York_Date = new Date().toLocaleDateString("en-US", {
+    timeZone: "America/New_York",
+    timestyle: "full",
+    hourCycle: "h24",
+  });
   let {
     LocationId,
     amount,
