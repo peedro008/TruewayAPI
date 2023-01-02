@@ -28,7 +28,7 @@ let monthTo = (date.getMonth() + 2 > 9 ? "-" : "-0") + (date.getMonth() + 2);
 if (monthLast === "-00") { monthLast = "-12"; yearLast = date.getFullYear() - 1};
 if (monthTo === "-13") (monthTo = "-01"), (yearTo = date.getFullYear() + 1);
 const DATE0 = yearLast + monthLast + '-25';
-console.log(DATE0)
+
 const DATE1 = yearBy + monthBy + "-01";
 const DATE2 = new Date(yearTo + monthTo + "-01");
 
@@ -146,6 +146,7 @@ const getPaymentsStats = async (req, res) => {
 };
 
 const getPayment = async (req, res) => {
+  
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
@@ -170,6 +171,7 @@ const getPayment = async (req, res) => {
 };
 
 const getLastPayments = async (req, res) => {
+ 
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
@@ -237,7 +239,7 @@ const ClientPayment = (req, res) => {
         method: method,
         DepositId: null,
         increasePremium: increasePremium,
-        // time: New_York_Time,
+        time: New_York_Time,
         policyNumber: policyNumber,
         CompanyId: CompanyId,
         type: type,
@@ -291,7 +293,7 @@ const addPayment = async (req, res) => {
       QuoteId: QuoteId,
       LocationId: LocationId,
       amount: amount,
-      // time: New_York_Time,
+      time: New_York_Time,
       policyNumber: policyNumber,
       increasePremium: increasePremium,
       CompanyId:CompanyId,
@@ -388,7 +390,7 @@ const addMultiPayment = async (req, res) => {
       QuoteId: QuoteId,
       LocationId: LocationId,
       increasePremium:increasePremium,
-      // time: New_York_Time,
+      time: New_York_Time,
       policyNumber:policyNumber,
       CompanyId:CompanyId,
       amount: amount1,
@@ -408,7 +410,7 @@ const addMultiPayment = async (req, res) => {
       QuoteId: QuoteId,
       LocationId: LocationId,
       increasePremium:increasePremium,
-      // time: New_York_Time,
+      time: New_York_Time,
       policyNumber:policyNumber,
       CompanyId:CompanyId,
       amount: amount2,
@@ -516,7 +518,7 @@ const ClientMultiPayment = async (req, res) => {
       LocationId: LocationId,
       amount: amount1,
       increasePremium:increasePremium,
-      // time: New_York_Time,
+      time: New_York_Time,
       policyNumber:policyNumber,
       CompanyId:CompanyId,
       method: method,
@@ -537,7 +539,7 @@ const ClientMultiPayment = async (req, res) => {
       method: method2,
       DepositId: null,
       increasePremium:increasePremium,
-      // time: New_York_Time,
+      time: New_York_Time,
       policyNumber:policyNumber,
       CompanyId: CompanyId,
       type: type,
@@ -553,7 +555,7 @@ const ClientMultiPayment = async (req, res) => {
       let quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        // date: New_York_Date,
+        date: New_York_Date,
         QuoteId: QuoteId,
         UserId: UserId,
       });
