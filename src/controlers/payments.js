@@ -32,6 +32,7 @@ const DATE0 = yearLast + monthLast + '-25';
 const DATE1 = yearBy + monthBy + "-01";
 const DATE2 = new Date(yearTo + monthTo + "-01");
 
+
 const getPaymentsReport = async (req, res) => {
   let objQ = req.query;
   let dateFrom = req.query.dateFrom;
@@ -323,7 +324,7 @@ const addPayment = async (req, res) => {
       quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        date: New_York_Date,
+        date: New_York_Time.slice(0,8),
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -452,7 +453,7 @@ const addMultiPayment = async (req, res) => {
       quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        date: New_York_Date,
+        date: New_York_Time.slice(0,8),
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -587,7 +588,7 @@ const ClientMultiPayment = async (req, res) => {
       let quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        date: New_York_Date,
+        date: New_York_Time.slice(0,8),
         QuoteId: QuoteId,
         UserId: UserId,
       });
