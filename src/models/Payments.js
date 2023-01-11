@@ -65,7 +65,8 @@ const Payments = (sequelize) => {
         "Monthly Payment",
         "Down Payment",
         "Endorsement",
-        "Renew Down"
+        "Renew Down",
+        "Full Premium"
       ),
     },
     deposited: {
