@@ -35,7 +35,14 @@ const Payments = (sequelize) => {
       defaultValue: NOW,
       allowNull: false,
     },
-
+    effectiveDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    expirationDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
     time: {
       type: DataTypes.DATE,
       defaultValue: NOW,

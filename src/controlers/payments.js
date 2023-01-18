@@ -215,6 +215,8 @@ const ClientPayment = (req, res) => {
     increasePremium,
     CompanyId,
     CategoryId,
+    effectiveDate,
+    expirationDate,
   } = req.body;
   let neww = req.body.new;
   let PIPamount = req.body.PIPamount;
@@ -251,6 +253,8 @@ const ClientPayment = (req, res) => {
         PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
         MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
         NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+        effectiveDate: effectiveDate || null,
+        expirationDate: expirationDate || null,
       });
     });
     client
@@ -291,6 +295,8 @@ const addPayment = async (req, res) => {
     increasePremium,
     CompanyId,
     QuoteId,
+    effectiveDate,
+    expirationDate,
   } = req.body;
   let NSDvalue = CategoryNsd * NSDamount;
 
@@ -320,6 +326,8 @@ const addPayment = async (req, res) => {
       PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
       MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
       NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+      effectiveDate: effectiveDate || null,
+      expirationDate: expirationDate || null,
     });
     let quoteStatus;
     if (QuoteId) {
@@ -392,6 +400,8 @@ const addMultiPayment = async (req, res) => {
     CompanyId,
     method2,
     percent,
+    effectiveDate,
+    expirationDate,
   } = req.body;
   let NSDvalue = CategoryNsd * NSDamount * percent;
   let NSDvalue2 = CategoryNsd * NSDamount * (1 - percent);
@@ -429,6 +439,8 @@ const addMultiPayment = async (req, res) => {
       PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
       MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
       NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+      effectiveDate: effectiveDate || null,
+      expirationDate: expirationDate || null,
     });
     let pay2 = await Payments.create({
       ClientId: ClientId,
@@ -450,6 +462,8 @@ const addMultiPayment = async (req, res) => {
       PIPvalue: PIPvalue2 == "" ? "0" : PIPvalue2,
       MVRvalue: MVRvalue2 == "" ? "0" : MVRvalue2,
       NSDvalue: NSDvalue2 == "" ? "0" : NSDvalue2,
+      effectiveDate: effectiveDate || null,
+      expirationDate: expirationDate || null,
     });
 
     let quoteStatus;
@@ -525,6 +539,8 @@ const ClientMultiPayment = async (req, res) => {
     CompanyId,
     method2,
     percent,
+    effectiveDate,
+    expirationDate,
   } = req.body;
   let neww = req.body.new;
   let NSDvalue = CategoryNsd * NSDamount * percent;
@@ -569,6 +585,8 @@ const ClientMultiPayment = async (req, res) => {
       PIPvalue: PIPvalue == "" ? "0" : PIPvalue,
       MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
       NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
+      effectiveDate: effectiveDate || null,
+      expirationDate: expirationDate || null,
     });
     const pay2 = await Payments.create({
       ClientId: client.id,
@@ -589,6 +607,8 @@ const ClientMultiPayment = async (req, res) => {
       PIPvalue: PIPvalue2 == "" ? "0" : PIPvalue2,
       MVRvalue: MVRvalue2 == "" ? "0" : MVRvalue2,
       NSDvalue: NSDvalue2 == "" ? "0" : NSDvalue2,
+      effectiveDate: effectiveDate || null,
+      expirationDate: expirationDate || null,
     });
     if (QuoteId) {
       let quoteStatus = await QuoteStatus.create({

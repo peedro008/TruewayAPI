@@ -288,6 +288,9 @@ const addQuote = async (req, res) => {
   let monthlyPayment = req.body.monthlyPayment;
   let neww = req.body.new;
   let date = req.body.date;
+  let effectiveDate = req.body.effectiveDate;
+  let expirationDate = req.body.expirationDate;
+  let policyNumber = req.body.policyNumber;
   let TotalPremium = req.body.TotalPremium;
   let ClientNotes = req.body.notes;
   let PIPamount = req.body.PIPamount;
@@ -343,6 +346,9 @@ const addQuote = async (req, res) => {
               date: date,
               SoldBy: bound ? UserId : null,
               closingDate: bound ? date : null,
+              effectiveDate: effectiveDate || null,
+              expirationDate: expirationDate || null,
+              policyNumber,
             }))
         )
 
@@ -374,6 +380,9 @@ const addQuote = async (req, res) => {
         NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
         SoldBy: bound ? UserId : null,
         closingDate: bound ? date : null,
+        effectiveDate: effectiveDate || null,
+        expirationDate: expirationDate || null,
+        policyNumber
       }).then((Quote) => {
         QuoteStatus.create({
           note: notes,
@@ -953,6 +962,9 @@ const modifyQuotes = async (req, res) => {
   let UserId = req.body.UserId;
   let CompanyId = req.body.CompanyId;
   let date = req.body.date;
+  let effectiveDate = req.body.effectiveDate;
+  let expirationDate = req.body.expirationDate;
+  let policyNumber = req.body.policyNumber;
   try {
     if (Status == "Cancelled") {
       let quoteStatus = await QuoteStatus.create({
@@ -973,6 +985,9 @@ const modifyQuotes = async (req, res) => {
       let quote = await Quote.update(
         {
           down: down,
+          policyNumber,
+          expirationDate,
+          effectiveDate,
           monthlyPayment: monthly,
           CompanyId: CompanyId,
           closingDate: quoteRef.closingDate

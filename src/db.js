@@ -5,8 +5,6 @@ const path = require("path");
 
 const { Sequelize } = require("sequelize");
 
-
-
 const sequelize = new Sequelize( "TEMP", "postgres", "pesanmene",  {
   host: "aacao4lyn1y73d.cviwhti8ghss.us-east-1.rds.amazonaws.com",
   dialect:'postgres',

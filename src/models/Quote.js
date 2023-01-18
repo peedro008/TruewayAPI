@@ -30,14 +30,24 @@ const Quote= (sequelize)=>{
     },
     date:{
          type:DataTypes.DATEONLY,
-         
          defaultValue: NOW,
      },
+     effectiveDate:{
+        type:DataTypes.DATEONLY,
+        allowNull:true,
+    },
+    expirationDate:{
+        type:DataTypes.DATEONLY,
+        allowNull:true,
+    },
+    policyNumber: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      
      time:{
         type:DataTypes.DATE,
-        
         defaultValue: NOW,
-        
     },
     closingDate:{
         type:DataTypes.DATE,
@@ -64,7 +74,6 @@ const Quote= (sequelize)=>{
         defaultValue: false
     },
 
-    
     
     monthlyPayment:{
         type: DataTypes.STRING
