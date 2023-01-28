@@ -5,9 +5,9 @@ const path = require("path");
 
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize( "TEMP", "postgres", "pesanmene",  {
+const sequelize = new Sequelize("TEMP", "postgres", "pesanmene", {
   host: "aacao4lyn1y73d.cviwhti8ghss.us-east-1.rds.amazonaws.com",
-  dialect:'postgres',
+  dialect: "postgres",
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });
@@ -16,7 +16,6 @@ const sequelize = new Sequelize( "TEMP", "postgres", "pesanmene",  {
 //   "postgres://postgres:Messiyyaco@localhost:5432/test",
 //   { logging: false }
 // );
-
 
 const basename = path.basename(__filename);
 
@@ -60,24 +59,21 @@ const {
   Deposit,
 } = sequelize.models;
 
-
 Client.hasOne(Dealer, {
   foreignKey: {
     name: "ClientId",
-    allowNull: true
-  }
-})
-Dealer.belongsTo(Client)
+    allowNull: true,
+  },
+});
+Dealer.belongsTo(Client);
 
 DealerSalePerson.hasMany(Dealer, {
-  foreignKey:{
+  foreignKey: {
     name: "DealerSalePersonId",
-    allowNull: true
-  }
-})
-Dealer.belongsTo(DealerSalePerson)
-
-
+    allowNull: true,
+  },
+});
+Dealer.belongsTo(DealerSalePerson);
 
 Users.hasMany(Deposit, {
   foreignKey: {

@@ -22,16 +22,18 @@ function sumarDias(fecha, dias) {
 let yearBy = date.getFullYear();
 let yearLast = date.getFullYear();
 let monthBy = (date.getMonth() + 1 > 9 ? "-" : "-0") + (date.getMonth() + 1);
-let monthLast = (date.getMonth() - 1 > 9 ? "-" : "-0") + (date.getMonth());
+let monthLast = (date.getMonth() - 1 > 9 ? "-" : "-0") + date.getMonth();
 let yearTo = date.getFullYear();
 let monthTo = (date.getMonth() + 2 > 9 ? "-" : "-0") + (date.getMonth() + 2);
-if (monthLast === "-00") { monthLast = "-12"; yearLast = date.getFullYear() - 1};
+if (monthLast === "-00") {
+  monthLast = "-12";
+  yearLast = date.getFullYear() - 1;
+}
 if (monthTo === "-13") (monthTo = "-01"), (yearTo = date.getFullYear() + 1);
-const DATE0 = yearLast + monthLast + '-25';
+const DATE0 = yearLast + monthLast + "-25";
 
 const DATE1 = yearBy + monthBy + "-01";
 const DATE2 = new Date(yearTo + monthTo + "-01");
-
 
 const getPaymentsReport = async (req, res) => {
   let objQ = req.query;
@@ -134,7 +136,6 @@ const getPaymentsStats = async (req, res) => {
 };
 
 const getPayment = async (req, res) => {
-  
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
@@ -147,7 +148,25 @@ const getPayment = async (req, res) => {
       ],
       where: {
         deleted: false,
-       // date: { [Op.between]: [DATE1, sumarDias(DATE2, -1)] },
+        // date: { [Op.between]: [DATE1, sumarDias(DATE2, -1)] },
+      },
+    });
+    payments.length
+      ? res.status(200).json(payments)
+      : res.status(404).send("no Payments");
+  } catch (e) {
+    console.log("Error in payments controller" + e);
+  }
+};
+
+const getMonthlyPayments = async (req, res) => {
+  try {
+    const payments = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      order: [["date", "DESC"]],
+      where: {
+        deleted: false,
+        date: { [Op.between]: [DATE1, DATE2] },
       },
     });
     payments.length
@@ -159,7 +178,6 @@ const getPayment = async (req, res) => {
 };
 
 const getLastPayments = async (req, res) => {
- 
   try {
     const payments = await Payments.findAll({
       attributes: { exclude: ["modifiedAt"] },
@@ -170,9 +188,7 @@ const getLastPayments = async (req, res) => {
         { model: Quote },
         { model: Category },
       ],
-      order: [
-        ["date", "DESC"],
-      ],
+      order: [["date", "DESC"]],
       where: {
         deleted: false,
         date: { [Op.between]: [DATE0, DATE2] },
@@ -192,7 +208,7 @@ const ClientPayment = (req, res) => {
     timestyle: "full",
     hourCycle: "h24",
   });
-  
+
   let New_York_Date = new Date().toLocaleDateString("en-US", {
     timeZone: "America/New_York",
     timestyle: "full",
@@ -225,7 +241,7 @@ const ClientPayment = (req, res) => {
   let NSDvalue = CategoryNsd * NSDamount;
   let MVRamount = req.body.MVRamount;
   let MVRvalue = MVRamount ? 9 * parseFloat(MVRamount) : 0;
- 
+
   try {
     const client = Client.create({
       name: name,
@@ -271,7 +287,7 @@ const addPayment = async (req, res) => {
     timestyle: "full",
     hourCycle: "h24",
   });
-  
+
   let New_York_Date = new Date().toLocaleDateString("en-US", {
     timeZone: "America/New_York",
     timestyle: "full",
@@ -300,7 +316,6 @@ const addPayment = async (req, res) => {
   } = req.body;
   let NSDvalue = CategoryNsd * NSDamount;
 
-
   let PIPvalue = PIPamount ? 10 * parseFloat(PIPamount) : 0;
 
   let MVRvalue = MVRamount ? 9 * parseFloat(MVRamount) : 0;
@@ -314,7 +329,7 @@ const addPayment = async (req, res) => {
       time: New_York_Time,
       policyNumber: policyNumber,
       increasePremium: increasePremium,
-      CompanyId:CompanyId,
+      CompanyId: CompanyId,
       date: New_York_Date,
       CategoryId: CategoryId,
       method: method,
@@ -334,7 +349,7 @@ const addPayment = async (req, res) => {
       quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        date: New_York_Time.slice(0,8),
+        date: New_York_Time.slice(0, 8),
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -344,7 +359,7 @@ const addPayment = async (req, res) => {
         raw: true,
         nest: true,
       });
-      
+
       let quote = await Quote.update(
         {
           down: amount,
@@ -374,7 +389,7 @@ const addMultiPayment = async (req, res) => {
     timestyle: "full",
     hourCycle: "h24",
   });
-  
+
   let New_York_Date = new Date().toLocaleDateString("en-US", {
     timeZone: "America/New_York",
     timestyle: "full",
@@ -423,10 +438,10 @@ const addMultiPayment = async (req, res) => {
       ClientId: ClientId,
       QuoteId: QuoteId,
       LocationId: LocationId,
-      increasePremium:increasePremium,
+      increasePremium: increasePremium,
       time: New_York_Time,
-      policyNumber:policyNumber,
-      CompanyId:CompanyId,
+      policyNumber: policyNumber,
+      CompanyId: CompanyId,
       amount: amount1,
       date: New_York_Date,
       CategoryId: CategoryId,
@@ -446,10 +461,10 @@ const addMultiPayment = async (req, res) => {
       ClientId: ClientId,
       QuoteId: QuoteId,
       LocationId: LocationId,
-      increasePremium:increasePremium,
+      increasePremium: increasePremium,
       time: New_York_Time,
-      policyNumber:policyNumber,
-      CompanyId:CompanyId,
+      policyNumber: policyNumber,
+      CompanyId: CompanyId,
       date: New_York_Date,
       amount: amount2,
       CategoryId: CategoryId,
@@ -471,7 +486,7 @@ const addMultiPayment = async (req, res) => {
       quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        date: New_York_Time.slice(0,8),
+        date: New_York_Time.slice(0, 8),
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -511,7 +526,7 @@ const ClientMultiPayment = async (req, res) => {
     timestyle: "full",
     hourCycle: "h24",
   });
-  
+
   let New_York_Date = new Date().toLocaleDateString("en-US", {
     timeZone: "America/New_York",
     timestyle: "full",
@@ -570,11 +585,11 @@ const ClientMultiPayment = async (req, res) => {
       ClientId: client.id,
       LocationId: LocationId,
       amount: amount1,
-      increasePremium:increasePremium,
+      increasePremium: increasePremium,
       time: New_York_Time,
       date: New_York_Date,
-      policyNumber:policyNumber,
-      CompanyId:CompanyId,
+      policyNumber: policyNumber,
+      CompanyId: CompanyId,
       method: method,
       DepositId: null,
       type: type,
@@ -594,10 +609,10 @@ const ClientMultiPayment = async (req, res) => {
       amount: amount2,
       method: method2,
       DepositId: null,
-      increasePremium:increasePremium,
+      increasePremium: increasePremium,
       time: New_York_Time,
       date: New_York_Date,
-      policyNumber:policyNumber,
+      policyNumber: policyNumber,
       CompanyId: CompanyId,
       type: type,
       CategoryId: CategoryId,
@@ -614,7 +629,7 @@ const ClientMultiPayment = async (req, res) => {
       let quoteStatus = await QuoteStatus.create({
         note: notes,
         Status: "Sold",
-        date: New_York_Time.slice(0,8),
+        date: New_York_Time.slice(0, 8),
         QuoteId: QuoteId,
         UserId: UserId,
       });
@@ -689,7 +704,6 @@ const getPolicyNumber = async (req, res) => {
     console.log("Error in payments controller" + e);
   }
 };
-
 
 const getDeletedPayment = async (req, res) => {
   try {
@@ -894,5 +908,6 @@ module.exports = {
   addMultiPayment,
   ClientMultiPayment,
   getPolicyNumber,
-  getLastPayments
+  getLastPayments,
+  getMonthlyPayments,
 };
