@@ -345,7 +345,7 @@ const addQuote = async (req, res) => {
               NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
               date: date,
               SoldBy: bound ? UserId : null,
-              closingDate: bound ? date : null,
+              closingDate: bound ? New_York_Date : null,
               effectiveDate: effectiveDate || null,
               expirationDate: expirationDate || null,
               policyNumber,
@@ -379,10 +379,10 @@ const addQuote = async (req, res) => {
         MVRvalue: MVRvalue == "" ? "0" : MVRvalue,
         NSDvalue: NSDvalue == "" ? "0" : NSDvalue,
         SoldBy: bound ? UserId : null,
-        closingDate: bound ? date : null,
+        closingDate: bound ? New_York_Date : null,
         effectiveDate: effectiveDate || null,
         expirationDate: expirationDate || null,
-        policyNumber
+        policyNumber,
       }).then((Quote) => {
         QuoteStatus.create({
           note: notes,
@@ -473,10 +473,9 @@ const producerQuotes = async (req, res) => {
 
     if (QuotesDB.length) {
       res.status(200).json([QuotesDB, QuotesDB2]);
-    } else if (QuotesDB2.length){
+    } else if (QuotesDB2.length) {
       res.status(200).json([QuotesDB, QuotesDB2]);
-    }
-    else{
+    } else {
       res.status(404).send("no Quotes");
     }
   } catch (e) {
@@ -541,10 +540,9 @@ const producerQuotesThisMonth = async (req, res) => {
 
     if (QuotesDB.length) {
       res.status(200).json([QuotesDB, QuotesDB2]);
-    } else if (QuotesDB2.length){
+    } else if (QuotesDB2.length) {
       res.status(200).json([QuotesDB, QuotesDB2]);
-    }
-    else{
+    } else {
       res.status(404).send("no Quotes");
     }
   } catch (e) {
