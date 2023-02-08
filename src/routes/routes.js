@@ -74,6 +74,7 @@ const {
   getPolicyNumber,
   getLastPayments,
   getMonthlyPayments,
+  getPolicyByDate,
 } = require("../controlers/payments");
 const {
   getClients,
@@ -149,6 +150,7 @@ router.get("/getpayments", getPayment),
   router.get("/getLastPayments", getLastPayments),
   router.get("/getMonthlyPayments", getMonthlyPayments),
   router.get("/getPolicyNumber", getPolicyNumber),
+  router.get("/getPolicyByDate", getPolicyByDate),
   router.get("/getDailyReports", getDailyReports),
   router.post("/deleteQuote", deleteQuote),
   router.post("/resetDailyReport", resetDailyReport),

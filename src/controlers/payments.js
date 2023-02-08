@@ -705,6 +705,29 @@ const getPolicyNumber = async (req, res) => {
   }
 };
 
+const getPolicyByDate = async (req, res) => {
+  let dateFrom = req.query.dateFrom;
+  let dateTo = req.query.dateTo;
+  try {
+    const policyDate = await Payments.findAll({
+      attributes: { exclude: ["modifiedAt"] },
+      include: [
+        { model: Client },
+        { model: Quote },
+        { model: Location },
+        { model: Category },
+      ],
+      order: [["date", "DESC"]],
+      where: { date: { [Op.between]: [dateFrom, dateTo] } },
+    });
+    policyDate.length
+      ? res.status(200).json(policyDate)
+      : res.status(404).send("No payments");
+  } catch (err) {
+    res.status(404).json(`Error en policyByDateController: ${err}`);
+  }
+};
+
 const getDeletedPayment = async (req, res) => {
   try {
     const payments = await Payments.findAll({
@@ -910,4 +933,5 @@ module.exports = {
   getPolicyNumber,
   getLastPayments,
   getMonthlyPayments,
+  getPolicyByDate,
 };
