@@ -718,7 +718,7 @@ const getPolicyByDate = async (req, res) => {
         { model: Category },
       ],
       order: [["date", "DESC"]],
-      where: { date: { [Op.between]: [dateFrom, dateTo] } },
+      where: { date: { [Op.between]: [dateFrom, dateTo] }, deleted: false },
     });
     policyDate.length
       ? res.status(200).json(policyDate)
