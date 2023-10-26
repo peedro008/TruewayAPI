@@ -17,7 +17,6 @@ const tremendoscript = async (req, res) => {
     let QuotesDB = await Quote.findAll({
       attributes: { exclude: ["createdAt", "modifiedAt"] },
       include: [
-
         { model: Company },
         { model: Users },
         {
@@ -26,26 +25,19 @@ const tremendoscript = async (req, res) => {
             ["date", "ASC"],
             [QuoteStatus, "id", "ASC"],
           ],
-    
-
-    
         },
-
       ],
       order: [["id", "DESC"]],
-
-    
-
     });
 
- 
- 
-    let temp = 0
+    let temp = 0;
     QuotesDB.map(async (e) => {
-      console.log (temp)
-      temp++
-      if (e.QuoteStatuses.length&& e.QuoteStatuses.find((e) => e.Status == "Sold")) {
-        
+      console.log(temp);
+      temp++;
+      if (
+        e.QuoteStatuses.length &&
+        e.QuoteStatuses.find((e) => e.Status == "Sold")
+      ) {
         await Quote.update(
           {
             SoldBy: e.QuoteStatuses.sort(function (a, b) {
@@ -62,7 +54,6 @@ const tremendoscript = async (req, res) => {
           }
         );
       }
-  
     });
 
     res.status(200).send(QuotesDB);
